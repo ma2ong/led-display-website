@@ -151,6 +151,112 @@ def api_contact():
     
     return jsonify({'status': 'success', 'message': '询盘提交成功！'})
 
+@app.route('/api/content')
+def api_content():
+    """获取页面内容API"""
+    try:
+        # 读取内容文件
+        content_file = 'data/content.json'
+        if os.path.exists(content_file):
+            with open(content_file, 'r', encoding='utf-8') as f:
+                content = json.load(f)
+        else:
+            # 默认内容
+            content = {
+                "company": {
+                    "name": "深圳联进科技有限公司",
+                    "slogan": "专业LED显示屏制造商",
+                    "description": "17年专业经验，为全球客户提供高品质LED显示解决方案"
+                },
+                "stats": {
+                    "projects": 1500,
+                    "clients": 800,
+                    "countries": 50,
+                    "experience": 17
+                }
+            }
+        
+        return jsonify({
+            'status': 'success',
+            'data': content
+        })
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        }), 500
+
+@app.route('/api/health')
+def api_health():
+    """健康检查API"""
+    return jsonify({
+        'status': 'success',
+        'message': 'API is running',
+        'timestamp': datetime.now().isoformat()
+    })
+
+@app.route('/api/news/latest')
+def api_latest_news():
+    """获取最新新闻API"""
+    try:
+        conn = sqlite3.connect('admin/database.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM news WHERE status = "published" ORDER BY created_at DESC LIMIT 3')
+        news_data = cursor.fetchall()
+        conn.close()
+        
+        news_list = []
+        for news in news_data:
+            news_list.append({
+                'id': news[0],
+                'title': news[1],
+                'content': news[2],
+                'summary': news[2][:100] + '...' if len(news[2]) > 100 else news[2],
+                'author': news[3],
+                'created_at': news[5]
+            })
+        
+        return jsonify({
+            'status': 'success',
+            'data': news_list
+        })
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        }), 500
+
+@app.route('/api/products/featured')
+def api_featured_products():
+    """获取特色产品API"""
+    try:
+        conn = sqlite3.connect('admin/database.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM products ORDER BY created_at DESC LIMIT 4')
+        products = cursor.fetchall()
+        conn.close()
+        
+        products_list = []
+        for product in products:
+            products_list.append({
+                'id': product[0],
+                'name': product[1],
+                'category': product[2],
+                'description': product[3],
+                'price': product[5],
+                'image_url': product[6]
+            })
+        
+        return jsonify({
+            'status': 'success',
+            'data': products_list
+        })
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
+        }), 500
+
 # 后台管理路由
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_login():
