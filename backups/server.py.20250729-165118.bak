@@ -1,0 +1,131 @@
+#!/usr/bin/env python3
+"""
+Simple HTTP server for local development of the LED website.
+Run this script to serve the website locally.
+"""
+
+import http.server
+import socketserver
+import webbrowser
+import os
+import sys
+from pathlib import Path
+
+# Configuration
+PORT = 8000
+HOST = 'localhost'
+
+class CustomHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
+    """Custom handler to serve files with proper MIME types"""
+    
+    def end_headers(self):
+        # Add CORS headers for local development
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        super().end_headers()
+    
+    def guess_type(self, path):
+        """Override to handle additional file types"""
+        mimetype, encoding = super().guess_type(path)
+        
+        # Handle specific file types
+        if path.endswith('.js'):
+            return 'application/javascript', encoding
+        elif path.endswith('.css'):
+            return 'text/css', encoding
+        elif path.endswith('.json'):
+            return 'application/json', encoding
+        elif path.endswith('.woff2'):
+            return 'font/woff2', encoding
+        elif path.endswith('.woff'):
+            return 'font/woff', encoding
+        
+        return mimetype, encoding
+
+def main():
+    """Start the development server"""
+    
+    # Change to the directory containing this script
+    script_dir = Path(__file__).parent
+    os.chdir(script_dir)
+    
+    # Check if index.html exists
+    if not Path('index.html').exists():
+        print("❌ Error: index.html not found in current directory")
+        print("Make sure you're running this script from the website root directory")
+        sys.exit(1)
+    
+    try:
+        # Create server
+        with socketserver.TCPServer((HOST, PORT), CustomHTTPRequestHandler) as httpd:
+            server_url = f"http://{HOST}:{PORT}"
+            
+            print("🚀 LED Website Development Server")
+            print("=" * 40)
+            print(f"📍 Server running at: {server_url}")
+            print(f"📁 Serving files from: {script_dir}")
+            print("=" * 40)
+            print("📝 Available pages:")
+            print(f"   • Main website: {server_url}")
+            print(f"   • Direct access: {server_url}/index.html")
+            print("=" * 40)
+            print("💡 Tips:")
+            print("   • Press Ctrl+C to stop the server")
+            print("   • Refresh browser to see changes")
+            print("   • Check browser console for any errors")
+            print("=" * 40)
+            
+            # Try to open browser automatically
+            try:
+                print("🌐 Opening browser...")
+                webbrowser.open(server_url)
+            except Exception as e:
+                print(f"⚠️  Could not open browser automatically: {e}")
+                print(f"Please manually open: {server_url}")
+            
+            print("\n✅ Server started successfully!")
+            print("Waiting for requests... (Press Ctrl+C to stop)\n")
+            
+            # Start serving
+            httpd.serve_forever()
+            
+    except KeyboardInterrupt:
+        print("\n\n🛑 Server stopped by user")
+    except OSError as e:
+        if e.errno == 48:  # Address already in use
+            print(f"❌ Error: Port {PORT} is already in use")
+            print("Try using a different port or stop the other server")
+        else:
+            print(f"❌ Error starting server: {e}")
+    except Exception as e:
+        print(f"❌ Unexpected error: {e}")
+
+if __name__ == "__main__":
+    main()
+
+"""
+中文使用说明：
+
+这是一个简单的本地开发服务器，用于在本地运行LED网站。
+
+使用方法：
+1. 确保您已安装Python 3
+2. 在命令行中导航到网站文件夹
+3. 运行命令：python server.py
+4. 服务器将自动启动并在浏览器中打开网站
+5. 默认地址：http://localhost:8000
+
+功能特点：
+- 自动打开浏览器
+- 支持所有网站文件类型
+- 实时查看网站修改效果
+- 按Ctrl+C停止服务器
+
+注意事项：
+- 确保index.html文件在同一目录下
+- 如果端口8000被占用，会显示错误信息
+- 修改网站文件后，刷新浏览器即可看到更新
+
+这个服务器仅用于本地开发测试，不适用于生产环境。
+"""

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+
+{% block title %}关于我们管理 - LED显示屏管理后台{% endblock %}
+{% block page_title %}关于我们管理{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    关于我们内容管理
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="about_title_en" class="form-label">标题 (英文)</label>
+                                <input type="text" class="form-control" id="about_title_en" name="about_title_en" 
+                                       value="{{ about_data.get('about_title_en', 'About Lianjin LED') }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="about_title_zh" class="form-label">标题 (中文)</label>
+                                <input type="text" class="form-control" id="about_title_zh" name="about_title_zh" 
+                                       value="{{ about_data.get('about_title_zh', '关于联进LED') }}">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="about_content_en" class="form-label">内容 (英文)</label>
+                        <textarea class="form-control" id="about_content_en" name="about_content_en" rows="6">{{ about_data.get('about_content_en', 'With over 15 years of experience in LED display manufacturing, we are committed to providing innovative and reliable LED solutions.') }}</textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="about_content_zh" class="form-label">内容 (中文)</label>
+                        <textarea class="form-control" id="about_content_zh" name="about_content_zh" rows="6">{{ about_data.get('about_content_zh', '拥有超过15年的LED显示屏制造经验，我们致力于提供创新可靠的LED解决方案。') }}</textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="about_image" class="form-label">关于我们图片</label>
+                        {% if about_data.get('about_image') %}
+                        <div class="mb-2">
+                            <img src="{{ about_data.get('about_image') }}" alt="关于我们" class="img-thumbnail" style="max-width: 200px; max-height: 150px;">
+                            <div class="form-text">当前图片</div>
+                        </div>
+                        {% endif %}
+                        <input type="file" class="form-control" id="about_image" name="about_image" accept="image/*">
+                        <div class="form-text">支持 PNG, JPG, JPEG, GIF, WEBP 格式，最大16MB</div>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> 保存设置
+                        </button>
+                        <a href="http://localhost:8000#about" target="_blank" class="btn btn-success">
+                            <i class="fas fa-external-link-alt"></i> 前端预览
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>编辑说明</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <h6>内容编辑提示：</h6>
+                    <ul class="list-unstyled small">
+                        <li>• 标题建议控制在50字符以内</li>
+                        <li>• 内容支持HTML标签</li>
+                        <li>• 图片推荐尺寸：800x600像素</li>
+                        <li>• 保存后立即在前端生效</li>
+                    </ul>
+                </div>
+                
+                <div class="alert alert-info small">
+                    <i class="fas fa-lightbulb"></i>
+                    <strong>提示：</strong>修改后可以点击"前端预览"查看效果。
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

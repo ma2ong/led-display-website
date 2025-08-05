@@ -1,0 +1,20 @@
+{
+  "path": "c:\\Users\\Administrator\\Desktop\\codebuddy ledwebsite",
+  "desc": "这是一个综合的LED显示屏网站，包含前端展示和后台管理系统。功能包括：专业LED产品展示、完整的中文后台管理界面、产品管理(CRUD)、询盘管理、新闻管理、前端页面管理(包含8个子模块：首页、关于我们、产品中心、解决方案、成功案例、新闻资讯、技术支持、联系我们)、用户管理、系统设置和数据统计。所有内部服务器错误已修复，系统完全可用。",
+  "id": "031140452245470f88fc6f6a5cd3d68e",
+  "data": {
+    "spaceKey": "031140452245470f88fc6f6a5cd3d68e",
+    "connections": {
+      "webIDE": "https://031140452245470f88fc6f6a5cd3d68e.ap-singapore.cloudstudio.club",
+      "preview": "",
+      "api": "https://031140452245470f88fc6f6a5cd3d68e--api.ap-singapore.cloudstudio.club",
+      "pty": "https://031140452245470f88fc6f6a5cd3d68e--pty.ap-singapore.cloudstudio.club"
+    }
+  },
+  "config": {
+    "api": "https://031140452245470f88fc6f6a5cd3d68e--api.ap-singapore.cloudstudio.club",
+    "pty": "https://031140452245470f88fc6f6a5cd3d68e--pty.ap-singapore.cloudstudio.club",
+    "region": "ap-shanghai",
+    "spaceKey": "031140452245470f88fc6f6a5cd3d68e"
+  }
+}

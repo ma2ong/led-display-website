@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+
+{% block title %}新闻管理 - LED显示屏管理后台{% endblock %}
+{% block page_title %}新闻管理{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h4 class="mb-0">新闻列表</h4>
+        <p class="text-muted">管理网站新闻和资讯内容</p>
+    </div>
+    <a href="{{ url_for('add_news') }}" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>添加新闻
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>标题</th>
+                        <th>分类</th>
+                        <th>作者</th>
+                        <th>状态</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for news in news_list %}
+                    <tr>
+                        <td>{{ news.id }}</td>
+                        <td>
+                            <div class="fw-bold">{{ news.title_en }}</div>
+                            <small class="text-muted">{{ news.title_zh }}</small>
+                        </td>
+                        <td>
+                            {% if news.category %}
+                                <span class="badge bg-secondary">{{ news.category }}</span>
+                            {% else %}
+                                <span class="text-muted">未分类</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ news.author or '未知' }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'success' if news.status == 'published' else 'secondary' }}">
+                                {{ '已发布' if news.status == 'published' else '草稿' }}
+                            </span>
+                        </td>
+                        <td>{{ news.created_at }}</td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" class="btn btn-outline-primary">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-danger">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            <i class="fas fa-inbox fa-2x mb-2"></i>
+                            <div>暂无新闻数据</div>
+                            <a href="{{ url_for('add_news') }}" class="btn btn-primary btn-sm mt-2">
+                                添加第一篇新闻
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

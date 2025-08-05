@@ -1,0 +1,282 @@
+#!/usr/bin/env python3
+"""
+API endpoints for frontend-backend integration
+前后端集成API接口
+"""
+
+from flask import Blueprint, jsonify, request, current_app
+from datetime import datetime
+import json
+import os
+from pathlib import Path
+
+api = Blueprint('api', __name__, url_prefix='/api')
+
+# Get the project root directory
+PROJECT_ROOT = Path(__file__).parent.parent
+
+def get_content_data():
+    """获取内容数据"""
+    content_file = PROJECT_ROOT / 'data' / 'content.json'
+    if content_file.exists():
+        with open(content_file, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    return {
+        'products': [],
+        'news': [],
+        'cases': [],
+        'company_info': {},
+        'last_updated': None
+    }
+
+def save_content_data(data):
+    """保存内容数据"""
+    data_dir = PROJECT_ROOT / 'data'
+    data_dir.mkdir(exist_ok=True)
+    
+    content_file = data_dir / 'content.json'
+    data['last_updated'] = datetime.now().isoformat()
+    
+    with open(content_file, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+@api.route('/products', methods=['GET'])
+def get_products():
+    """获取产品列表"""
+    try:
+        data = get_content_data()
+        return jsonify({
+            'success': True,
+            'products': data.get('products', [])
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@api.route('/products', methods=['POST'])
+def add_product():
+    """添加产品"""
+    try:
+        product_data = request.json
+        data = get_content_data()
+        
+        # Add ID if not provided
+        if 'id' not in product_data:
+            product_data['id'] = len(data.get('products', [])) + 1
+        
+        product_data['created_at'] = datetime.now().isoformat()
+        product_data['updated_at'] = datetime.now().isoformat()
+        
+        if 'products' not in data:
+            data['products'] = []
+        
+        data['products'].append(product_data)
+        save_content_data(data)
+        
+        return jsonify({
+            'success': True,
+            'product': product_data
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@api.route('/products/<int:product_id>', methods=['PUT'])
+def update_product(product_id):
+    """更新产品"""
+    try:
+        product_data = request.json
+        data = get_content_data()
+        
+        products = data.get('products', [])
+        for i, product in enumerate(products):
+            if product.get('id') == product_id:
+                product_data['id'] = product_id
+                product_data['updated_at'] = datetime.now().isoformat()
+                if 'created_at' not in product_data:
+                    product_data['created_at'] = product.get('created_at', datetime.now().isoformat())
+                
+                products[i] = product_data
+                data['products'] = products
+                save_content_data(data)
+                
+                return jsonify({
+                    'success': True,
+                    'product': product_data
+                })
+        
+        return jsonify({
+            'success': False,
+            'error': 'Product not found'
+        }), 404
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@api.route('/products/<int:product_id>', methods=['DELETE'])
+def delete_product(product_id):
+    """删除产品"""
+    try:
+        data = get_content_data()
+        products = data.get('products', [])
+        
+        data['products'] = [p for p in products if p.get('id') != product_id]
+        save_content_data(data)
+        
+        return jsonify({
+            'success': True,
+            'message': 'Product deleted successfully'
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@api.route('/news', methods=['GET'])
+def get_news():
+    """获取新闻列表"""
+    try:
+        data = get_content_data()
+        return jsonify({
+            'success': True,
+            'news': data.get('news', [])
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@api.route('/news', methods=['POST'])
+def add_news():
+    """添加新闻"""
+    try:
+        news_data = request.json
+        data = get_content_data()
+        
+        if 'id' not in news_data:
+            news_data['id'] = len(data.get('news', [])) + 1
+        
+        news_data['created_at'] = datetime.now().isoformat()
+        news_data['updated_at'] = datetime.now().isoformat()
+        
+        if 'news' not in data:
+            data['news'] = []
+        
+        data['news'].append(news_data)
+        save_content_data(data)
+        
+        return jsonify({
+            'success': True,
+            'news': news_data
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@api.route('/cases', methods=['GET'])
+def get_cases():
+    """获取案例列表"""
+    try:
+        data = get_content_data()
+        return jsonify({
+            'success': True,
+            'cases': data.get('cases', [])
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@api.route('/cases', methods=['POST'])
+def add_case():
+    """添加案例"""
+    try:
+        case_data = request.json
+        data = get_content_data()
+        
+        if 'id' not in case_data:
+            case_data['id'] = len(data.get('cases', [])) + 1
+        
+        case_data['created_at'] = datetime.now().isoformat()
+        case_data['updated_at'] = datetime.now().isoformat()
+        
+        if 'cases' not in data:
+            data['cases'] = []
+        
+        data['cases'].append(case_data)
+        save_content_data(data)
+        
+        return jsonify({
+            'success': True,
+            'case': case_data
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@api.route('/company-info', methods=['GET'])
+def get_company_info():
+    """获取公司信息"""
+    try:
+        data = get_content_data()
+        return jsonify({
+            'success': True,
+            'company_info': data.get('company_info', {})
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@api.route('/company-info', methods=['PUT'])
+def update_company_info():
+    """更新公司信息"""
+    try:
+        company_data = request.json
+        data = get_content_data()
+        
+        data['company_info'] = company_data
+        data['company_info']['updated_at'] = datetime.now().isoformat()
+        save_content_data(data)
+        
+        return jsonify({
+            'success': True,
+            'company_info': data['company_info']
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@api.route('/sync-status', methods=['GET'])
+def get_sync_status():
+    """获取同步状态"""
+    try:
+        data = get_content_data()
+        return jsonify({
+            'success': True,
+            'last_updated': data.get('last_updated'),
+            'total_products': len(data.get('products', [])),
+            'total_news': len(data.get('news', [])),
+            'total_cases': len(data.get('cases', []))
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500

@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creative LED Display - Flexible & Curved LED Solutions | Lianjin LED</title>
+    <meta name="description" content="Creative LED displays with flexible modules, curved configurations, and unique shapes. Perfect for architectural integration, art installations, and innovative designs.">
+    <meta name="keywords" content="creative LED display, flexible LED screen, curved LED display, shaped LED display, architectural LED">
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="homepage.html">
+                <i class="fas fa-tv me-2"></i>
+                <span class="fw-bold">Lianjin LED</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="homepage.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About Us</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown">
+                            Products
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="fine-pitch.html">Fine Pitch LED</a></li>
+                            <li><a class="dropdown-item" href="outdoor.html">Outdoor LED</a></li>
+                            <li><a class="dropdown-item" href="rental.html">Rental LED</a></li>
+                            <li><a class="dropdown-item active" href="creative.html">Creative LED</a></li>
+                            <li><a class="dropdown-item" href="transparent.html">Transparent LED</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="products.html">All Products</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="solutions.html">Solutions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cases.html">Cases</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="news.html">News</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="support.html">Support</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+                <div class="navbar-nav ms-3">
+                    <a href="contact.html" class="btn btn-primary btn-sm">
+                        <i class="fas fa-envelope me-1"></i>Get Quote
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="product-hero-section" style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 hero-content" data-aos="fade-right">
+                    <h1 class="hero-title">Creative LED Display</h1>
+                    <p class="hero-subtitle">Flexible LED modules and innovative designs that break traditional boundaries. Create stunning curved, spherical, and custom-shaped displays for architectural integration and artistic installations.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="#specifications" class="btn btn-light btn-lg">
+                            <i class="fas fa-list-ul me-2"></i>Specifications
+                        </a>
+                        <a href="contact.html" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-envelope me-2"></i>Get Quote
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="product-image-container">
+                        <img src="assets/products/creative-led.jpg" alt="Creative LED Display" class="img-fluid rounded shadow-lg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Overview -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8" data-aos="fade-right">
+                    <h2 class="section-title">Creative LED Display Overview</h2>
+                    <p class="lead">Unleash your imagination with limitless design possibilities</p>
+                    
+                    <p>Lianjin Creative LED displays push the boundaries of traditional flat-panel displays with flexible modules, curved configurations, and custom shapes. These innovative solutions enable architects, designers, and artists to integrate LED technology seamlessly into buildings, create immersive environments, and develop unique visual experiences that captivate audiences.</p>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle text-danger mb-2"></i>
+                                <h5>Flexible Modules</h5>
+                                <p>Bendable LED modules for curved and irregular surfaces</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle text-danger mb-2"></i>
+                                <h5>Custom Shapes</h5>
+                                <p>Spheres, cylinders, waves, and any imaginable form</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle text-danger mb-2"></i>
+                                <h5>Seamless Integration</h5>
+                                <p>Perfect integration with architectural elements</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle text-danger mb-2"></i>
+                                <h5>Interactive Capabilities</h5>
+                                <p>Touch and motion sensor integration available</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4" data-aos="fade-left">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h4 class="card-title">Key Applications</h4>
+                            <ul class="list-unstyled">
+                                <li class="mb-3">
+                                    <i class="fas fa-building text-danger me-2"></i>
+                                    <strong>Architectural Integration</strong>
+                                    <p class="small text-muted mb-0">Building facades and interior design elements</p>
+                                </li>
+                                <li class="mb-3">
+                                    <i class="fas fa-palette text-danger me-2"></i>
+                                    <strong>Art Installations</strong>
+                                    <p class="small text-muted mb-0">Museums, galleries, and public art projects</p>
+                                </li>
+                                <li class="mb-3">
+                                    <i class="fas fa-store text-danger me-2"></i>
+                                    <strong>Retail Environments</strong>
+                                    <p class="small text-muted mb-0">Flagship stores and experiential retail spaces</p>
+                                </li>
+                                <li class="mb-3">
+                                    <i class="fas fa-glass-cheers text-danger me-2"></i>
+                                    <strong>Entertainment Venues</strong>
+                                    <p class="small text-muted mb-0">Nightclubs, bars, and themed environments</p>
+                                </li>
+                                <li>
+                                    <i class="fas fa-landmark text-danger me-2"></i>
+                                    <strong>Public Spaces</strong>
+                                    <p class="small text-muted mb-0">Airports, hotels, and corporate lobbies</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Creative Configurations -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Creative Configurations</h2>
+                <p class="section-subtitle">Endless possibilities for unique visual experiences</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <div class="creative-icon mb-3">
+                                <i class="fas fa-circle" style="color: #dc2626;"></i>
+                            </div>
+                            <h4 class="card-title">Curved Displays</h4>
+                            <p class="card-text">Concave and convex curved displays with customizable radius from 1m to infinity. Perfect for immersive environments and architectural integration.</p>
+                            <ul class="list-unstyled small text-start">
+                                <li><i class="fas fa-check text-danger me-2"></i>Horizontal and vertical curves</li>
+                                <li><i class="fas fa-check text-danger me-2"></i>Custom radius options</li>
+                                <li><i class="fas fa-check text-danger me-2"></i>Seamless connections</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <div class="creative-icon mb-3">
+                                <i class="fas fa-globe" style="color: #dc2626;"></i>
+                            </div>
+                            <h4 class="card-title">Spherical Displays</h4>
+                            <p class="card-text">Complete 360° spherical LED displays for planetariums, exhibitions, and artistic installations. Available in various diameters.</p>
+                            <ul class="list-unstyled small text-start">
+                                <li><i class="fas fa-check text-danger me-2"></i>Full sphere or hemisphere</li>
+                                <li><i class="fas fa-check text-danger me-2"></i>Diameter from 1m to 10m</li>
+                                <li><i class="fas fa-check text-danger me-2"></i>360° content mapping</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <div class="creative-icon mb-3">
+                                <i class="fas fa-wave-square" style="color: #dc2626;"></i>
+                            </div>
+                            <h4 class="card-title">Wave Displays</h4>
+                            <p class="card-text">Dynamic wave-shaped displays that create flowing, organic visual experiences. Ideal for retail environments and public spaces.</p>
+                            <ul class="list-unstyled small text-start">
+                                <li><i class="fas fa-check text-danger me-2"></i>Customizable wave patterns</li>
+                                <li><i class="fas fa-check text-danger me-2"></i>Multiple wave frequencies</li>
+                                <li><i class="fas fa-check text-danger me-2"></i>Ceiling or wall mounting</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <div class="creative-icon mb-3">
+                                <i class="fas fa-cube" style="color: #dc2626;"></i>
+                            </div>
+                            <h4 class="card-title">3D Structures</h4>
+                            <p class="card-text">Complex 3D LED structures including cubes, pyramids, and custom geometric shapes for unique architectural elements.</p>
+                            <ul class="list-unstyled small text-start">
+                                <li><i class="fas fa-check text-danger me-2"></i>Custom 3D modeling</li>
+                                <li><i class="fas fa-check text-danger me-2"></i>Structural engineering</li>
+                                <li><i class="fas fa-check text-danger me-2"></i>Interactive capabilities</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <div class="creative-icon mb-3">
+                                <i class="fas fa-grip-lines" style="color: #dc2626;"></i>
+                            </div>
+                            <h4 class="card-title">Strip Displays</h4>
+                            <p class="card-text">Flexible LED strips for linear installations, edge lighting, and creative outlining of architectural features.</p>
+                            <ul class="list-unstyled small text-start">
+                                <li><i class="fas fa-check text-danger me-2"></i>Ultra-thin profile</li>
+                                <li><i class="fas fa-check text-danger me-2"></i>Cuttable to length</li>
+                                <li><i class="fas fa-check text-danger me-2"></i>Weatherproof options</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <div class="creative-icon mb-3">
+                                <i class="fas fa-puzzle-piece" style="color: #dc2626;"></i>
+                            </div>
+                            <h4 class="card-title">Modular Systems</h4>
+                            <p class="card-text">Interlocking modular LED panels that can be arranged in countless configurations for dynamic, changeable displays.</p>
+                            <ul class="list-unstyled small text-start">
+                                <li><i class="fas fa-check text-danger me-2"></i>Magnetic connections</li>
+                                <li><i class="fas fa-check text-danger me-2"></i>Hot-swappable modules</li>
+                                <li><i class="fas fa-check text-danger me-2"></i>Reconfigurable layouts</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Specifications -->
+    <section id="specifications" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Technical Specifications</h2>
+                <p class="section-subtitle">Advanced technology for creative applications</p>
+            </div>
+            
+            <div class="table-responsive" data-aos="fade-up">
+                <table class="table table-bordered bg-white">
+                    <thead style="background-color: #dc2626; color: white;">
+                        <tr>
+                            <th>Model</th>
+                            <th>Type</th>
+                            <th>Pixel Pitch</th>
+                            <th>Flexibility</th>
+                            <th>Brightness</th>
+                            <th>Viewing Angle</th>
+                            <th>Applications</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>LJ-FLEX2.5</strong></td>
+                            <td>Flexible Module</td>
+                            <td>2.5mm</td>
+                            <td>±30° bend</td>
+                            <td>1200 nits</td>
+                            <td>160°/160°</td>
+                            <td>Curved walls, columns</td>
+                        </tr>
+                        <tr>
+                            <td><strong>LJ-SPHERE3.9</strong></td>
+                            <td>Spherical</td>
+                            <td>3.9mm</td>
+                            <td>360° coverage</td>
+                            <td>1000 nits</td>
+                            <td>360°</td>
+                            <td>Planetariums, exhibitions</td>
+                        </tr>
+                        <tr>
+                            <td><strong>LJ-STRIP5</strong></td>
+                            <td>LED Strip</td>
+                            <td>5mm</td>
+                            <td>Fully flexible</td>
+                            <td>1500 nits</td>
+                            <td>120°/120°</td>
+                            <td>Linear lighting, outlines</td>
+                        </tr>
+                        <tr>
+                            <td><strong>LJ-MOD6</strong></td>
+                            <td>Modular</td>
+                            <td>6mm</td>
+                            <td>Interlocking</td>
+                            <td>1800 nits</td>
+                            <td>140°/140°</td>
+                            <td>Reconfigurable displays</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="row mt-5">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <h4>Creative Features</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><strong>Bend Radius:</strong> Min 50cm (flexible models)</li>
+                                <li class="mb-2"><strong>Module Size:</strong> Various custom sizes</li>
+                                <li class="mb-2"><strong>Weight:</strong> 8-15kg/m² depending on type</li>
+                                <li class="mb-2"><strong>Thickness:</strong> 25-80mm</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><strong>Control:</strong> Advanced mapping software</li>
+                                <li class="mb-2"><strong>Content:</strong> 3D content support</li>
+                                <li class="mb-2"><strong>Sensors:</strong> Touch, motion, proximity</li>
+                                <li class="mb-2"><strong>Lifespan:</strong> 100,000+ hours</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6" data-aos="fade-left">
+                    <h4>Environmental & Power</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><strong>Operating Temp:</strong> -20°C to +50°C</li>
+                                <li class="mb-2"><strong>IP Rating:</strong> IP43-IP65 (model dependent)</li>
+                                <li class="mb-2"><strong>Humidity:</strong> 10-90% RH</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><strong>Power:</strong> 200-600W/m²</li>
+                                <li class="mb-2"><strong>Voltage:</strong> AC 100-240V</li>
+                                <li class="mb-2"><strong>Refresh Rate:</strong> 1920-3840Hz</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Design Process -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Design Process</h2>
+                <p class="section-subtitle">From concept to reality - our comprehensive design approach</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up">
+                    <div class="process-step text-center">
+                        <div class="step-number">01</div>
+                        <div class="step-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h5>Concept Development</h5>
+                        <p class="small">Collaborate with architects and designers to develop creative concepts and feasibility studies.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="process-step text-center">
+                        <div class="step-number">02</div>
+                        <div class="step-icon">
+                            <i class="fas fa-drafting-compass"></i>
+                        </div>
+                        <h5>3D Modeling</h5>
+                        <p class="small">Create detailed 3D models and visualizations to validate design concepts and technical requirements.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="process-step text-center">
+                        <div class="step-number">03</div>
+                        <div class="step-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h5>Engineering</h5>
+                        <p class="small">Develop custom mounting systems, control solutions, and structural engineering for complex installations.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="process-step text-center">
+                        <div class="step-number">04</div>
+                        <div class="step-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h5>Installation</h5>
+                        <p class="small">Professional installation with certified technicians and comprehensive testing and calibration.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Features -->
+    <section class="py-5">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Interactive Features</h2>
+                <p class="section-subtitle">Engage audiences with responsive and interactive displays</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="feature-icon mb-3" style="color: #dc2626;">
+                                <i class="fas fa-hand-pointer"></i>
+                            </div>
+                            <h4 class="card-title">Touch Interaction</h4>
+                            <p class="card-text">Multi-touch capabilities with gesture recognition for intuitive user interaction. Support for up to 40 simultaneous touch points.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="feature-icon mb-3" style="color: #dc2626;">
+                                <i class="fas fa-running"></i>
+                            </div>
+                            <h4 class="card-title">Motion Sensing</h4>
+                            <p class="card-text">Advanced motion detection and tracking systems that respond to human movement and gestures for immersive experiences.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="feature-icon mb-3" style="color: #dc2626;">
+                                <i class="fas fa-eye"></i>
+                            </div>
+                            <h4 class="card-title">Proximity Detection</h4>
+                            <p class="card-text">Proximity sensors that trigger content changes as viewers approach, creating dynamic and engaging visual experiences.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="feature-icon mb-3" style="color: #dc2626;">
+                                <i class="fas fa-microphone"></i>
+                            </div>
+                            <h4 class="card-title">Audio Reactive</h4>
+                            <p class="card-text">Sound-reactive displays that visualize music and audio in real-time, perfect for entertainment venues and events.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="feature-icon mb-3" style="color: #dc2626;">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <h4 class="card-title">Mobile Integration</h4>
+                            <p class="card-text">Smartphone and tablet integration allowing users to control content, share media, and interact with displays remotely.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="feature-icon mb-3" style="color: #dc2626;">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h4 class="card-title">AI Integration</h4>
+                            <p class="card-text">Artificial intelligence integration for facial recognition, demographic analysis, and personalized content delivery.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Case Studies -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Success Stories</h2>
+                <p class="section-subtitle">Creative LED displays transforming spaces worldwide</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                    <div class="case-card">
+                        <img src="assets/cases/museum-installation.jpg" alt="Museum Installation" class="img-fluid">
+                        <div class="case-content">
+                            <h5>Interactive Museum Exhibition</h5>
+                            <p class="text-muted">London, UK</p>
+                            <p>Curved LED displays with touch interaction creating an immersive historical timeline experience for museum visitors.</p>
+                            <a href="cases.html" class="btn btn-outline-danger btn-sm">View Case Study</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="case-card">
+                        <img src="assets/cases/retail-flagship.jpg" alt="Retail Flagship Store" class="img-fluid">
+                        <div class="case-content">
+                            <h5>Luxury Retail Flagship Store</h5>
+                            <p class="text-muted">Tokyo, Japan</p>
+                            <p>Spherical LED display suspended in store center with 360° product showcases and interactive brand experiences.</p>
+                            <a href="cases.html" class="btn btn-outline-danger btn-sm">View Case Study</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="case-card">
+                        <img src="assets/cases/hotel-lobby.jpg" alt="Hotel Lobby Installation" class="img-fluid">
+                        <div class="case-content">
+                            <h5>5-Star Hotel Lobby Feature</h5>
+                            <p class="text-muted">Dubai, UAE</p>
+                            <p>Wave-shaped LED ceiling installation creating dynamic lighting effects and immersive guest experiences in luxury hotel lobby.</p>
+                            <a href="cases.html" class="btn btn-outline-danger btn-sm">View Case Study</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8" data-aos="fade-right">
+                    <h2 class="mb-3">Ready to Create Something Extraordinary?</h2>
+                    <p class="mb-0 fs-5">Let's bring your creative vision to life with innovative LED display solutions.</p>
+                </div>
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0" data-aos="fade-left">
+                    <a href="contact.html" class="btn btn-light btn-lg me-3">
+                        <i class="fas fa-envelope me-2"></i>Get Quote
+                    </a>
+                    <a href="tel:+86-755-1234-5678" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-phone me-2"></i>Call Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">
+                        <i class="fas fa-tv me-2"></i>
+                        Lianjin LED Display
+                    </h5>
+                    <p class="mb-3">Leading manufacturer of professional LED display solutions with over 17 years of industry experience.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-light"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Products</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="fine-pitch.html" class="text-light-50">Fine Pitch LED</a></li>
+                        <li class="mb-2"><a href="outdoor.html" class="text-light-50">Outdoor LED</a></li>
+                        <li class="mb-2"><a href="rental.html" class="text-light-50">Rental LED</a></li>
+                        <li class="mb-2"><a href="creative.html" class="text-light-50">Creative LED</a></li>
+                        <li class="mb-2"><a href="transparent.html" class="text-light-50">Transparent LED</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Solutions</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Commercial</a></li>
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Broadcast</a></li>
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Events</a></li>
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Rental</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Support</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Technical Support</a></li>
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Warranty</a></li>
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Downloads</a></li>
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Training</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Company</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="about.html" class="text-light-50">About Us</a></li>
+                        <li class="mb-2"><a href="news.html" class="text-light-50">News</a></li>
+                        <li class="mb-2"><a href="cases.html" class="text-light-50">Case Studies</a></li>
+                        <li class="mb-2"><a href="contact.html" class="text-light-50">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <hr class="my-4">
+            
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2024 Lianjin LED Display Technology Co., Ltd. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-light-50 me-3">Privacy Policy</a>
+                    <a href="#" class="text-light-50">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+    </script>
+</body>
+</html>

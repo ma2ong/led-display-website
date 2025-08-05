@@ -1,0 +1,383 @@
+/**
+ * Frontend-Backend Synchronization System
+ * 前后端同步系统
+ */
+
+class AdminSync {
+    constructor() {
+        this.apiBase = 'http://localhost:5000/api';
+        this.lastSync = localStorage.getItem('lastSync');
+        this.syncInterval = 30000; // 30 seconds
+        this.init();
+    }
+
+    init() {
+        // 页面加载时同步数据
+        this.syncData();
+        
+        // 定期同步数据
+        setInterval(() => {
+            this.syncData();
+        }, this.syncInterval);
+        
+        // 监听页面可见性变化
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                this.syncData();
+            }
+        });
+    }
+
+    async syncData() {
+        try {
+            console.log('🔄 Syncing data with backend...');
+            
+            // 同步产品数据
+            await this.syncProducts();
+            
+            // 同步新闻数据
+            await this.syncNews();
+            
+            // 同步案例数据
+            await this.syncCases();
+            
+            // 同步公司信息
+            await this.syncCompanyInfo();
+            
+            // 更新同步时间
+            this.lastSync = new Date().toISOString();
+            localStorage.setItem('lastSync', this.lastSync);
+            
+            console.log('✅ Data sync completed');
+            this.updateSyncStatus('success');
+            
+        } catch (error) {
+            console.error('❌ Sync failed:', error);
+            this.updateSyncStatus('error');
+        }
+    }
+
+    async syncProducts() {
+        try {
+            const response = await fetch(`${this.apiBase}/products`);
+            const data = await response.json();
+            
+            if (data.success) {
+                // 更新产品页面内容
+                this.updateProductsDisplay(data.products);
+                
+                // 更新产品详情页面
+                this.updateProductDetailPages(data.products);
+                
+                console.log(`📦 Synced ${data.products.length} products`);
+            }
+        } catch (error) {
+            console.error('Failed to sync products:', error);
+        }
+    }
+
+    async syncNews() {
+        try {
+            const response = await fetch(`${this.apiBase}/news`);
+            const data = await response.json();
+            
+            if (data.success) {
+                this.updateNewsDisplay(data.news);
+                console.log(`📰 Synced ${data.news.length} news items`);
+            }
+        } catch (error) {
+            console.error('Failed to sync news:', error);
+        }
+    }
+
+    async syncCases() {
+        try {
+            const response = await fetch(`${this.apiBase}/cases`);
+            const data = await response.json();
+            
+            if (data.success) {
+                this.updateCasesDisplay(data.cases);
+                console.log(`💼 Synced ${data.cases.length} cases`);
+            }
+        } catch (error) {
+            console.error('Failed to sync cases:', error);
+        }
+    }
+
+    async syncCompanyInfo() {
+        try {
+            const response = await fetch(`${this.apiBase}/company-info`);
+            const data = await response.json();
+            
+            if (data.success) {
+                this.updateCompanyInfo(data.company_info);
+                console.log('🏢 Synced company info');
+            }
+        } catch (error) {
+            console.error('Failed to sync company info:', error);
+        }
+    }
+
+    updateProductsDisplay(products) {
+        // 更新产品页面的产品列表
+        const productGrid = document.querySelector('.product-grid');
+        if (productGrid && products.length > 0) {
+            productGrid.innerHTML = products.map(product => `
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
+                    <div class="card product-card h-100">
+                        <div class="card-img-container">
+                            <img src="${product.images || 'assets/products/placeholder.jpg'}" 
+                                 class="card-img-top" alt="${product.name_en}">
+                            <div class="card-overlay">
+                                <a href="${this.getCategoryPage(product.category)}" class="btn btn-primary">
+                                    <i class="fas fa-eye me-2"></i>View Details
+                                </a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">${product.name_en}</h5>
+                            <p class="card-text">${product.description_en}</p>
+                            <div class="product-features">
+                                ${product.features ? product.features.split(',').map(feature => 
+                                    `<span class="badge bg-primary me-1">${feature.trim()}</span>`
+                                ).join('') : ''}
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Category: ${product.category}</small>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 更新首页产品展示
+        const homeProducts = document.querySelector('.home-products');
+        if (homeProducts && products.length > 0) {
+            const featuredProducts = products.slice(0, 6);
+            homeProducts.innerHTML = featuredProducts.map(product => `
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
+                    <div class="card product-card h-100">
+                        <img src="${product.images || 'assets/products/placeholder.jpg'}" 
+                             class="card-img-top" alt="${product.name_en}">
+                        <div class="card-body">
+                            <h5 class="card-title">${product.name_en}</h5>
+                            <p class="card-text">${product.description_en}</p>
+                            <a href="${this.getCategoryPage(product.category)}" class="btn btn-primary">
+                                Learn More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+
+    updateProductDetailPages(products) {
+        // 根据当前页面更新对应的产品详情
+        const currentPage = window.location.pathname.split('/').pop();
+        const pageProduct = products.find(p => 
+            currentPage.includes(p.category) || 
+            currentPage === `${p.category}.html`
+        );
+
+        if (pageProduct) {
+            // 更新页面标题
+            const pageTitle = document.querySelector('.hero-title');
+            if (pageTitle) {
+                pageTitle.textContent = pageProduct.name_en;
+            }
+
+            // 更新产品描述
+            const pageDescription = document.querySelector('.hero-subtitle');
+            if (pageDescription) {
+                pageDescription.textContent = pageProduct.description_en;
+            }
+
+            // 更新产品图片
+            const productImage = document.querySelector('.product-image-container img');
+            if (productImage && pageProduct.images) {
+                productImage.src = pageProduct.images;
+                productImage.alt = pageProduct.name_en;
+            }
+
+            // 更新规格表格
+            if (pageProduct.specifications) {
+                this.updateSpecificationsTable(pageProduct.specifications);
+            }
+        }
+    }
+
+    updateSpecificationsTable(specifications) {
+        const specTable = document.querySelector('#specifications table tbody');
+        if (specTable && specifications) {
+            const specs = specifications.split('\n').filter(line => line.trim());
+            const tableRows = specs.map(spec => {
+                const [key, value] = spec.split(':').map(s => s.trim());
+                return `<tr><td><strong>${key}</strong></td><td>${value}</td></tr>`;
+            }).join('');
+            
+            if (tableRows) {
+                specTable.innerHTML = tableRows;
+            }
+        }
+    }
+
+    updateNewsDisplay(news) {
+        const newsContainer = document.querySelector('.news-container');
+        if (newsContainer && news.length > 0) {
+            newsContainer.innerHTML = news.slice(0, 6).map(item => `
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
+                    <div class="card news-card h-100">
+                        <img src="${item.image || 'assets/news/placeholder.jpg'}" 
+                             class="card-img-top" alt="${item.title_en}">
+                        <div class="card-body">
+                            <h5 class="card-title">${item.title_en}</h5>
+                            <p class="card-text">${item.content_en ? item.content_en.substring(0, 150) + '...' : ''}</p>
+                            <small class="text-muted">
+                                <i class="fas fa-calendar me-2"></i>
+                                ${new Date(item.created_at).toLocaleDateString()}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+
+    updateCasesDisplay(cases) {
+        const casesContainer = document.querySelector('.cases-container');
+        if (casesContainer && cases.length > 0) {
+            casesContainer.innerHTML = cases.slice(0, 6).map(caseItem => `
+                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
+                    <div class="card case-card h-100">
+                        <img src="${caseItem.images || 'assets/cases/placeholder.jpg'}" 
+                             class="card-img-top" alt="${caseItem.title_en}">
+                        <div class="card-body">
+                            <h5 class="card-title">${caseItem.title_en}</h5>
+                            <p class="card-text">${caseItem.description_en}</p>
+                            <small class="text-muted">
+                                <i class="fas fa-map-marker-alt me-2"></i>
+                                ${caseItem.location}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    }
+
+    updateCompanyInfo(companyInfo) {
+        // 更新联系信息
+        const phoneElements = document.querySelectorAll('.company-phone');
+        phoneElements.forEach(el => {
+            if (companyInfo.phone) el.textContent = companyInfo.phone;
+        });
+
+        const emailElements = document.querySelectorAll('.company-email');
+        emailElements.forEach(el => {
+            if (companyInfo.email) el.textContent = companyInfo.email;
+        });
+
+        const addressElements = document.querySelectorAll('.company-address');
+        addressElements.forEach(el => {
+            if (companyInfo.address_en) el.textContent = companyInfo.address_en;
+        });
+    }
+
+    getCategoryPage(category) {
+        const categoryPages = {
+            'fine-pitch': 'fine-pitch.html',
+            'outdoor': 'outdoor.html',
+            'indoor': 'products.html',
+            'transparent': 'transparent.html',
+            'creative': 'creative.html',
+            'rental': 'rental.html'
+        };
+        return categoryPages[category] || 'products.html';
+    }
+
+    updateSyncStatus(status) {
+        // 创建同步状态指示器
+        let statusIndicator = document.querySelector('.sync-status');
+        if (!statusIndicator) {
+            statusIndicator = document.createElement('div');
+            statusIndicator.className = 'sync-status';
+            statusIndicator.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-size: 12px;
+                z-index: 9999;
+                transition: all 0.3s ease;
+            `;
+            document.body.appendChild(statusIndicator);
+        }
+
+        if (status === 'success') {
+            statusIndicator.style.backgroundColor = '#10b981';
+            statusIndicator.style.color = 'white';
+            statusIndicator.innerHTML = '<i class="fas fa-check me-1"></i>Synced';
+            
+            // 3秒后隐藏
+            setTimeout(() => {
+                statusIndicator.style.opacity = '0';
+            }, 3000);
+        } else if (status === 'error') {
+            statusIndicator.style.backgroundColor = '#ef4444';
+            statusIndicator.style.color = 'white';
+            statusIndicator.innerHTML = '<i class="fas fa-exclamation-triangle me-1"></i>Sync Error';
+        }
+
+        // 重置透明度
+        statusIndicator.style.opacity = '1';
+    }
+
+    // 手动触发同步
+    async forcSync() {
+        await this.syncData();
+    }
+
+    // 获取同步状态
+    getSyncStatus() {
+        return {
+            lastSync: this.lastSync,
+            isOnline: navigator.onLine,
+            syncInterval: this.syncInterval
+        };
+    }
+}
+
+// 初始化同步系统
+document.addEventListener('DOMContentLoaded', () => {
+    window.adminSync = new AdminSync();
+    
+    // 添加手动同步按钮（可选）
+    const syncButton = document.createElement('button');
+    syncButton.innerHTML = '<i class="fas fa-sync-alt"></i>';
+    syncButton.className = 'btn btn-sm btn-outline-primary sync-btn';
+    syncButton.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        z-index: 9998;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    `;
+    syncButton.title = 'Manual Sync';
+    syncButton.onclick = () => {
+        syncButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        window.adminSync.forcSync().finally(() => {
+            syncButton.innerHTML = '<i class="fas fa-sync-alt"></i>';
+        });
+    };
+    
+    document.body.appendChild(syncButton);
+});
+
+// 导出供其他脚本使用
+window.AdminSync = AdminSync;

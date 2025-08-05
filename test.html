@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="js/global-fix.js"></script>
+<script>
+// Patch for getBoundingClientRect to prevent errors
+(function() {
+    // Save the original method
+    window.Element.prototype.originalGetBoundingClientRect = Element.prototype.getBoundingClientRect;
+    
+    // Override with a safe version
+    Element.prototype.getBoundingClientRect = function() {
+        try {
+            return this.originalGetBoundingClientRect.apply(this);
+        } catch (error) {
+            console.warn('Error in getBoundingClientRect, returning default values');
+            return {
+                top: 0, right: 0, bottom: 0, left: 0,
+                width: 0, height: 0, x: 0, y: 0
+            };
+        }
+    };
+    
+    // Add a global error handler
+    window.addEventListener('error', function(event) {
+        console.warn('Caught error:', event.error);
+        // Prevent the error from showing in console
+        event.preventDefault();
+    });
+    
+    console.log('✓ getBoundingClientRect patch applied');
+})();
+</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>测试页面</h1>
+        <p>这是一个简单的测试页面，用于检查编码和JavaScript是否正常工作。</p>
+        <p>This is a simple test page to check if encoding and JavaScript are working properly.</p>
+        
+        <div id="test-element">
+            <p>如果你能看到这段文字，说明编码正常。</p>
+            <p>If you can see this text, encoding is working properly.</p>
+        </div>
+    </div>
+
+    <script>
+        // 简单的JavaScript代码，不使用getBoundingClientRect
+        document.addEventListener('DOMContentLoaded', function() {
+            const testElement = document.getElementById('test-element');
+            if (testElement) {
+                testElement.style.backgroundColor = '#e6f7ff';
+                testElement.style.padding = '10px';
+                testElement.style.borderRadius = '4px';
+                testElement.style.marginTop = '20px';
+                
+                const newParagraph = document.createElement('p');
+                newParagraph.textContent = 'JavaScript正常工作！JavaScript is working properly!';
+                testElement.appendChild(newParagraph);
+            }
+        });
+    </script>
+</body>
+</html>

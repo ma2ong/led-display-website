@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title }} - 内容管理</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 12px 20px;
+            margin: 2px 0;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
+        }
+        .content-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        .content-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+        .content-type-badge {
+            font-size: 0.8rem;
+            padding: 4px 8px;
+        }
+        .content-preview {
+            max-height: 100px;
+            overflow: hidden;
+            position: relative;
+        }
+        .content-preview::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: linear-gradient(transparent, white);
+        }
+        .add-content-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .add-content-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+        .content-actions {
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .content-card:hover .content-actions {
+            opacity: 1;
+        }
+        .editor-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .form-control, .form-select {
+            border-radius: 8px;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .btn-save {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 25px;
+            color: white;
+            font-weight: 600;
+        }
+        .btn-cancel {
+            background: #6c757d;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 25px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏 -->
+            <div class="col-md-3 col-lg-2 px-0">
+                <div class="sidebar">
+                    <div class="p-3">
+                        <h4 class="text-white mb-4">
+                            <i class="fas fa-tv me-2"></i>
+                            LED管理后台
+                        </h4>
+                        <nav class="nav flex-column">
+                            <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                仪表盘
+                            </a>
+                            <a class="nav-link" href="{{ url_for('admin_frontend_pages') }}">
+                                <i class="fas fa-file-alt me-2"></i>
+                                页面管理
+                            </a>
+                            <hr class="text-white-50">
+                            <a class="nav-link {{ 'active' if page_name == 'home' }}" href="{{ url_for('page_content_manager', page_name='home') }}">
+                                <i class="fas fa-home me-2"></i>
+                                首页管理
+                            </a>
+                            <a class="nav-link {{ 'active' if page_name == 'about' }}" href="{{ url_for('page_content_manager', page_name='about') }}">
+                                <i class="fas fa-info-circle me-2"></i>
+                                关于我们
+                            </a>
+                            <a class="nav-link {{ 'active' if page_name == 'products' }}" href="{{ url_for('page_content_manager', page_name='products') }}">
+                                <i class="fas fa-cube me-2"></i>
+                                产品中心
+                            </a>
+                            <a class="nav-link {{ 'active' if page_name == 'solutions' }}" href="{{ url_for('page_content_manager', page_name='solutions') }}">
+                                <i class="fas fa-lightbulb me-2"></i>
+                                解决方案
+                            </a>
+                            <a class="nav-link {{ 'active' if page_name == 'cases' }}" href="{{ url_for('page_content_manager', page_name='cases') }}">
+                                <i class="fas fa-briefcase me-2"></i>
+                                成功案例
+                            </a>
+                            <a class="nav-link {{ 'active' if page_name == 'news' }}" href="{{ url_for('page_content_manager', page_name='news') }}">
+                                <i class="fas fa-newspaper me-2"></i>
+                                新闻资讯
+                            </a>
+                            <a class="nav-link {{ 'active' if page_name == 'support' }}" href="{{ url_for('page_content_manager', page_name='support') }}">
+                                <i class="fas fa-life-ring me-2"></i>
+                                技术支持
+                            </a>
+                            <a class="nav-link {{ 'active' if page_name == 'contact' }}" href="{{ url_for('page_content_manager', page_name='contact') }}">
+                                <i class="fas fa-envelope me-2"></i>
+                                联系我们
+                            </a>
+                            <hr class="text-white-50">
+                            <a class="nav-link" href="{{ url_for('admin_logout') }}">
+                                <i class="fas fa-sign-out-alt me-2"></i>
+                                退出登录
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主内容区域 -->
+            <div class="col-md-9 col-lg-10">
+                <div class="p-4">
+                    <!-- 头部 -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h2>{{ page_title }}</h2>
+                            <p class="text-muted mb-0">管理 {{ page_title }} 页面的所有内容元素</p>
+                        </div>
+                        <button class="btn add-content-btn" onclick="showAddContentForm()">
+                            <i class="fas fa-plus me-2"></i>
+                            添加新内容
+                        </button>
+                    </div>
+
+                    <!-- Flash消息 -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <!-- 内容列表 -->
+                    <div class="row" id="content-list">
+                        {% for content in contents %}
+                        <div class="col-lg-6 col-xl-4 mb-4">
+                            <div class="card content-card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0">{{ content.section_name }}</h6>
+                                        <span class="badge content-type-badge bg-primary">{{ content.content_type }}</span>
+                                    </div>
+                                    <div class="content-actions">
+                                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editContent({{ content.id }})">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteContent({{ content.id }})">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    {% if content.title_zh %}
+                                    <h6 class="card-title">{{ content.title_zh }}</h6>
+                                    {% endif %}
+                                    {% if content.subtitle_zh %}
+                                    <p class="text-muted small">{{ content.subtitle_zh }}</p>
+                                    {% endif %}
+                                    {% if content.content_zh %}
+                                    <div class="content-preview">
+                                        <p class="card-text small">{{ content.content_zh[:100] }}{% if content.content_zh|length > 100 %}...{% endif %}</p>
+                                    </div>
+                                    {% endif %}
+                                    {% if content.image_url %}
+                                    <div class="mt-2">
+                                        <small class="text-success">
+                                            <i class="fas fa-image me-1"></i>包含图片
+                                        </small>
+                                    </div>
+                                    {% endif %}
+                                    {% if content.video_url %}
+                                    <div class="mt-2">
+                                        <small class="text-info">
+                                            <i class="fas fa-video me-1"></i>包含视频
+                                        </small>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="card-footer">
+                                    <small class="text-muted">
+                                        排序: {{ content.sort_order }} | 
+                                        状态: <span class="badge bg-{{ 'success' if content.status == 'active' else 'secondary' }}">{{ content.status }}</span>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        
+                        {% if not contents %}
+                        <div class="col-12">
+                            <div class="text-center py-5">
+                                <i class="fas fa-file-alt fa-3x text-muted mb-3"></i>
+                                <h4 class="text-muted">暂无内容</h4>
+                                <p class="text-muted">点击上方"添加新内容"按钮开始创建页面内容</p>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- 添加/编辑内容表单 -->
+                    <div class="editor-container" id="content-editor" style="display: none;">
+                        <h4 id="editor-title">添加新内容</h4>
+                        <form id="content-form" method="POST" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">区域名称 *</label>
+                                    <input type="text" class="form-control" name="section_name" required>
+                                    <div class="form-text">例如：hero, features, about_intro</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">内容类型 *</label>
+                                    <select class="form-select" name="content_type" required>
+                                        <option value="">选择内容类型</option>
+                                        <option value="hero_section">横幅区域</option>
+                                        <option value="text_content">文本内容</option>
+                                        <option value="image_content">图片内容</option>
+                                        <option value="video_content">视频内容</option>
+                                        <option value="feature_list">特色列表</option>
+                                        <option value="product_showcase">产品展示</option>
+                                        <option value="contact_info">联系信息</option>
+                                        <option value="custom">自定义</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">标题（中文）</label>
+                                    <input type="text" class="form-control" name="title_zh">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">标题（英文）</label>
+                                    <input type="text" class="form-control" name="title_en">
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">副标题（中文）</label>
+                                    <input type="text" class="form-control" name="subtitle_zh">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">副标题（英文）</label>
+                                    <input type="text" class="form-control" name="subtitle_en">
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">正文内容（中文）</label>
+                                    <textarea class="form-control" name="content_zh" rows="4"></textarea>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">正文内容（英文）</label>
+                                    <textarea class="form-control" name="content_en" rows="4"></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">上传图片</label>
+                                    <input type="file" class="form-control" name="image_file" accept="image/*">
+                                    <div class="form-text">支持 JPG, PNG, GIF, WebP 格式</div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">上传视频</label>
+                                    <input type="file" class="form-control" name="video_file" accept="video/*">
+                                    <div class="form-text">支持 MP4, AVI, MOV 格式</div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">链接地址</label>
+                                    <input type="url" class="form-control" name="link_url">
+                                    <div class="form-text">可选的外部链接</div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">排序</label>
+                                    <input type="number" class="form-control" name="sort_order" value="0">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-label">状态</label>
+                                    <select class="form-select" name="status">
+                                        <option value="active">启用</option>
+                                        <option value="inactive">禁用</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">参数设置</label>
+                                <textarea class="form-control" name="parameters" rows="2" placeholder='JSON格式参数，例如：{"color": "blue", "size": "large"}'></textarea>
+                                <div class="form-text">可选的JSON格式参数配置</div>
+                            </div>
+                            
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-save">
+                                    <i class="fas fa-save me-2"></i>保存内容
+                                </button>
+                                <button type="button" class="btn btn-cancel" onclick="hideContentEditor()">
+                                    <i class="fas fa-times me-2"></i>取消
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let editingContentId = null;
+
+        function showAddContentForm() {
+            document.getElementById('editor-title').textContent = '添加新内容';
+            document.getElementById('content-form').action = '{{ url_for("add_page_content", page_name=page_name) }}';
+            document.getElementById('content-form').reset();
+            document.getElementById('content-editor').style.display = 'block';
+            document.getElementById('content-editor').scrollIntoView({ behavior: 'smooth' });
+            editingContentId = null;
+        }
+
+        function editContent(contentId) {
+            // 这里可以通过AJAX获取内容详情并填充表单
+            document.getElementById('editor-title').textContent = '编辑内容';
+            document.getElementById('content-form').action = '/pages/{{ page_name }}/content/' + contentId + '/edit';
+            document.getElementById('content-editor').style.display = 'block';
+            document.getElementById('content-editor').scrollIntoView({ behavior: 'smooth' });
+            editingContentId = contentId;
+            
+            // 这里应该通过AJAX获取内容数据并填充表单
+            // 为了简化，这里只是显示表单
+        }
+
+        function deleteContent(contentId) {
+            if (confirm('确定要删除这个内容吗？此操作不可恢复。')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/pages/{{ page_name }}/content/' + contentId + '/delete';
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        function hideContentEditor() {
+            document.getElementById('content-editor').style.display = 'none';
+            editingContentId = null;
+        }
+
+        // 表单提交处理
+        document.getElementById('content-form').addEventListener('submit', function(e) {
+            const formData = new FormData(this);
+            
+            // 这里可以添加表单验证逻辑
+            const sectionName = formData.get('section_name');
+            const contentType = formData.get('content_type');
+            
+            if (!sectionName || !contentType) {
+                e.preventDefault();
+                alert('请填写必填字段：区域名称和内容类型');
+                return;
+            }
+            
+            // 表单验证通过，继续提交
+        });
+    </script>
+</body>
+</html>

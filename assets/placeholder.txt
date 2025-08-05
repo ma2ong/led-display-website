@@ -1,0 +1,54 @@
+# Assets Directory
+
+This directory should contain the following image files for the LED display website:
+
+## Logo Files
+- logo.png - Main company logo
+- logo-white.png - White version for dark backgrounds
+- favicon.ico - Website favicon
+
+## Hero Section Images
+- hero-bg-1.jpg - Main hero background (LED display manufacturing)
+- hero-bg-2.jpg - Fine pitch LED displays
+- hero-bg-3.jpg - Transparent LED installation
+
+## Product Images
+- products/fine-pitch-led.jpg - Fine pitch LED display
+- products/outdoor-led.jpg - Outdoor LED billboard
+- products/indoor-led.jpg - Indoor LED video wall
+- products/transparent-led.jpg - Transparent LED display
+- products/creative-led.jpg - Creative LED installation
+- products/rental-led.jpg - Rental LED display
+
+## Solution Images
+- solutions/retail-solution.jpg - Retail LED display installation
+- solutions/corporate-solution.jpg - Corporate meeting room LED wall
+- solutions/entertainment-solution.jpg - Concert/event LED screens
+- solutions/transportation-solution.jpg - Airport/station LED displays
+- solutions/education-solution.jpg - Classroom LED display
+
+## Case Study Images
+- cases/retail-mall.jpg - Shopping mall LED installation
+- cases/corporate-hq.jpg - Corporate headquarters LED wall
+- cases/concert-stage.jpg - Concert stage LED display
+- cases/outdoor-billboard.jpg - Outdoor LED billboard
+- cases/flagship-store.jpg - Flagship store LED installation
+- cases/control-room.jpg - Control room LED video wall
+
+## About Section Images
+- about/factory-overview.jpg - Factory and manufacturing facility
+
+## News Images
+- news/featured-news.jpg - Latest technology announcement
+- news/industry-news-1.jpg - Industry trend article
+- news/company-news-1.jpg - Company expansion news
+
+## Recommended Image Specifications:
+- Hero images: 1920x1080px or higher
+- Product images: 800x600px minimum
+- Case study images: 600x400px minimum
+- News images: 400x300px minimum
+- Logo: SVG or high-resolution PNG with transparent background
+
+All images should be optimized for web use (compressed but maintaining quality).
+For production, consider using WebP format for better compression.

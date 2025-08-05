@@ -1,0 +1,39 @@
+/* 统一的固定侧边栏样式 */
+.sidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    height: 100vh !important;
+    width: 250px !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    overflow-y: auto !important;
+    z-index: 1000 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+.main-content {
+    margin-left: 250px !important;
+    padding-top: 0 !important;
+    min-height: 100vh !important;
+}
+
+.sidebar .nav-link {
+    color: rgba(255,255,255,0.8) !important;
+    padding: 1rem 1.5rem !important;
+    border-radius: 0.5rem !important;
+    margin: 0.25rem 0 !important;
+    transition: all 0.3s ease !important;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    color: white !important;
+    background: rgba(255,255,255,0.1) !important;
+    transform: translateX(5px) !important;
+}
+
+/* 确保没有其他样式覆盖 */
+.container-fluid, .row, .col-md-3, .col-lg-2 {
+    display: none !important;
+}

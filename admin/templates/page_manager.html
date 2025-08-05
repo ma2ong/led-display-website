@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_name.title() }} Page Management - Lianjin LED Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            margin: 0.25rem 0;
+            transition: all 0.3s ease;
+        }
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
+        }
+        .content-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+        .content-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        .content-type-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.5rem;
+        }
+        .content-preview {
+            max-height: 100px;
+            overflow: hidden;
+            position: relative;
+        }
+        .content-preview::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: linear-gradient(transparent, white);
+        }
+        .image-thumbnail {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6c757d;
+        }
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <h4 class="text-white">
+                            <i class="fas fa-tv me-2"></i>
+                            Lianjin LED Admin
+                        </h4>
+                    </div>
+                    
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_dashboard') }}">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item mt-3">
+                            <small class="text-white-50 px-3">PAGE MANAGEMENT</small>
+                        </li>
+                        
+                        {% set pages = ['home', 'about', 'products', 'solutions', 'cases', 'news', 'support', 'contact'] %}
+                        {% for page in pages %}
+                        <li class="nav-item">
+                            <a class="nav-link {{ 'active' if page == page_name else '' }}" href="{{ url_for('manage_page', page_name=page) }}">
+                                <i class="fas fa-{{ 'home' if page == 'home' else 'info-circle' if page == 'about' else 'tv' if page == 'products' else 'lightbulb' if page == 'solutions' else 'briefcase' if page == 'cases' else 'newspaper' if page == 'news' else 'life-ring' if page == 'support' else 'envelope' }} me-2"></i>
+                                {{ page.title() }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                        
+                        <li class="nav-item mt-3">
+                            <a class="nav-link" href="{{ url_for('admin_logout') }}">
+                                <i class="fas fa-sign-out-alt me-2"></i>
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">
+                        <i class="fas fa-{{ 'home' if page_name == 'home' else 'info-circle' if page_name == 'about' else 'tv' if page_name == 'products' else 'lightbulb' if page_name == 'solutions' else 'briefcase' if page_name == 'cases' else 'newspaper' if page_name == 'news' else 'life-ring' if page_name == 'support' else 'envelope' }} me-2"></i>
+                        {{ page_name.title() }} Page Management
+                    </h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <a href="{{ url_for('edit_page_content', page_name=page_name) }}" class="btn btn-primary">
+                                <i class="fas fa-plus me-1"></i>Add New Section
+                            </a>
+                            <button type="button" class="btn btn-outline-secondary" onclick="previewPage()">
+                                <i class="fas fa-eye me-1"></i>Preview Page
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page Description -->
+                <div class="alert alert-info" role="alert">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>{{ page_name.title() }} Page:</strong>
+                    {% if page_name == 'home' %}
+                        Manage homepage content including hero sections, featured products, and company highlights.
+                    {% elif page_name == 'about' %}
+                        Edit company information, history, team details, and mission statements.
+                    {% elif page_name == 'products' %}
+                        Manage product listings, specifications, images, and detailed descriptions.
+                    {% elif page_name == 'solutions' %}
+                        Edit solution categories, case studies, and industry-specific offerings.
+                    {% elif page_name == 'cases' %}
+                        Manage project case studies, client testimonials, and success stories.
+                    {% elif page_name == 'news' %}
+                        Publish and manage company news, announcements, and industry updates.
+                    {% elif page_name == 'support' %}
+                        Manage support documentation, FAQs, and technical resources.
+                    {% elif page_name == 'contact' %}
+                        Update contact information, office locations, and contact form settings.
+                    {% endif %}
+                </div>
+
+                <!-- Content Sections -->
+                {% if content_items %}
+                    <div class="row">
+                        {% for item in content_items %}
+                        <div class="col-lg-6 col-xl-4 mb-4">
+                            <div class="card content-card h-100">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h6 class="mb-0">{{ item[1] }}</h6> <!-- section_name -->
+                                    <span class="content-type-badge badge bg-{{ 'primary' if item[2] == 'text' else 'success' if item[2] == 'image' else 'warning' if item[2] == 'video' else 'info' }}">
+                                        <i class="fas fa-{{ 'align-left' if item[2] == 'text' else 'image' if item[2] == 'image' else 'video' if item[2] == 'video' else 'th-large' }} me-1"></i>
+                                        {{ item[2].title() }}
+                                    </span>
+                                </div>
+                                <div class="card-body">
+                                    <!-- Content Preview -->
+                                    {% if item[2] == 'text' and item[4] %}
+                                        <div class="content-preview">
+                                            <div class="small text-muted">{{ item[4]|striptags|truncate(100) }}</div>
+                                        </div>
+                                    {% elif item[2] == 'image' and item[5] %}
+                                        <div class="text-center mb-2">
+                                            <img src="{{ item[5] }}" alt="Preview" class="image-thumbnail">
+                                        </div>
+                                        {% if item[4] %}
+                                            <div class="small text-muted">{{ item[4] }}</div>
+                                        {% endif %}
+                                    {% elif item[2] == 'video' and item[6] %}
+                                        <div class="text-center mb-2">
+                                            <i class="fas fa-play-circle fa-3x text-muted"></i>
+                                        </div>
+                                        {% if item[4] %}
+                                            <div class="small text-muted">{{ item[4] }}</div>
+                                        {% endif %}
+                                    {% else %}
+                                        <div class="text-center text-muted">
+                                            <i class="fas fa-file-alt fa-2x mb-2"></i>
+                                            <div class="small">No content preview available</div>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <!-- Metadata -->
+                                    <div class="mt-3">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <small class="text-muted">
+                                                <i class="fas fa-sort-numeric-up me-1"></i>
+                                                Order: {{ item[8] }}
+                                            </small>
+                                            <div class="form-check form-switch">
+                                                <input class="form-check-input" type="checkbox" 
+                                                       id="active_{{ item[0] }}" 
+                                                       {{ 'checked' if item[9] else '' }}
+                                                       onchange="toggleActive({{ item[0] }}, this.checked)">
+                                                <label class="form-check-label small" for="active_{{ item[0] }}">
+                                                    Active
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <small class="text-muted">
+                                            <i class="fas fa-clock me-1"></i>
+                                            Updated: {{ item[10][:16] if item[10] else 'Never' }}
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-transparent">
+                                    <div class="btn-group w-100" role="group">
+                                        <a href="{{ url_for('edit_page_content', page_name=page_name, content_id=item[0]) }}" 
+                                           class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-edit me-1"></i>Edit
+                                        </a>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" 
+                                                onclick="duplicateContent({{ item[0] }})">
+                                            <i class="fas fa-copy me-1"></i>Duplicate
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" 
+                                                onclick="deleteContent({{ item[0] }}, '{{ item[1] }}')">
+                                            <i class="fas fa-trash me-1"></i>Delete
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <!-- Empty State -->
+                    <div class="empty-state">
+                        <i class="fas fa-file-plus"></i>
+                        <h4>No Content Sections Yet</h4>
+                        <p class="mb-4">Start building your {{ page_name }} page by adding content sections like text, images, videos, or mixed content.</p>
+                        <a href="{{ url_for('edit_page_content', page_name=page_name) }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-plus me-2"></i>Add First Section
+                        </a>
+                    </div>
+                {% endif %}
+
+                <!-- Quick Actions -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-bolt me-2"></i>
+                                    Quick Actions
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3 mb-2">
+                                        <button class="btn btn-outline-primary w-100" onclick="addTextSection()">
+                                            <i class="fas fa-align-left me-2"></i>Add Text Section
+                                        </button>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <button class="btn btn-outline-success w-100" onclick="addImageSection()">
+                                            <i class="fas fa-image me-2"></i>Add Image Section
+                                        </button>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <button class="btn btn-outline-warning w-100" onclick="addVideoSection()">
+                                            <i class="fas fa-video me-2"></i>Add Video Section
+                                        </button>
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <button class="btn btn-outline-info w-100" onclick="addMixedSection()">
+                                            <i class="fas fa-th-large me-2"></i>Add Mixed Section
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function previewPage() {
+            let previewUrl = '/';
+            
+            switch('{{ page_name }}') {
+                case 'home':
+                    previewUrl = '/homepage.html';
+                    break;
+                case 'about':
+                    previewUrl = '/about.html';
+                    break;
+                case 'products':
+                    previewUrl = '/products.html';
+                    break;
+                case 'solutions':
+                    previewUrl = '/solutions.html';
+                    break;
+                case 'cases':
+                    previewUrl = '/cases.html';
+                    break;
+                case 'news':
+                    previewUrl = '/news.html';
+                    break;
+                case 'support':
+                    previewUrl = '/support.html';
+                    break;
+                case 'contact':
+                    previewUrl = '/contact.html';
+                    break;
+            }
+            
+            window.open(previewUrl, '_blank');
+        }
+
+        function toggleActive(contentId, isActive) {
+            fetch('/save_content', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: contentId,
+                    is_active: isActive
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    showAlert('Status updated successfully!', 'success');
+                } else {
+                    // Revert checkbox state
+                    document.getElementById(`active_${contentId}`).checked = !isActive;
+                    showAlert('Failed to update status', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById(`active_${contentId}`).checked = !isActive;
+                showAlert('Failed to update status', 'error');
+            });
+        }
+
+        function deleteContent(contentId, sectionName) {
+            if (confirm(`Are you sure you want to delete the "${sectionName}" section? This action cannot be undone.`)) {
+                fetch(`/delete_content/${contentId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        showAlert('Failed to delete content', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showAlert('Failed to delete content', 'error');
+                });
+            }
+        }
+
+        function duplicateContent(contentId) {
+            // This would create a copy of the content section
+            showAlert('Duplicate feature coming soon!', 'info');
+        }
+
+        function addTextSection() {
+            window.location.href = `{{ url_for('edit_page_content', page_name=page_name) }}?type=text&name=New Text Section`;
+        }
+
+        function addImageSection() {
+            window.location.href = `{{ url_for('edit_page_content', page_name=page_name) }}?type=image&name=New Image Section`;
+        }
+
+        function addVideoSection() {
+            window.location.href = `{{ url_for('edit_page_content', page_name=page_name) }}?type=video&name=New Video Section`;
+        }
+
+        function addMixedSection() {
+            window.location.href = `{{ url_for('edit_page_content', page_name=page_name) }}?type=mixed&name=New Mixed Section`;
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            const container = document.querySelector('main');
+            container.insertBefore(alertDiv, container.firstChild);
+            
+            // Auto dismiss after 3 seconds
+            setTimeout(() => {
+                alertDiv.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

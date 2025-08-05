@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="js/global-fix.js"></script>
+    <script>
+    // Patch for getBoundingClientRect to prevent errors
+    (function() {
+        window.Element.prototype.originalGetBoundingClientRect = Element.prototype.getBoundingClientRect;
+        Element.prototype.getBoundingClientRect = function() {
+            try {
+                return this.originalGetBoundingClientRect.apply(this);
+            } catch (error) {
+                console.warn('Error in getBoundingClientRect, returning default values');
+                return {
+                    top: 0, right: 0, bottom: 0, left: 0,
+                    width: 0, height: 0, x: 0, y: 0
+                };
+            }
+        };
+        window.addEventListener('error', function(event) {
+            console.warn('Caught error:', event.error);
+            event.preventDefault();
+        });
+        console.log('✓ getBoundingClientRect patch applied');
+    })();
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News & Updates - LED Display Industry | Lianjin LED</title>
+    <meta name="description" content="Stay updated with the latest news, trends, and innovations in LED display technology. Industry insights and company updates from Lianjin LED.">
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-tv me-2"></i>
+                <span class="fw-bold">Lianjin LED</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About Us</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Products
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="fine-pitch.html">Fine Pitch LED</a></li>
+                            <li><a class="dropdown-item" href="outdoor.html">Outdoor LED</a></li>
+                            <li><a class="dropdown-item" href="rental.html">Rental LED</a></li>
+                            <li><a class="dropdown-item" href="creative.html">Creative LED</a></li>
+                            <li><a class="dropdown-item" href="transparent.html">Transparent LED</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="products.html">All Products</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="solutions.html">Solutions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cases.html">Cases</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="news.html">News</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="support.html">Support</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+                <div class="navbar-nav ms-3">
+                    <a class="btn btn-primary btn-sm" href="contact.html">
+                        <i class="fas fa-envelope me-1"></i>Get Quote
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="product-hero-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8" data-aos="fade-right">
+                    <div class="hero-content text-white">
+                        <h1 class="display-4 fw-bold mb-4">News & Updates</h1>
+                        <p class="lead mb-4">Stay informed about the latest developments in LED display technology, industry trends, and company announcements from Lianjin LED.</p>
+                        <div class="d-flex flex-wrap gap-3">
+                            <a href="#newsletter" class="btn btn-light btn-lg">
+                                <i class="fas fa-envelope me-2"></i>Subscribe Newsletter
+                            </a>
+                            <a href="#latest-news" class="btn btn-outline-light btn-lg">
+                                <i class="fas fa-newspaper me-2"></i>Latest News
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4" data-aos="fade-left">
+                    <div class="hero-image text-center">
+                        <div class="bg-white rounded shadow-lg p-4">
+                            <i class="fas fa-newspaper display-1 text-primary mb-3"></i>
+                            <h4 class="text-dark">Stay Updated</h4>
+                            <p class="text-muted">Latest Industry News</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured News -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="featured-news mb-5" data-aos="fade-up">
+                        <div class="card border-0 shadow-lg overflow-hidden">
+                            <div class="row g-0">
+                                <div class="col-md-6">
+                                    <div class="card-img-container" style="height: 300px; background: linear-gradient(45deg, #667eea, #764ba2); position: relative;">
+                                        <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+                                            <i class="fas fa-rocket display-1 mb-3"></i>
+                                            <h5>Innovation Launch</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card-body h-100 d-flex flex-column">
+                                        <div class="mb-2">
+                                            <span class="badge bg-primary">Featured</span>
+                                            <small class="text-muted ms-2">March 15, 2024</small>
+                                        </div>
+                                        <h3 class="card-title mb-3">Lianjin LED Launches Revolutionary P0.9 MicroLED Technology</h3>
+                                        <p class="card-text flex-grow-1">We're excited to announce the launch of our groundbreaking P0.9 MicroLED display technology, setting new standards for ultra-fine pitch LED displays with unprecedented image quality and reliability.</p>
+                                        <div class="mt-auto">
+                                            <a href="#" class="btn btn-primary">
+                                                <i class="fas fa-arrow-right me-2"></i>Read More
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="sidebar">
+                        <div class="card border-0 shadow-sm mb-4" data-aos="fade-up">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0"><i class="fas fa-calendar me-2"></i>Upcoming Events</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="event-item mb-3 pb-3 border-bottom">
+                                    <div class="d-flex">
+                                        <div class="event-date text-center me-3">
+                                            <div class="bg-primary text-white rounded p-2">
+                                                <div class="fw-bold">25</div>
+                                                <small>MAR</small>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">InfoComm Asia 2024</h6>
+                                            <small class="text-muted">Bangkok, Thailand</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="event-item mb-3 pb-3 border-bottom">
+                                    <div class="d-flex">
+                                        <div class="event-date text-center me-3">
+                                            <div class="bg-success text-white rounded p-2">
+                                                <div class="fw-bold">10</div>
+                                                <small>APR</small>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">LED China 2024</h6>
+                                            <small class="text-muted">Shenzhen, China</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="event-item">
+                                    <div class="d-flex">
+                                        <div class="event-date text-center me-3">
+                                            <div class="bg-info text-white rounded p-2">
+                                                <div class="fw-bold">15</div>
+                                                <small>MAY</small>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">NAB Show 2024</h6>
+                                            <small class="text-muted">Las Vegas, USA</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card border-0 shadow-sm" data-aos="fade-up" data-aos-delay="100">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0"><i class="fas fa-trophy me-2"></i>Recent Awards</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="award-item mb-3">
+                                    <h6 class="mb-1">Best Innovation Award 2024</h6>
+                                    <small class="text-muted">LED Display Industry Awards</small>
+                                </div>
+                                <div class="award-item mb-3">
+                                    <h6 class="mb-1">Excellence in Manufacturing</h6>
+                                    <small class="text-muted">Asia Technology Awards</small>
+                                </div>
+                                <div class="award-item">
+                                    <h6 class="mb-1">Top Supplier Recognition</h6>
+                                    <small class="text-muted">Global Display Alliance</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest News -->
+    <section id="latest-news" class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Latest News</h2>
+                <p class="section-subtitle">Stay updated with our recent developments</p>
+            </div>
+            
+            <div class="row g-4">
+                <!-- News Item 1 -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                    <div class="news-card h-100 bg-white rounded shadow-sm overflow-hidden">
+                        <div class="news-image" style="height: 200px; background: linear-gradient(45deg, #28a745, #20c997); position: relative;">
+                            <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+                                <i class="fas fa-globe display-4 mb-2"></i>
+                                <small>Global Expansion</small>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-success">Company News</span>
+                                <small class="text-muted">March 10, 2024</small>
+                            </div>
+                            <h5 class="mb-3">Lianjin LED Expands to European Market</h5>
+                            <p class="text-muted mb-3">We're pleased to announce our expansion into the European market with new partnerships and distribution channels across major European cities.</p>
+                            <a href="#" class="btn btn-outline-success btn-sm">
+                                <i class="fas fa-arrow-right me-1"></i>Read More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- News Item 2 -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="news-card h-100 bg-white rounded shadow-sm overflow-hidden">
+                        <div class="news-image" style="height: 200px; background: linear-gradient(45deg, #fd7e14, #e83e8c); position: relative;">
+                            <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+                                <i class="fas fa-award display-4 mb-2"></i>
+                                <small>Recognition</small>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-warning">Awards</span>
+                                <small class="text-muted">March 5, 2024</small>
+                            </div>
+                            <h5 class="mb-3">Innovation Excellence Award Winner</h5>
+                            <p class="text-muted mb-3">Lianjin LED receives the Innovation Excellence Award for our breakthrough in transparent LED display technology at the Asia Display Summit 2024.</p>
+                            <a href="#" class="btn btn-outline-warning btn-sm">
+                                <i class="fas fa-arrow-right me-1"></i>Read More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- News Item 3 -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="news-card h-100 bg-white rounded shadow-sm overflow-hidden">
+                        <div class="news-image" style="height: 200px; background: linear-gradient(45deg, #6f42c1, #e83e8c); position: relative;">
+                            <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+                                <i class="fas fa-cogs display-4 mb-2"></i>
+                                <small>Technology</small>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-info">Technology</span>
+                                <small class="text-muted">February 28, 2024</small>
+                            </div>
+                            <h5 class="mb-3">New AI-Powered Display Management</h5>
+                            <p class="text-muted mb-3">Introducing our new AI-powered display management system that optimizes content delivery and energy efficiency automatically.</p>
+                            <a href="#" class="btn btn-outline-info btn-sm">
+                                <i class="fas fa-arrow-right me-1"></i>Read More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- News Item 4 -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="news-card h-100 bg-white rounded shadow-sm overflow-hidden">
+                        <div class="news-image" style="height: 200px; background: linear-gradient(45deg, #dc3545, #fd7e14); position: relative;">
+                            <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+                                <i class="fas fa-handshake display-4 mb-2"></i>
+                                <small>Partnership</small>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-danger">Partnership</span>
+                                <small class="text-muted">February 20, 2024</small>
+                            </div>
+                            <h5 class="mb-3">Strategic Partnership with Global AV Leader</h5>
+                            <p class="text-muted mb-3">We've formed a strategic partnership with a leading global AV company to enhance our rental and staging solutions worldwide.</p>
+                            <a href="#" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-arrow-right me-1"></i>Read More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- News Item 5 -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="news-card h-100 bg-white rounded shadow-sm overflow-hidden">
+                        <div class="news-image" style="height: 200px; background: linear-gradient(45deg, #20c997, #6f42c1); position: relative;">
+                            <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+                                <i class="fas fa-leaf display-4 mb-2"></i>
+                                <small>Sustainability</small>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-success">Sustainability</span>
+                                <small class="text-muted">February 15, 2024</small>
+                            </div>
+                            <h5 class="mb-3">Green Manufacturing Initiative Launch</h5>
+                            <p class="text-muted mb-3">Launching our comprehensive green manufacturing initiative to reduce carbon footprint and promote sustainable LED display production.</p>
+                            <a href="#" class="btn btn-outline-success btn-sm">
+                                <i class="fas fa-arrow-right me-1"></i>Read More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- News Item 6 -->
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                    <div class="news-card h-100 bg-white rounded shadow-sm overflow-hidden">
+                        <div class="news-image" style="height: 200px; background: linear-gradient(45deg, #007bff, #28a745); position: relative;">
+                            <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+                                <i class="fas fa-graduation-cap display-4 mb-2"></i>
+                                <small>Training</small>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary">Training</span>
+                                <small class="text-muted">February 10, 2024</small>
+                            </div>
+                            <h5 class="mb-3">New Technical Training Center Opens</h5>
+                            <p class="text-muted mb-3">Our new state-of-the-art technical training center in Singapore is now open, offering comprehensive LED display training programs.</p>
+                            <a href="#" class="btn btn-outline-primary btn-sm">
+                                <i class="fas fa-arrow-right me-1"></i>Read More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="d-flex justify-content-center mt-5" data-aos="fade-up">
+                <nav>
+                    <ul class="pagination">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#"><i class="fas fa-chevron-left"></i></a>
+                        </li>
+                        <li class="page-item active">
+                            <a class="page-link" href="#">1</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">2</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">3</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section id="newsletter" class="py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <div class="text-white">
+                        <h2 class="mb-3">Stay Updated</h2>
+                        <p class="fs-5 mb-4">Subscribe to our newsletter and never miss important updates about LED display technology and industry trends.</p>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fas fa-check me-2"></i>Latest product announcements</li>
+                            <li class="mb-2"><i class="fas fa-check me-2"></i>Industry insights and trends</li>
+                            <li class="mb-2"><i class="fas fa-check me-2"></i>Technical tips and guides</li>
+                            <li class="mb-2"><i class="fas fa-check me-2"></i>Event invitations and updates</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="bg-white rounded shadow-lg p-4">
+                        <h4 class="mb-4">Subscribe to Newsletter</h4>
+                        <form>
+                            <div class="mb-3">
+                                <input type="email" class="form-control form-control-lg" placeholder="Enter your email address" required>
+                            </div>
+                            <div class="mb-3">
+                                <select class="form-select form-select-lg">
+                                    <option value="">Select your interest</option>
+                                    <option value="products">Product Updates</option>
+                                    <option value="technology">Technology News</option>
+                                    <option value="events">Events & Exhibitions</option>
+                                    <option value="all">All Updates</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 form-check">
+                                <input type="checkbox" class="form-check-input" id="privacy" required>
+                                <label class="form-check-label" for="privacy">
+                                    I agree to the <a href="#" class="text-primary">Privacy Policy</a>
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg w-100">
+                                <i class="fas fa-envelope me-2"></i>Subscribe Now
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">
+                        <i class="fas fa-tv me-2"></i>
+                        Lianjin LED Display
+                    </h5>
+                    <p class="mb-3">Leading manufacturer of professional LED display solutions with over 17 years of industry experience.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-light"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Products</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="fine-pitch.html" class="text-light-50">Fine Pitch LED</a></li>
+                        <li class="mb-2"><a href="outdoor.html" class="text-light-50">Outdoor LED</a></li>
+                        <li class="mb-2"><a href="rental.html" class="text-light-50">Rental LED</a></li>
+                        <li class="mb-2"><a href="creative.html" class="text-light-50">Creative LED</a></li>
+                        <li class="mb-2"><a href="transparent.html" class="text-light-50">Transparent LED</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Solutions</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Commercial</a></li>
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Broadcast</a></li>
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Events</a></li>
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Rental</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Support</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Technical Support</a></li>
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Warranty</a></li>
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Downloads</a></li>
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Training</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Company</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="about.html" class="text-light-50">About Us</a></li>
+                        <li class="mb-2"><a href="news.html" class="text-light-50">News</a></li>
+                        <li class="mb-2"><a href="cases.html" class="text-light-50">Case Studies</a></li>
+                        <li class="mb-2"><a href="contact.html" class="text-light-50">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">© 2024 Lianjin LED Display Technology Co., Ltd. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-light-50 me-3">Privacy Policy</a>
+                    <a href="#" class="text-light-50">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+
+        // Newsletter form submission
+        document.querySelector('#newsletter form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for subscribing! You will receive our latest updates soon.');
+        });
+    </script>
+</body>
+</html>

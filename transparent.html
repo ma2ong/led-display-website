@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="js/global-fix.js"></script>
+<script>
+// Patch for getBoundingClientRect to prevent errors
+(function() {
+    // Save the original method
+    window.Element.prototype.originalGetBoundingClientRect = Element.prototype.getBoundingClientRect;
+    
+    // Override with a safe version
+    Element.prototype.getBoundingClientRect = function() {
+        try {
+            return this.originalGetBoundingClientRect.apply(this);
+        } catch (error) {
+            console.warn('Error in getBoundingClientRect, returning default values');
+            return {
+                top: 0, right: 0, bottom: 0, left: 0,
+                width: 0, height: 0, x: 0, y: 0
+            };
+        }
+    };
+    
+    // Add a global error handler
+    window.addEventListener('error', function(event) {
+        console.warn('Caught error:', event.error);
+        // Prevent the error from showing in console
+        event.preventDefault();
+    });
+    
+    console.log('✓ getBoundingClientRect patch applied');
+})();
+</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transparent LED Displays - See-Through Digital Signage | Lianjin LED</title>
+    <meta name="description" content="Innovative transparent LED displays that maintain visibility while displaying content. Perfect for retail windows, glass facades, and creative architectural installations.">
+    <meta name="keywords" content="transparent LED display, see-through LED screen, glass LED display, transparent digital signage, retail window display">
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="homepage.html">
+                <i class="fas fa-tv me-2"></i>
+                <span class="fw-bold">Lianjin LED</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="homepage.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About Us</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown">
+                            Products
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="fine-pitch.html">Fine Pitch LED</a></li>
+                            <li><a class="dropdown-item" href="outdoor.html">Outdoor LED</a></li>
+                            <li><a class="dropdown-item" href="rental.html">Rental LED</a></li>
+                            <li><a class="dropdown-item" href="creative.html">Creative LED</a></li>
+                            <li><a class="dropdown-item active" href="transparent.html">Transparent LED</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="products.html">All Products</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="solutions.html">Solutions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cases.html">Cases</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="news.html">News</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="support.html">Support</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+                <div class="navbar-nav ms-3">
+                    <a class="btn btn-primary btn-sm" href="contact.html">
+                        <i class="fas fa-envelope me-1"></i>Get Quote
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="product-hero-section" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 hero-content" data-aos="fade-right">
+                    <h1 class="hero-title">Transparent LED Displays</h1>
+                    <p class="hero-subtitle">Revolutionary see-through LED technology that maintains visibility while displaying vibrant content. Perfect for retail windows, glass facades, and creative architectural installations.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a class="btn btn-light btn-lg" href="#product-details">
+                            <i class="fas fa-info-circle me-2"></i>Learn More
+                        </a>
+                        <a class="btn btn-outline-light btn-lg" href="contact.html">
+                            <i class="fas fa-envelope me-2"></i>Get Quote
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="product-image-container">
+                        <img src="assets/products/transparent-led-hero.jpg" alt="Transparent LED Display" class="img-fluid rounded shadow-lg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Features -->
+    <section class="py-5" id="product-details">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Key Features</h2>
+                <p class="section-subtitle">Advanced transparent LED display technology</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-eye display-4 text-info"></i>
+                            </div>
+                            <h5 class="card-title">High Transparency</h5>
+                            <p class="card-text">70-90% transparency rate maintains natural light and visibility while displaying vibrant content.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-feather display-4 text-success"></i>
+                            </div>
+                            <h5 class="card-title">Ultra-Lightweight</h5>
+                            <p class="card-text">Only 12kg/m² weight reduces structural load requirements for glass installations.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-tools display-4 text-warning"></i>
+                            </div>
+                            <h5 class="card-title">Easy Maintenance</h5>
+                            <p class="card-text">Front and rear service access for convenient maintenance without removing the entire display.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-leaf display-4 text-success"></i>
+                            </div>
+                            <h5 class="card-title">Energy Efficient</h5>
+                            <p class="card-text">Advanced LED technology with low power consumption and excellent heat dissipation.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-expand-arrows-alt display-4 text-primary"></i>
+                            </div>
+                            <h5 class="card-title">Customizable Sizes</h5>
+                            <p class="card-text">Flexible sizing options to fit various architectural requirements and installation spaces.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <div class="feature-icon mb-3">
+                                <i class="fas fa-palette display-4 text-danger"></i>
+                            </div>
+                            <h5 class="card-title">Vibrant Colors</h5>
+                            <p class="card-text">High brightness and excellent color reproduction for stunning visual impact.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Specifications -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Technical Specifications</h2>
+                <p class="section-subtitle">Detailed technical information</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-lg-8 mx-auto" data-aos="fade-up">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>Pixel Pitch</strong></td>
+                                            <td>P3.91, P7.81, P10.42, P15.625</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Transparency Rate</strong></td>
+                                            <td>70% - 90%</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Cabinet Weight</strong></td>
+                                            <td>12kg/m²</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Cabinet Thickness</strong></td>
+                                            <td>≤ 10mm</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Brightness</strong></td>
+                                            <td>1000-4000 nits</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Viewing Angle</strong></td>
+                                            <td>H: 140° / V: 140°</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Refresh Rate</strong></td>
+                                            <td>≥ 1920Hz</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Color Depth</strong></td>
+                                            <td>16 bit</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Power Consumption</strong></td>
+                                            <td>Max: 280W/m² / Avg: 93W/m²</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Operating Temperature</strong></td>
+                                            <td>-20°C to +60°C</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>IP Rating</strong></td>
+                                            <td>IP43 (Indoor) / IP65 (Outdoor)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Lifespan</strong></td>
+                                            <td>100,000+ hours</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Applications -->
+    <section class="py-5">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Applications</h2>
+                <p class="section-subtitle">Perfect for various transparent display needs</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up">
+                    <div class="card application-card h-100">
+                        <div class="card-body text-center">
+                            <div class="application-icon mb-3">
+                                <i class="fas fa-store display-4 text-primary"></i>
+                            </div>
+                            <h5 class="card-title">Retail Windows</h5>
+                            <p class="card-text">Transform store windows into dynamic advertising displays while maintaining product visibility.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card application-card h-100">
+                        <div class="card-body text-center">
+                            <div class="application-icon mb-3">
+                                <i class="fas fa-building display-4 text-success"></i>
+                            </div>
+                            <h5 class="card-title">Glass Facades</h5>
+                            <p class="card-text">Integrate digital content into building exteriors without blocking natural light.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card application-card h-100">
+                        <div class="card-body text-center">
+                            <div class="application-icon mb-3">
+                                <i class="fas fa-car display-4 text-info"></i>
+                            </div>
+                            <h5 class="card-title">Showrooms</h5>
+                            <p class="card-text">Display product information and promotions in automotive and luxury goods showrooms.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card application-card h-100">
+                        <div class="card-body text-center">
+                            <div class="application-icon mb-3">
+                                <i class="fas fa-university display-4 text-warning"></i>
+                            </div>
+                            <h5 class="card-title">Museums & Galleries</h5>
+                            <p class="card-text">Create interactive exhibits and information displays without obstructing views.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="card application-card h-100">
+                        <div class="card-body text-center">
+                            <div class="application-icon mb-3">
+                                <i class="fas fa-utensils display-4 text-danger"></i>
+                            </div>
+                            <h5 class="card-title">Restaurants & Bars</h5>
+                            <p class="card-text">Display menus and promotions on glass partitions and windows.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                    <div class="card application-card h-100">
+                        <div class="card-body text-center">
+                            <div class="application-icon mb-3">
+                                <i class="fas fa-plane display-4 text-secondary"></i>
+                            </div>
+                            <h5 class="card-title">Transportation</h5>
+                            <p class="card-text">Provide information displays in airports, train stations, and transit hubs.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="600">
+                    <div class="card application-card h-100">
+                        <div class="card-body text-center">
+                            <div class="application-icon mb-3">
+                                <i class="fas fa-briefcase display-4 text-dark"></i>
+                            </div>
+                            <h5 class="card-title">Corporate Offices</h5>
+                            <p class="card-text">Create modern meeting rooms and office spaces with transparent digital displays.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="700">
+                    <div class="card application-card h-100">
+                        <div class="card-body text-center">
+                            <div class="application-icon mb-3">
+                                <i class="fas fa-palette display-4 text-purple"></i>
+                            </div>
+                            <h5 class="card-title">Art Installations</h5>
+                            <p class="card-text">Create stunning artistic displays and interactive installations for public spaces.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advantages -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Why Choose Our Transparent LED Displays?</h2>
+                <p class="section-subtitle">Advantages that set us apart</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-6" data-aos="fade-up">
+                    <div class="card advantage-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start">
+                                <div class="advantage-icon me-3">
+                                    <i class="fas fa-lightbulb text-warning"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title">Innovative Design</h5>
+                                    <p class="card-text">Cutting-edge transparent LED technology that seamlessly blends digital content with physical environments, creating unique visual experiences.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card advantage-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start">
+                                <div class="advantage-icon me-3">
+                                    <i class="fas fa-dollar-sign text-success"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title">Cost-Effective</h5>
+                                    <p class="card-text">Maximize advertising impact without blocking natural light or requiring additional structural modifications to existing glass installations.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card advantage-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start">
+                                <div class="advantage-icon me-3">
+                                    <i class="fas fa-cogs text-primary"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title">Easy Installation</h5>
+                                    <p class="card-text">Lightweight design and modular construction make installation quick and simple, with minimal disruption to existing structures.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card advantage-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start">
+                                <div class="advantage-icon me-3">
+                                    <i class="fas fa-shield-alt text-info"></i>
+                                </div>
+                                <div>
+                                    <h5 class="card-title">Reliable Quality</h5>
+                                    <p class="card-text">Premium components and rigorous testing ensure long-lasting performance with minimal maintenance requirements.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Examples -->
+    <section class="py-5">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Installation Examples</h2>
+                <p class="section-subtitle">See our transparent LED displays in action</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                    <div class="card example-card">
+                        <div class="example-image bg-light d-flex align-items-center justify-content-center">
+                            <i class="fas fa-image display-1 text-muted"></i>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Luxury Retail Store</h5>
+                            <p class="card-text">High-end fashion boutique window display showcasing products while displaying brand content.</p>
+                            <small class="text-muted">Location: New York, USA</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card example-card">
+                        <div class="example-image bg-light d-flex align-items-center justify-content-center">
+                            <i class="fas fa-image display-1 text-muted"></i>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Corporate Headquarters</h5>
+                            <p class="card-text">Modern office building facade with integrated transparent LED displays for corporate communications.</p>
+                            <small class="text-muted">Location: Shanghai, China</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card example-card">
+                        <div class="example-image bg-light d-flex align-items-center justify-content-center">
+                            <i class="fas fa-image display-1 text-muted"></i>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Shopping Mall</h5>
+                            <p class="card-text">Large-scale transparent LED installation in shopping center atrium for advertising and information display.</p>
+                            <small class="text-muted">Location: Dubai, UAE</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" style="background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8" data-aos="fade-right">
+                    <h2 class="mb-3">Ready to Transform Your Space?</h2>
+                    <p class="mb-0 fs-5">Discover how transparent LED displays can revolutionize your visual communication strategy.</p>
+                </div>
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0" data-aos="fade-left">
+                    <a class="btn btn-light btn-lg me-3" href="contact.html">
+                        <i class="fas fa-envelope me-2"></i>Get Quote
+                    </a>
+                    <a class="btn btn-outline-light btn-lg" href="tel:+86-755-1234-5678">
+                        <i class="fas fa-phone me-2"></i>Call Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">
+                        <i class="fas fa-tv me-2"></i>
+                        Lianjin LED Display
+                    </h5>
+                    <p class="mb-3">Leading manufacturer of professional LED display solutions with over 17 years of industry experience.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-light"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Products</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="fine-pitch.html" class="text-light-50">Fine Pitch LED</a></li>
+                        <li class="mb-2"><a href="outdoor.html" class="text-light-50">Outdoor LED</a></li>
+                        <li class="mb-2"><a href="rental.html" class="text-light-50">Rental LED</a></li>
+                        <li class="mb-2"><a href="creative.html" class="text-light-50">Creative LED</a></li>
+                        <li class="mb-2"><a href="transparent.html" class="text-light-50">Transparent LED</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Solutions</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Commercial</a></li>
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Broadcast</a></li>
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Events</a></li>
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Rental</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Support</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Technical Support</a></li>
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Warranty</a></li>
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Downloads</a></li>
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Training</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Company</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="about.html" class="text-light-50">About Us</a></li>
+                        <li class="mb-2"><a href="news.html" class="text-light-50">News</a></li>
+                        <li class="mb-2"><a href="cases.html" class="text-light-50">Case Studies</a></li>
+                        <li class="mb-2"><a href="contact.html" class="text-light-50">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">© 2024 Lianjin LED Display Technology Co., Ltd. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-light-50 me-3">Privacy Policy</a>
+                    <a href="#" class="text-light-50">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="js/script.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+</html>

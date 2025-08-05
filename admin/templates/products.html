@@ -1,0 +1,292 @@
+{% extends "base.html" %}
+
+{% block title %}产品管理 - 联锦LED显示屏管理后台{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- 页面标题 -->
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">
+            <i class="fas fa-tv me-2"></i>产品管理
+        </h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            <div class="btn-group me-2">
+                <a href="#" class="btn btn-sm btn-primary" onclick="alert('添加产品功能开发中')">
+                    <i class="fas fa-plus me-1"></i>添加新产品
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 产品列表 -->
+    <div class="card shadow">
+        <div class="card-header">
+            <h6 class="m-0 font-weight-bold text-primary">
+                <i class="fas fa-list me-2"></i>产品列表
+            </h6>
+        </div>
+        <div class="card-body">
+            {% if products %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>产品名称</th>
+                                <th>分类</th>
+                                <th>价格</th>
+                                <th>状态</th>
+                                <th>创建时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                            <tr>
+                                <td>{{ product.id }}</td>
+                                <td>
+                                    <div>
+                                        <strong>{{ product.name_zh }}</strong>
+                                        <br>
+                                        <small class="text-muted">{{ product.name_en }}</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary">
+                                        {% if product.category == 'fine-pitch' %}小间距
+                                        {% elif product.category == 'outdoor' %}户外
+                                        {% elif product.category == 'indoor' %}室内
+                                        {% elif product.category == 'transparent' %}透明
+                                        {% elif product.category == 'creative' %}创意
+                                        {% elif product.category == 'rental' %}租赁
+                                        {% else %}{{ product.category }}
+                                        {% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if product.price %}
+                                        ¥{{ "%.2f"|format(product.price) }}
+                                    {% else %}
+                                        <span class="text-muted">询价</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if product.status == 'active' else 'warning' if product.status == 'draft' else 'secondary' }}">
+                                        {{ '已发布' if product.status == 'active' else '草稿' if product.status == 'draft' else '已下架' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {{ product.created_at if product.created_at else '' }}
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="#" class="btn btn-sm btn-outline-info" title="预览">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="#" class="btn btn-sm btn-outline-primary" title="编辑">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" title="复制" onclick="duplicateProduct({{ product.id }})">
+                                            <i class="fas fa-copy"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-danger" title="删除" onclick="alert('删除功能开发中')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-tv fa-4x text-muted mb-3"></i>
+                    <h5 class="text-muted">暂无产品</h5>
+                    <p class="text-muted">点击上方按钮添加您的第一个产品</p>
+                    <a href="#" class="btn btn-primary" onclick="alert('添加产品功能开发中')">
+                        <i class="fas fa-plus me-2"></i>添加新产品
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- 产品统计 -->
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6>总产品数</h6>
+                            <h3>{{ products|length }}</h3>
+                        </div>
+                        <div>
+                            <i class="fas fa-tv fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6>已发布</h6>
+                            <h3>{{ products|selectattr('status', 'equalto', 'active')|list|length }}</h3>
+                        </div>
+                        <div>
+                            <i class="fas fa-check-circle fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6>草稿</h6>
+                            <h3>{{ products|selectattr('status', 'equalto', 'draft')|list|length }}</h3>
+                        </div>
+                        <div>
+                            <i class="fas fa-edit fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-secondary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6>已下架</h6>
+                            <h3>{{ products|selectattr('status', 'equalto', 'inactive')|list|length }}</h3>
+                        </div>
+                        <div>
+                            <i class="fas fa-archive fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Error protection
+window.addEventListener('error', function(e) {
+    console.warn('Products page error caught:', e.message);
+    e.preventDefault();
+    return true;
+});
+
+// Fix getBoundingClientRect error
+if (Element.prototype.getBoundingClientRect) {
+    const original = Element.prototype.getBoundingClientRect;
+    Element.prototype.getBoundingClientRect = function() {
+        try {
+            return original.apply(this);
+        } catch (e) {
+            return { top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 0, x: 0, y: 0 };
+        }
+    };
+}
+
+function duplicateProduct(productId) {
+    if (confirm('确定要复制这个产品吗？')) {
+        try {
+            fetch(`/products/duplicate/${productId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert('复制产品失败，请重试');
+                }
+            })
+            .catch(error => {
+                console.error('Duplicate product error:', error);
+                alert('复制产品时发生错误');
+            });
+        } catch (error) {
+            console.error('Duplicate product error:', error);
+            alert('复制产品时发生错误');
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        // 确认删除操作
+        const deleteForms = document.querySelectorAll('form[data-confirm-delete]');
+        deleteForms.forEach(function(form) {
+            form.addEventListener('submit', function(e) {
+                if (!confirm('确定要删除这个产品吗？此操作不可撤销。')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        });
+
+        // 表格排序功能
+        const table = document.querySelector('table');
+        if (table) {
+            const headers = table.querySelectorAll('th');
+            headers.forEach(function(header, index) {
+                if (index < headers.length - 1) { // 排除操作列
+                    header.style.cursor = 'pointer';
+                    header.addEventListener('click', function() {
+                        // 这里可以添加排序逻辑
+                        console.log('Sort by column:', index);
+                    });
+                }
+            });
+        }
+    } catch (error) {
+        console.warn('Products page initialization error:', error);
+    }
+});
+</script>
+
+<style>
+.table th {
+    background-color: #f8f9fa;
+    border-top: none;
+    font-weight: 600;
+    color: #495057;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.btn-group .btn {
+    margin-right: 2px;
+}
+
+.btn-group .btn:last-child {
+    margin-right: 0;
+}
+
+.badge {
+    font-size: 0.75em;
+}
+
+.card {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+</style>
+{% endblock %}

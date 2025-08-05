@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>联进LED后台管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            margin: 0.25rem 0;
+            transition: all 0.3s ease;
+        }
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            transform: translateX(5px);
+        }
+        .stat-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        .bg-primary-gradient { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .bg-success-gradient { background: linear-gradient(135deg, #56ab2f 0%, #a8e6cf 100%); }
+        .bg-warning-gradient { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .bg-info-gradient { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .recent-item {
+            border-left: 4px solid #667eea;
+            background: #f8f9ff;
+            border-radius: 0 10px 10px 0;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        .recent-item:hover {
+            background: #e8ecff;
+            transform: translateX(5px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏 -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <h4 class="text-white">
+                            <i class="fas fa-tv me-2"></i>
+                            联进LED后台管理
+                        </h4>
+                        <small class="text-white-50">管理系统 v2.0</small>
+                    </div>
+                    
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('admin_dashboard') }}">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                仪表盘
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item mt-3">
+                            <small class="text-white-50 px-3">核心管理</small>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_products') }}">
+                                <i class="fas fa-tv me-2"></i>
+                                产品管理
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_inquiries') }}">
+                                <i class="fas fa-envelope me-2"></i>
+                                询盘管理
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_news') }}">
+                                <i class="fas fa-newspaper me-2"></i>
+                                新闻管理
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_frontend_pages') }}">
+                                <i class="fas fa-globe me-2"></i>
+                                前端页面管理
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item mt-3">
+                            <small class="text-white-50 px-3">系统管理</small>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_users') }}">
+                                <i class="fas fa-users me-2"></i>
+                                用户管理
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_settings') }}">
+                                <i class="fas fa-cogs me-2"></i>
+                                系统设置
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('admin_statistics') }}">
+                                <i class="fas fa-chart-bar me-2"></i>
+                                数据统计
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('view_frontend') }}" target="_blank">
+                                <i class="fas fa-external-link-alt me-2"></i>
+                                查看前端网站
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item mt-3">
+                            <a class="nav-link" href="{{ url_for('admin_logout') }}">
+                                <i class="fas fa-sign-out-alt me-2"></i>
+                                退出登录
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- 主要内容 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">
+                        <i class="fas fa-tachometer-alt me-2"></i>
+                        仪表盘
+                    </h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-download me-1"></i>导出数据
+                            </button>
+                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-sync me-1"></i>刷新
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 统计卡片 -->
+                <div class="row mb-4">
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card stat-card h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                            产品总数
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                            {{ stats.products or 0 }}
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="stat-icon bg-primary-gradient">
+                                            <i class="fas fa-tv"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card stat-card h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                            询盘总数
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                            {{ stats.inquiries or 0 }}
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="stat-icon bg-success-gradient">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card stat-card h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                            新闻文章
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                            {{ stats.news or 0 }}
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="stat-icon bg-info-gradient">
+                                            <i class="fas fa-newspaper"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="card stat-card h-100">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                            页面内容
+                                        </div>
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                            {{ stats.page_content or 0 }}
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
+                                        <div class="stat-icon bg-warning-gradient">
+                                            <i class="fas fa-globe"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 最近活动 -->
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold text-primary">
+                                    <i class="fas fa-envelope me-2"></i>
+                                    最近询盘
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                {% if recent_inquiries %}
+                                    {% for inquiry in recent_inquiries %}
+                                    <div class="recent-item">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h6 class="mb-1">{{ inquiry[0] }}</h6>
+                                                <p class="mb-1 text-muted">{{ inquiry[1] or '未填写公司' }}</p>
+                                                <small class="text-muted">产品兴趣: {{ inquiry[2] or '未指定' }}</small>
+                                            </div>
+                                            <div class="text-end">
+                                                <span class="badge bg-{{ 'success' if inquiry[3] == 'completed' else 'warning' if inquiry[3] == 'processing' else 'secondary' }}">
+                                                    {{ '已完成' if inquiry[3] == 'completed' else '处理中' if inquiry[3] == 'processing' else '新询盘' }}
+                                                </span>
+                                                <div class="text-muted small mt-1">
+                                                    {{ inquiry[4][:10] if inquiry[4] else '' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="text-center text-muted py-4">
+                                        <i class="fas fa-inbox fa-3x mb-3"></i>
+                                        <p>暂无询盘记录</p>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="text-center mt-3">
+                                    <a href="{{ url_for('admin_inquiries') }}" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i>查看全部询盘
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold text-primary">
+                                    <i class="fas fa-newspaper me-2"></i>
+                                    最近新闻
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                {% if recent_news %}
+                                    {% for news in recent_news %}
+                                    <div class="recent-item">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h6 class="mb-1">{{ news[0] }}</h6>
+                                                <p class="mb-1 text-muted">分类: {{ news[1] or '未分类' }}</p>
+                                            </div>
+                                            <div class="text-end">
+                                                <span class="badge bg-{{ 'success' if news[3] else 'secondary' }}">
+                                                    {{ '已发布' if news[3] else '草稿' }}
+                                                </span>
+                                                <div class="text-muted small mt-1">
+                                                    {{ news[2] if news[2] else '未设置日期' }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="text-center text-muted py-4">
+                                        <i class="fas fa-newspaper fa-3x mb-3"></i>
+                                        <p>暂无新闻文章</p>
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="text-center mt-3">
+                                    <a href="{{ url_for('admin_news') }}" class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-eye me-1"></i>查看全部新闻
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 快速操作 -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="m-0 font-weight-bold text-primary">
+                                    <i class="fas fa-bolt me-2"></i>
+                                    快速操作
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <a href="{{ url_for('admin_products') }}" class="btn btn-outline-primary w-100">
+                                            <i class="fas fa-plus me-2"></i>
+                                            添加新产品
+                                        </a>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <a href="{{ url_for('admin_frontend_pages') }}" class="btn btn-outline-success w-100">
+                                            <i class="fas fa-edit me-2"></i>
+                                            编辑页面内容
+                                        </a>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <a href="{{ url_for('admin_inquiries') }}" class="btn btn-outline-info w-100">
+                                            <i class="fas fa-envelope me-2"></i>
+                                            处理询盘
+                                        </a>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <a href="{{ url_for('admin_statistics') }}" class="btn btn-outline-warning w-100">
+                                            <i class="fas fa-chart-bar me-2"></i>
+                                            查看统计
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 自动刷新统计数据
+        setInterval(function() {
+            // 这里可以添加AJAX调用来更新统计数据
+        }, 30000); // 每30秒刷新一次
+        
+        // 欢迎消息
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('联进LED后台管理系统已加载');
+        });
+    </script>
+</body>
+</html>

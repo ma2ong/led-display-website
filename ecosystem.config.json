@@ -1,0 +1,38 @@
+{
+  "apps": [
+    {
+      "name": "led-frontend",
+      "script": "simple_server.py",
+      "cwd": "C:\\Users\\Administrator\\Desktop\\codebuddy ledwebsite",
+      "interpreter": "python3",
+      "env": {
+        "PORT": "8080",
+        "NODE_ENV": "production"
+      },
+      "instances": 1,
+      "exec_mode": "fork",
+      "watch": false,
+      "max_memory_restart": "1G",
+      "error_file": "./logs/frontend-error.log",
+      "out_file": "./logs/frontend-out.log",
+      "log_file": "./logs/frontend-combined.log"
+    },
+    {
+      "name": "led-admin",
+      "script": "admin/complete_chinese_admin.py",
+      "cwd": "C:\\Users\\Administrator\\Desktop\\codebuddy ledwebsite",
+      "interpreter": "python3",
+      "env": {
+        "PORT": "5003",
+        "NODE_ENV": "production"
+      },
+      "instances": 1,
+      "exec_mode": "fork",
+      "watch": false,
+      "max_memory_restart": "1G",
+      "error_file": "./logs/admin-error.log",
+      "out_file": "./logs/admin-out.log",
+      "log_file": "./logs/admin-combined.log"
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+{% extends "base.html" %}
+
+{% block title %}Quote Requests - LED Display Admin{% endblock %}
+{% block page_title %}Quote Requests{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header">
+        <h6 class="m-0 font-weight-bold text-primary">Quote Requests</h6>
+    </div>
+    <div class="card-body">
+        {% if quotes_list %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Customer</th>
+                            <th>Contact</th>
+                            <th>Product Details</th>
+                            <th>Requirements</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for quote in quotes_list %}
+                        <tr>
+                            <td>{{ quote.id }}</td>
+                            <td>
+                                <div>
+                                    <strong>{{ quote.name }}</strong>
+                                    <br><small class="text-muted">{{ quote.company }}</small>
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <i class="fas fa-envelope me-1"></i>{{ quote.email }}
+                                </div>
+                            </td>
+                            <td>
+                                <div>
+                                    <strong>Type:</strong> {{ quote.product_type or 'N/A' }}<br>
+                                    <strong>Size:</strong> {{ quote.display_size or 'N/A' }}<br>
+                                    <strong>Qty:</strong> {{ quote.quantity or 'N/A' }}
+                                </div>
+                            </td>
+                            <td>
+                                <div style="max-width: 200px;">
+                                    {{ quote.requirements[:100] if quote.requirements else 'N/A' }}
+                                    {% if quote.requirements and quote.requirements|length > 100 %}...{% endif %}
+                                </div>
+                            </td>
+                            <td>
+                                {% if quote.status == 'pending' %}
+                                    <span class="badge bg-warning">Pending</span>
+                                {% elif quote.status == 'quoted' %}
+                                    <span class="badge bg-success">Quoted</span>
+                                {% elif quote.status == 'rejected' %}
+                                    <span class="badge bg-danger">Rejected</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ quote.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ quote.created_at[:16] }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-info" onclick="viewQuote({{ quote.id }})" title="View Details">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                {% if quote.status == 'pending' %}
+                                <div class="btn-group" role="group">
+                                    <button class="btn btn-sm btn-success" onclick="updateQuoteStatus({{ quote.id }}, 'quoted')" title="Mark as Quoted">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="updateQuoteStatus({{ quote.id }}, 'rejected')" title="Reject">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-file-invoice fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">No quote requests found</h5>
+                <p class="text-muted">Quote requests will appear here when submitted through the website.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Quote Details Modal -->
+<div class="modal fade" id="quoteModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Quote Request Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="quoteDetails">
+                <!-- Details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function viewQuote(id) {
+    // This would typically fetch data via AJAX, but for now we'll use table data
+    const modal = new bootstrap.Modal(document.getElementById('quoteModal'));
+    document.getElementById('quoteDetails').innerHTML = `
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    `;
+    modal.show();
+    
+    // Simulate loading quote details
+    setTimeout(() => {
+        document.getElementById('quoteDetails').innerHTML = `
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                Quote details for ID: ${id}. Full implementation would fetch detailed data via API.
+            </div>
+        `;
+    }, 1000);
+}
+
+function updateQuoteStatus(id, status) {
+    if (confirm(`Are you sure you want to mark this quote as ${status}?`)) {
+        // This would typically send an AJAX request to update the status
+        alert(`Quote ${id} status would be updated to: ${status}`);
+        location.reload();
+    }
+}
+</script>
+{% endblock %}

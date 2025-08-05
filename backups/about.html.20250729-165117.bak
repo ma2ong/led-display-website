@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Lianjin LED Display | Leading LED Manufacturer</title>
+    <meta name="description" content="Learn about Lianjin LED Display - 17+ years of LED manufacturing excellence, serving 160+ countries with professional LED display solutions and innovative technology.">
+    <meta name="keywords" content="LED display manufacturer, LED screen factory, Shenzhen LED company, professional LED solutions, LED display technology">
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="homepage.html">
+                <i class="fas fa-tv me-2"></i>
+                <span class="fw-bold">Lianjin LED</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="homepage.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="about.html">About Us</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Products
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="fine-pitch.html">Fine Pitch LED</a></li>
+                            <li><a class="dropdown-item" href="outdoor.html">Outdoor LED</a></li>
+                            <li><a class="dropdown-item" href="rental.html">Rental LED</a></li>
+                            <li><a class="dropdown-item" href="creative.html">Creative LED</a></li>
+                            <li><a class="dropdown-item" href="transparent.html">Transparent LED</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="products.html">All Products</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="solutions.html">Solutions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cases.html">Cases</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="news.html">News</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="support.html">Support</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+                <div class="navbar-nav ms-3">
+                    <a href="contact.html" class="btn btn-primary btn-sm">
+                        <i class="fas fa-envelope me-1"></i>Get Quote
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section" style="min-height: 60vh;">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center hero-content">
+                    <h1 class="hero-title" data-aos="fade-up">About Lianjin LED Display</h1>
+                    <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="100">
+                        Leading the LED display industry with 17+ years of innovation, excellence, and global reach
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Company Overview -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <h2 class="section-title text-start">Our Story</h2>
+                    <p class="lead">Founded in 2007, Shenzhen Lianjin Optoelectronics Co., Ltd. has grown from a small LED manufacturer to a global leader in professional LED display solutions.</p>
+                    <p>With over 17 years of experience in LED display manufacturing, we are committed to providing innovative and reliable LED solutions that meet the evolving needs of our global clientele.</p>
+                    <p>Our company specializes in research, development, manufacturing, and sales of LED displays. We serve customers worldwide with high-quality products, professional services, and cutting-edge technology.</p>
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="feature-icon me-3" style="width: 50px; height: 50px; font-size: 1.2rem;">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Established 2007</h6>
+                                    <small class="text-muted">17+ years of excellence</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="feature-icon me-3" style="width: 50px; height: 50px; font-size: 1.2rem;">
+                                    <i class="fas fa-globe"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Global Presence</h6>
+                                    <small class="text-muted">160+ countries served</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="product-image" style="height: 400px; border-radius: 12px;">
+                        <i class="fas fa-building"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Company Stats -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Company Achievements</h2>
+                <p class="section-subtitle">Numbers that reflect our commitment to excellence</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up">
+                    <div class="stat-card">
+                        <div class="stat-number">17+</div>
+                        <div class="stat-label">Years Experience</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-card">
+                        <div class="stat-number">50,000</div>
+                        <div class="stat-label">m² Factory Area</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-card">
+                        <div class="stat-number">160+</div>
+                        <div class="stat-label">Countries Served</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-card">
+                        <div class="stat-number">5000+</div>
+                        <div class="stat-label">Projects Completed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission & Vision -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-6" data-aos="fade-up">
+                    <div class="feature-card h-100">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <h3>Our Mission</h3>
+                        <p class="text-muted">To provide innovative, reliable, and cost-effective LED display solutions that exceed customer expectations and drive digital transformation across industries worldwide.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-card h-100">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h3>Our Vision</h3>
+                        <p class="text-muted">To be the global leader in LED display technology, setting industry standards for quality, innovation, and customer service while contributing to a more connected world.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core Values -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Our Core Values</h2>
+                <p class="section-subtitle">The principles that guide everything we do</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                    <div class="feature-card">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-award"></i>
+                        </div>
+                        <h4>Excellence</h4>
+                        <p class="text-muted">We strive for excellence in every aspect of our business, from product quality to customer service.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-card">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h4>Innovation</h4>
+                        <p class="text-muted">Continuous innovation drives our R&D efforts to develop cutting-edge LED display technologies.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-card">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <h4>Integrity</h4>
+                        <p class="text-muted">We conduct business with honesty, transparency, and ethical practices in all our relationships.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-card">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h4>Customer Focus</h4>
+                        <p class="text-muted">Our customers are at the center of everything we do, driving our commitment to exceptional service.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="feature-card">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-leaf"></i>
+                        </div>
+                        <h4>Sustainability</h4>
+                        <p class="text-muted">We are committed to environmental responsibility and sustainable manufacturing practices.</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+                    <div class="feature-card">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h4>Growth</h4>
+                        <p class="text-muted">We foster continuous learning and growth for our employees, partners, and communities.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Manufacturing Excellence -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <div class="product-image" style="height: 400px; border-radius: 12px;">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <h2 class="section-title text-start">Manufacturing Excellence</h2>
+                    <p class="lead">Our state-of-the-art manufacturing facility spans 50,000 square meters, equipped with advanced production lines and quality control systems.</p>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Automated SMT Production Lines</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Advanced Testing Equipment</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Clean Room Assembly</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Quality Control Systems</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>ISO 9001:2015 Certified</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Environmental Management</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Lean Manufacturing</li>
+                                <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Continuous Improvement</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <a href="contact.html" class="btn btn-primary">
+                            <i class="fas fa-calendar-alt me-2"></i>Schedule Factory Visit
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certifications -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Certifications & Standards</h2>
+                <p class="section-subtitle">International quality and safety certifications</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-2 col-md-4 col-6" data-aos="fade-up">
+                    <div class="certification-badge">
+                        <div class="fw-bold mb-2">CE</div>
+                        <small>European Conformity</small>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="certification-badge">
+                        <div class="fw-bold mb-2">FCC</div>
+                        <small>Federal Communications Commission</small>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="certification-badge">
+                        <div class="fw-bold mb-2">RoHS</div>
+                        <small>Restriction of Hazardous Substances</small>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="certification-badge">
+                        <div class="fw-bold mb-2">ISO9001</div>
+                        <small>Quality Management System</small>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6" data-aos="fade-up" data-aos-delay="400">
+                    <div class="certification-badge">
+                        <div class="fw-bold mb-2">ISO14001</div>
+                        <small>Environmental Management</small>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6" data-aos="fade-up" data-aos-delay="500">
+                    <div class="certification-badge">
+                        <div class="fw-bold mb-2">ETL</div>
+                        <small>Electrical Testing Laboratories</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Presence -->
+    <section class="py-5">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Global Presence</h2>
+                <p class="section-subtitle">Serving customers worldwide with local support</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up">
+                    <div class="text-center">
+                        <div class="feature-icon mx-auto mb-3">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h5>Asia Pacific</h5>
+                        <p class="text-muted">China, Japan, Korea, Southeast Asia, Australia</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="text-center">
+                        <div class="feature-icon mx-auto mb-3">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h5>North America</h5>
+                        <p class="text-muted">United States, Canada, Mexico</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="text-center">
+                        <div class="feature-icon mx-auto mb-3">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h5>Europe</h5>
+                        <p class="text-muted">Germany, UK, France, Netherlands, Nordic countries</p>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="text-center">
+                        <div class="feature-icon mx-auto mb-3">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h5>Others</h5>
+                        <p class="text-muted">Middle East, Africa, South America</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8" data-aos="fade-right">
+                    <h2 class="mb-3">Partner with Industry Leaders</h2>
+                    <p class="mb-0 fs-5">Join thousands of satisfied customers worldwide who trust Lianjin LED for their display solutions.</p>
+                </div>
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0" data-aos="fade-left">
+                    <a href="contact.html" class="btn btn-light btn-lg me-3">
+                        <i class="fas fa-envelope me-2"></i>Contact Us
+                    </a>
+                    <a href="products.html" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-tv me-2"></i>View Products
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">
+                        <i class="fas fa-tv me-2"></i>
+                        Lianjin LED Display
+                    </h5>
+                    <p class="mb-3">Leading manufacturer of professional LED display solutions with over 17 years of industry experience.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-light"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Products</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="fine-pitch.html" class="text-light-50">Fine Pitch LED</a></li>
+                        <li class="mb-2"><a href="outdoor.html" class="text-light-50">Outdoor LED</a></li>
+                        <li class="mb-2"><a href="rental.html" class="text-light-50">Rental LED</a></li>
+                        <li class="mb-2"><a href="creative.html" class="text-light-50">Creative LED</a></li>
+                        <li class="mb-2"><a href="transparent.html" class="text-light-50">Transparent LED</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Solutions</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Commercial</a></li>
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Broadcast</a></li>
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Events</a></li>
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Rental</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Support</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Technical Support</a></li>
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Installation</a></li>
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Training</a></li>
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Warranty</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Company</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="about.html" class="text-light-50">About Us</a></li>
+                        <li class="mb-2"><a href="news.html" class="text-light-50">News</a></li>
+                        <li class="mb-2"><a href="cases.html" class="text-light-50">Cases</a></li>
+                        <li class="mb-2"><a href="contact.html" class="text-light-50">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <hr class="my-4">
+            
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2024 Shenzhen Lianjin Optoelectronics Co., Ltd. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-light me-3">Privacy Policy</a>
+                    <a href="#" class="text-light">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating CTA Button -->
+    <button class="floating-cta" onclick="window.location.href='contact.html'">
+        <i class="fas fa-envelope me-2"></i>Get Quote
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // Counter animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent.replace(/[^\d]/g, ''));
+                const increment = target / 100;
+                let current = 0;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = counter.textContent.replace(/\d+/, target);
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = counter.textContent.replace(/\d+/, Math.floor(current));
+                    }
+                }, 20);
+            });
+        }
+
+        // Trigger counter animation when stats section is visible
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const statsSection = document.querySelector('.stats-section');
+            if (statsSection) {
+                observer.observe(statsSection);
+            }
+        });
+
+        // Hide floating CTA on footer
+        window.addEventListener('scroll', () => {
+            const floatingCta = document.querySelector('.floating-cta');
+            const footer = document.querySelector('footer');
+            const footerRect = footer.getBoundingClientRect();
+            
+            if (footerRect.top < window.innerHeight) {
+                floatingCta.style.display = 'none';
+            } else {
+                floatingCta.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

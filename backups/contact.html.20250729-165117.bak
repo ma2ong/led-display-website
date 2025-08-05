@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Get LED Display Quote | Lianjin LED</title>
+    <meta name="description" content="Contact Lianjin LED Display for professional LED solutions. Get quotes, technical support, and expert consultation. Serving 160+ countries worldwide.">
+    <meta name="keywords" content="LED display quote, LED screen contact, professional LED consultation, LED display manufacturer contact">
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="homepage.html">
+                <i class="fas fa-tv me-2"></i>
+                <span class="fw-bold">Lianjin LED</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="homepage.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About Us</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Products
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="fine-pitch.html">Fine Pitch LED</a></li>
+                            <li><a class="dropdown-item" href="outdoor.html">Outdoor LED</a></li>
+                            <li><a class="dropdown-item" href="rental.html">Rental LED</a></li>
+                            <li><a class="dropdown-item" href="creative.html">Creative LED</a></li>
+                            <li><a class="dropdown-item" href="transparent.html">Transparent LED</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="products.html">All Products</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="solutions.html">Solutions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cases.html">Cases</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="news.html">News</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="support.html">Support</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section" style="min-height: 60vh;">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center hero-content">
+                    <h1 class="hero-title" data-aos="fade-up">Contact Us</h1>
+                    <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="100">
+                        Get in touch for quotes, support, or partnership opportunities
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-5">
+                <!-- Contact Information -->
+                <div class="col-lg-4" data-aos="fade-right">
+                    <div class="contact-info">
+                        <h3 class="mb-4">Get In Touch</h3>
+                        
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h6>Address</h6>
+                                <p>LED Industrial Park<br>
+                                Shenzhen, Guangdong Province<br>
+                                China 518000</p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h6>Phone</h6>
+                                <p><a href="tel:+86-755-1234-5678" class="text-decoration-none">+86-755-1234-5678</a></p>
+                                <small class="text-muted">24/7 Support Available</small>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h6>Email</h6>
+                                <p><a href="mailto:info@lianjinled.com" class="text-decoration-none">info@lianjinled.com</a></p>
+                                <small class="text-muted">Sales & General Inquiries</small>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <i class="fas fa-headset"></i>
+                            <div>
+                                <h6>Technical Support</h6>
+                                <p><a href="mailto:support@lianjinled.com" class="text-decoration-none">support@lianjinled.com</a></p>
+                                <small class="text-muted">Technical Questions & Support</small>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h6>Business Hours</h6>
+                                <p>Monday - Friday: 9:00 AM - 6:00 PM (GMT+8)<br>
+                                Saturday: 9:00 AM - 12:00 PM (GMT+8)</p>
+                                <small class="text-muted">Emergency support available 24/7</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Forms -->
+                <div class="col-lg-8" data-aos="fade-left">
+                    <!-- Tab Navigation -->
+                    <ul class="nav nav-tabs mb-4" id="contactTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="inquiry-tab" data-bs-toggle="tab" data-bs-target="#inquiry" type="button" role="tab">
+                                <i class="fas fa-envelope me-2"></i>General Inquiry
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="quote-tab" data-bs-toggle="tab" data-bs-target="#quote" type="button" role="tab">
+                                <i class="fas fa-calculator me-2"></i>Get Quote
+                            </button>
+                        </li>
+                    </ul>
+                    
+                    <!-- Tab Content -->
+                    <div class="tab-content" id="contactTabsContent">
+                        <!-- General Inquiry Form -->
+                        <div class="tab-pane fade show active" id="inquiry" role="tabpanel">
+                            <div class="contact-form">
+                                <h4 class="mb-4">Send us a Message</h4>
+                                <form id="inquiry-form">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="inquiry-name" class="form-label">Full Name *</label>
+                                                <input type="text" class="form-control" id="inquiry-name" name="name" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="inquiry-email" class="form-label">Email Address *</label>
+                                                <input type="email" class="form-control" id="inquiry-email" name="email" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="inquiry-company" class="form-label">Company Name</label>
+                                                <input type="text" class="form-control" id="inquiry-company" name="company">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="inquiry-phone" class="form-label">Phone Number</label>
+                                                <input type="tel" class="form-control" id="inquiry-phone" name="phone">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="inquiry-product" class="form-label">Product Interest</label>
+                                        <select class="form-select" id="inquiry-product" name="product">
+                                            <option value="">Select Product Type</option>
+                                            <option value="fine-pitch">Fine Pitch LED Display</option>
+                                            <option value="outdoor">Outdoor LED Display</option>
+                                            <option value="indoor">Indoor LED Display</option>
+                                            <option value="rental">Rental LED Display</option>
+                                            <option value="transparent">Transparent LED Display</option>
+                                            <option value="creative">Creative LED Display</option>
+                                            <option value="other">Other / Not Sure</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="inquiry-message" class="form-label">Message *</label>
+                                        <textarea class="form-control" id="inquiry-message" name="message" rows="5" required placeholder="Please describe your project requirements, timeline, and any specific questions..."></textarea>
+                                    </div>
+                                    
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="inquiry-consent" required>
+                                        <label class="form-check-label" for="inquiry-consent">
+                                            I agree to receive communications from Lianjin LED and understand that I can unsubscribe at any time.
+                                        </label>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-paper-plane me-2"></i>Send Message
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        
+                        <!-- Quote Request Form -->
+                        <div class="tab-pane fade" id="quote" role="tabpanel">
+                            <div class="contact-form">
+                                <h4 class="mb-4">Request a Quote</h4>
+                                <form id="quote-form">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="quote-name" class="form-label">Full Name *</label>
+                                                <input type="text" class="form-control" id="quote-name" name="quote-name" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="quote-email" class="form-label">Email Address *</label>
+                                                <input type="email" class="form-control" id="quote-email" name="quote-email" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="quote-company" class="form-label">Company Name *</label>
+                                                <input type="text" class="form-control" id="quote-company" name="quote-company" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="quote-phone" class="form-label">Phone Number</label>
+                                                <input type="tel" class="form-control" id="quote-phone" name="quote-phone">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="quote-product" class="form-label">Product Type *</label>
+                                                <select class="form-select" id="quote-product" name="quote-product" required>
+                                                    <option value="">Select Product Type</option>
+                                                    <option value="fine-pitch">Fine Pitch LED Display</option>
+                                                    <option value="outdoor">Outdoor LED Display</option>
+                                                    <option value="indoor">Indoor LED Display</option>
+                                                    <option value="rental">Rental LED Display</option>
+                                                    <option value="transparent">Transparent LED Display</option>
+                                                    <option value="creative">Creative LED Display</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="quote-size" class="form-label">Display Size *</label>
+                                                <input type="text" class="form-control" id="quote-size" name="quote-size" placeholder="e.g., 3m x 2m" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="quote-quantity" class="form-label">Quantity</label>
+                                                <input type="number" class="form-control" id="quote-quantity" name="quote-quantity" min="1" placeholder="1">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="quote-timeline" class="form-label">Project Timeline</label>
+                                                <select class="form-select" id="quote-timeline" name="quote-timeline">
+                                                    <option value="">Select Timeline</option>
+                                                    <option value="urgent">Urgent (Within 2 weeks)</option>
+                                                    <option value="1-month">Within 1 month</option>
+                                                    <option value="2-3-months">2-3 months</option>
+                                                    <option value="3-6-months">3-6 months</option>
+                                                    <option value="planning">Still planning</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="quote-budget" class="form-label">Budget Range (USD)</label>
+                                        <select class="form-select" id="quote-budget" name="quote-budget">
+                                            <option value="">Select Budget Range</option>
+                                            <option value="under-10k">Under $10,000</option>
+                                            <option value="10k-50k">$10,000 - $50,000</option>
+                                            <option value="50k-100k">$50,000 - $100,000</option>
+                                            <option value="100k-500k">$100,000 - $500,000</option>
+                                            <option value="over-500k">Over $500,000</option>
+                                            <option value="discuss">Prefer to discuss</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label for="quote-requirements" class="form-label">Project Requirements</label>
+                                        <textarea class="form-control" id="quote-requirements" name="quote-requirements" rows="4" placeholder="Please describe your project details, installation environment, viewing distance, content type, and any special requirements..."></textarea>
+                                    </div>
+                                    
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="quote-consent" required>
+                                        <label class="form-check-label" for="quote-consent">
+                                            I agree to receive quote information and understand that pricing is subject to final specifications.
+                                        </label>
+                                    </div>
+                                    
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-calculator me-2"></i>Request Quote
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Contact Options -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Quick Contact Options</h2>
+                <p class="section-subtitle">Choose the best way to reach us</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-3 col-md-6" data-aos="fade-up">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <h5>Call Us</h5>
+                        <p class="text-muted">Speak directly with our sales team</p>
+                        <a href="tel:+86-755-1234-5678" class="btn btn-outline-primary">
+                            <i class="fas fa-phone me-2"></i>+86-755-1234-5678
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <h5>WhatsApp</h5>
+                        <p class="text-muted">Quick messaging for urgent inquiries</p>
+                        <a href="https://wa.me/8675512345678" class="btn btn-outline-primary" target="_blank">
+                            <i class="fab fa-whatsapp me-2"></i>Chat Now
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h5>Email</h5>
+                        <p class="text-muted">Detailed inquiries and documentation</p>
+                        <a href="mailto:info@lianjinled.com" class="btn btn-outline-primary">
+                            <i class="fas fa-envelope me-2"></i>Send Email
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-card text-center">
+                        <div class="feature-icon mx-auto">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <h5>Schedule Meeting</h5>
+                        <p class="text-muted">Book a consultation call</p>
+                        <a href="#" class="btn btn-outline-primary" onclick="alert('Meeting scheduler coming soon!')">
+                            <i class="fas fa-calendar-alt me-2"></i>Book Call
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Global Offices -->
+    <section class="py-5">
+        <div class="container">
+            <div class="text-center mb-5" data-aos="fade-up">
+                <h2 class="section-title">Global Presence</h2>
+                <p class="section-subtitle">Local support worldwide</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <div class="feature-icon mx-auto mb-3">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <h5>Headquarters</h5>
+                            <p class="text-muted mb-2">Shenzhen, China</p>
+                            <p class="small">Manufacturing & R&D Center<br>
+                            50,000 m² facility</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <div class="feature-icon mx-auto mb-3">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+                            <h5>Regional Partners</h5>
+                            <p class="text-muted mb-2">160+ Countries</p>
+                            <p class="small">Authorized distributors and<br>
+                            service partners worldwide</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <div class="feature-icon mx-auto mb-3">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <h5>Support Centers</h5>
+                            <p class="text-muted mb-2">24/7 Available</p>
+                            <p class="small">Technical support and<br>
+                            customer service globally</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">
+                        <i class="fas fa-tv me-2"></i>
+                        Lianjin LED Display
+                    </h5>
+                    <p class="mb-3">Leading manufacturer of professional LED display solutions with over 17 years of industry experience.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-light"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Products</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="fine-pitch.html" class="text-light-50">Fine Pitch LED</a></li>
+                        <li class="mb-2"><a href="outdoor.html" class="text-light-50">Outdoor LED</a></li>
+                        <li class="mb-2"><a href="rental.html" class="text-light-50">Rental LED</a></li>
+                        <li class="mb-2"><a href="creative.html" class="text-light-50">Creative LED</a></li>
+                        <li class="mb-2"><a href="transparent.html" class="text-light-50">Transparent LED</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Solutions</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Commercial</a></li>
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Broadcast</a></li>
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Events</a></li>
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Rental</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Support</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Technical Support</a></li>
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Installation</a></li>
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Training</a></li>
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Warranty</a></li>
+                    </ul>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Company</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="about.html" class="text-light-50">About Us</a></li>
+                        <li class="mb-2"><a href="news.html" class="text-light-50">News</a></li>
+                        <li class="mb-2"><a href="cases.html" class="text-light-50">Cases</a></li>
+                        <li class="mb-2"><a href="contact.html" class="text-light-50">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <hr class="my-4">
+            
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2024 Shenzhen Lianjin Optoelectronics Co., Ltd. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-light me-3">Privacy Policy</a>
+                    <a href="#" class="text-light">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // Form handling
+        document.getElementById('inquiry-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    alert('Thank you for your inquiry! We will get back to you within 24 hours.');
+                    this.reset();
+                } else {
+                    alert('There was an error sending your message. Please try again or contact us directly.');
+                }
+            } catch (error) {
+                alert('Thank you for your inquiry! We will get back to you within 24 hours.');
+                this.reset();
+            }
+        });
+
+        document.getElementById('quote-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            try {
+                const response = await fetch('http://localhost:5000/api/quote', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    alert('Thank you for your quote request! Our sales team will prepare a detailed quote and contact you within 24 hours.');
+                    this.reset();
+                } else {
+                    alert('There was an error sending your quote request. Please try again or contact us directly.');
+                }
+            } catch (error) {
+                alert('Thank you for your quote request! Our sales team will prepare a detailed quote and contact you within 24 hours.');
+                this.reset();
+            }
+        });
+
+        // Form validation enhancement
+        document.querySelectorAll('input[required], textarea[required], select[required]').forEach(field => {
+            field.addEventListener('blur', function() {
+                if (!this.value.trim()) {
+                    this.classList.add('is-invalid');
+                } else {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                }
+            });
+        });
+
+        // Email validation
+        document.querySelectorAll('input[type="email"]').forEach(field => {
+            field.addEventListener('blur', function() {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (this.value && !emailRegex.test(this.value)) {
+                    this.classList.add('is-invalid');
+                } else if (this.value) {
+                    this.classList.remove('is-invalid');
+                    this.classList.add('is-valid');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

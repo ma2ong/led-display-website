@@ -1,0 +1,84 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+LED Display Admin Panel Startup Script
+启动LED显示屏管理后台系统
+"""
+
+import os
+import sys
+import subprocess
+import webbrowser
+from pathlib import Path
+
+def check_requirements():
+    """检查Python依赖"""
+    try:
+        import flask
+        print("✅ Flask已安装")
+    except ImportError:
+        print("❌ Flask未安装，正在安装...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "flask"])
+        print("✅ Flask安装完成")
+    
+    try:
+        import werkzeug
+        print("✅ Werkzeug已安装")
+    except ImportError:
+        print("❌ Werkzeug未安装，正在安装...")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "werkzeug"])
+        print("✅ Werkzeug安装完成")
+
+def main():
+    """启动管理后台"""
+    print("🚀 LED显示屏管理后台启动器")
+    print("=" * 50)
+    
+    # 检查依赖
+    print("📦 检查依赖包...")
+    check_requirements()
+    
+    # 切换到admin目录
+    admin_dir = Path(__file__).parent
+    os.chdir(admin_dir)
+    
+    print("📍 工作目录:", admin_dir)
+    print("=" * 50)
+    
+    # 启动Flask应用
+    try:
+        print("🌐 启动管理后台服务...")
+        print("📍 管理后台地址: http://localhost:5000")
+        print("👤 默认登录账户:")
+        print("   用户名: admin")
+        print("   密码: admin123")
+        print("=" * 50)
+        print("💡 提示:")
+        print("   • 首次登录后请及时修改密码")
+        print("   • 按 Ctrl+C 停止服务")
+        print("   • 管理后台数据存储在 led_admin.db")
+        print("=" * 50)
+        
+        # 尝试自动打开浏览器
+        try:
+            print("🌐 正在打开浏览器...")
+            webbrowser.open('http://localhost:5000')
+        except Exception as e:
+            print(f"⚠️  无法自动打开浏览器: {e}")
+            print("请手动访问: http://localhost:5000")
+        
+        print("\n✅ 管理后台启动成功!")
+        print("等待请求... (按 Ctrl+C 停止)\n")
+        
+        # 启动Flask应用
+        from app import app
+        app.run(debug=True, host='0.0.0.0', port=5000)
+        
+    except KeyboardInterrupt:
+        print("\n\n🛑 管理后台已停止")
+    except Exception as e:
+        print(f"\n❌ 启动失败: {e}")
+        print("请检查端口5000是否被占用")
+
+if __name__ == "__main__":
+    main()

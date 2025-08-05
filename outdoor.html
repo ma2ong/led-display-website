@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <script src="js/global-fix.js"></script>
+<script>
+// Patch for getBoundingClientRect to prevent errors
+(function() {
+    // Save the original method
+    window.Element.prototype.originalGetBoundingClientRect = Element.prototype.getBoundingClientRect;
+    
+    // Override with a safe version
+    Element.prototype.getBoundingClientRect = function() {
+        try {
+            return this.originalGetBoundingClientRect.apply(this);
+        } catch (error) {
+            console.warn('Error in getBoundingClientRect, returning default values');
+            return {
+                top: 0, right: 0, bottom: 0, left: 0,
+                width: 0, height: 0, x: 0, y: 0
+            };
+        }
+    };
+    
+    // Add a global error handler
+    window.addEventListener('error', function(event) {
+        console.warn('Caught error:', event.error);
+        // Prevent the error from showing in console
+        event.preventDefault();
+    });
+    
+    console.log('✓ getBoundingClientRect patch applied');
+})();
+</script>
+
+    <meta charset="UTF-8"><meta charset="UTF-8"/>
+
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Outdoor LED Display - Weather-Resistant High-Brightness LED Screens | Lianjin LED</title>
+<meta content="Professional outdoor LED displays with IP65 protection, high brightness up to 10,000 nits, and weather-resistant design for advertising, sports venues, and outdoor events." name="description"/>
+<meta content="outdoor LED display, weatherproof LED screen, high brightness LED, digital billboard, outdoor advertising display" name="keywords"/>
+<!-- CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
+<link href="css/style.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+<div class="container">
+<a class="navbar-brand" href="homepage.html">
+<i class="fas fa-tv me-2"></i>
+<span class="fw-bold">Lianjin LED</span>
+</a>
+<button class="navbar-toggler" data-bs-target="#navbarNav" data-bs-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarNav">
+<ul class="navbar-nav ms-auto">
+<li class="nav-item">
+<a class="nav-link" href="homepage.html">Home</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="about.html">About Us</a>
+</li>
+<li class="nav-item dropdown">
+<a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button">
+                            Products
+                        </a>
+<ul class="dropdown-menu">
+<li><a class="dropdown-item" href="fine-pitch.html">Fine Pitch LED</a></li>
+<li><a class="dropdown-item active" href="outdoor.html">Outdoor LED</a></li>
+<li><a class="dropdown-item" href="rental.html">Rental LED</a></li>
+<li><a class="dropdown-item" href="creative.html">Creative LED</a></li>
+<li><a class="dropdown-item" href="transparent.html">Transparent LED</a></li>
+<li><hr class="dropdown-divider"/></li>
+<li><a class="dropdown-item" href="products.html">All Products</a></li>
+</ul>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="solutions.html">Solutions</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="cases.html">Cases</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="news.html">News</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="support.html">Support</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="contact.html">Contact</a>
+</li>
+</ul>
+<div class="navbar-nav ms-3">
+<a class="btn btn-primary btn-sm" href="contact.html">
+<i class="fas fa-envelope me-1"></i>Get Quote
+                    </a>
+</div>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<section class="product-hero-section" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%);">
+<div class="container">
+<div class="row align-items-center">
+<div class="col-lg-6 hero-content" data-aos="fade-right">
+<h1 class="hero-title">Outdoor LED Display</h1>
+<p class="hero-subtitle">Weather-resistant LED displays with high brightness up to 10,000 nits, perfect for digital billboards, sports venues, and outdoor advertising applications.</p>
+<div class="d-flex flex-wrap gap-3">
+<a class="btn btn-light btn-lg" href="#specifications">
+<i class="fas fa-list-ul me-2"></i>Specifications
+                        </a>
+<a class="btn btn-outline-light btn-lg" href="contact.html">
+<i class="fas fa-envelope me-2"></i>Get Quote
+                        </a>
+</div>
+</div>
+<div class="col-lg-6" data-aos="fade-left">
+<div class="product-image-container">
+<img alt="Outdoor LED Display" class="img-fluid rounded shadow-lg" src="assets/products/outdoor-led.jpg"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Product Overview -->
+<section class="py-5">
+<div class="container">
+<div class="row">
+<div class="col-lg-8" data-aos="fade-right">
+<h2 class="section-title">Outdoor LED Display Overview</h2>
+<p class="lead">Built to withstand the elements while delivering exceptional visual impact</p>
+<p>Lianjin Outdoor LED displays are engineered for superior performance in challenging outdoor environments. With IP65/IP66 protection ratings, high brightness levels up to 10,000 nits, and robust construction, these displays deliver outstanding visibility and reliability for digital billboards, sports venues, transportation hubs, and outdoor advertising applications.</p>
+<div class="row mt-4">
+<div class="col-md-6">
+<div class="feature-item">
+<i class="fas fa-check-circle text-success mb-2"></i>
+<h5>IP65/IP66 Protection</h5>
+<p>Complete protection against dust and water ingress</p>
+</div>
+</div>
+<div class="col-md-6">
+<div class="feature-item">
+<i class="fas fa-check-circle text-success mb-2"></i>
+<h5>High Brightness</h5>
+<p>Up to 10,000 nits for excellent daylight visibility</p>
+</div>
+</div>
+<div class="col-md-6">
+<div class="feature-item">
+<i class="fas fa-check-circle text-success mb-2"></i>
+<h5>Wide Temperature Range</h5>
+<p>Operating temperature from -40°C to +60°C</p>
+</div>
+</div>
+<div class="col-md-6">
+<div class="feature-item">
+<i class="fas fa-check-circle text-success mb-2"></i>
+<h5>Energy Efficient</h5>
+<p>Advanced power management for reduced energy costs</p>
+</div>
+</div>
+</div>
+</div>
+<div class="col-lg-4" data-aos="fade-left">
+<div class="card shadow-sm">
+<div class="card-body">
+<h4 class="card-title">Key Applications</h4>
+<ul class="list-unstyled">
+<li class="mb-3">
+<i class="fas fa-ad text-success me-2"></i>
+<strong>Digital Billboards</strong>
+<p class="small text-muted mb-0">Highway and urban advertising displays</p>
+</li>
+<li class="mb-3">
+<i class="fas fa-futbol text-success me-2"></i>
+<strong>Sports Venues</strong>
+<p class="small text-muted mb-0">Stadium perimeter and scoreboard displays</p>
+</li>
+<li class="mb-3">
+<i class="fas fa-building text-success me-2"></i>
+<strong>Commercial Buildings</strong>
+<p class="small text-muted mb-0">Facade displays and architectural lighting</p>
+</li>
+<li class="mb-3">
+<i class="fas fa-bus text-success me-2"></i>
+<strong>Transportation</strong>
+<p class="small text-muted mb-0">Airport and train station information displays</p>
+</li>
+<li>
+<i class="fas fa-calendar-alt text-success me-2"></i>
+<strong>Events &amp; Festivals</strong>
+<p class="small text-muted mb-0">Outdoor concerts and public gatherings</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Technical Specifications -->
+<section class="py-5 bg-light" id="specifications">
+<div class="container">
+<div class="text-center mb-5" data-aos="fade-up">
+<h2 class="section-title">Technical Specifications</h2>
+<p class="section-subtitle">Comprehensive specifications for our outdoor LED display range</p>
+</div>
+<div class="table-responsive" data-aos="fade-up">
+<table class="table table-bordered bg-white">
+<thead class="table-success">
+<tr>
+<th>Model</th>
+<th>Pixel Pitch</th>
+<th>Resolution</th>
+<th>Brightness</th>
+<th>IP Rating</th>
+<th>Viewing Angle</th>
+<th>Cabinet Size</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>LJ-OUT4</strong></td>
+<td>4mm</td>
+<td>128×128 pixels/panel</td>
+<td>6500 nits</td>
+<td>IP65</td>
+<td>140°/140°</td>
+<td>512×512mm</td>
+</tr>
+<tr>
+<td><strong>LJ-OUT5</strong></td>
+<td>5mm</td>
+<td>128×128 pixels/panel</td>
+<td>7000 nits</td>
+<td>IP65</td>
+<td>140°/140°</td>
+<td>640×640mm</td>
+</tr>
+<tr>
+<td><strong>LJ-OUT6</strong></td>
+<td>6mm</td>
+<td>112×112 pixels/panel</td>
+<td>8000 nits</td>
+<td>IP66</td>
+<td>140°/140°</td>
+<td>672×672mm</td>
+</tr>
+<tr>
+<td><strong>LJ-OUT8</strong></td>
+<td>8mm</td>
+<td>96×96 pixels/panel</td>
+<td>9000 nits</td>
+<td>IP66</td>
+<td>140°/140°</td>
+<td>768×768mm</td>
+</tr>
+<tr>
+<td><strong>LJ-OUT10</strong></td>
+<td>10mm</td>
+<td>64×64 pixels/panel</td>
+<td>10000 nits</td>
+<td>IP66</td>
+<td>140°/140°</td>
+<td>640×640mm</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="row mt-5">
+<div class="col-lg-6" data-aos="fade-right">
+<h4>Environmental Specifications</h4>
+<div class="row">
+<div class="col-md-6">
+<ul class="list-unstyled">
+<li class="mb-2"><strong>Operating Temperature:</strong> -40°C to +60°C</li>
+<li class="mb-2"><strong>Storage Temperature:</strong> -50°C to +70°C</li>
+<li class="mb-2"><strong>Humidity:</strong> 10-95% RH (non-condensing)</li>
+<li class="mb-2"><strong>Wind Resistance:</strong> Up to 200 km/h</li>
+</ul>
+</div>
+<div class="col-md-6">
+<ul class="list-unstyled">
+<li class="mb-2"><strong>UV Resistance:</strong> UV8 rating</li>
+<li class="mb-2"><strong>Salt Spray:</strong> 1000 hours resistance</li>
+<li class="mb-2"><strong>Vibration:</strong> IEC 60068-2-6 compliant</li>
+<li class="mb-2"><strong>Lifespan:</strong> 100,000+ hours</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="col-lg-6" data-aos="fade-left">
+<h4>Power &amp; Control</h4>
+<div class="row">
+<div class="col-md-6">
+<ul class="list-unstyled">
+<li class="mb-2"><strong>Power Consumption:</strong> Max 800W/m², Avg 280W/m²</li>
+<li class="mb-2"><strong>Input Voltage:</strong> AC 100-240V, 50/60Hz</li>
+<li class="mb-2"><strong>Power Factor:</strong> &gt;0.95</li>
+</ul>
+</div>
+<div class="col-md-6">
+<ul class="list-unstyled">
+<li class="mb-2"><strong>Control System:</strong> Novastar, Colorlight, Linsn</li>
+<li class="mb-2"><strong>Remote Control:</strong> 4G/WiFi/Ethernet</li>
+<li class="mb-2"><strong>Brightness Sensor:</strong> Auto adjustment</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Weather Protection Features -->
+<section class="py-5">
+<div class="container">
+<div class="text-center mb-5" data-aos="fade-up">
+<h2 class="section-title">Weather Protection Features</h2>
+<p class="section-subtitle">Engineered to withstand extreme weather conditions</p>
+</div>
+<div class="row g-4">
+<div class="col-lg-4 col-md-6" data-aos="fade-up">
+<div class="card h-100">
+<div class="card-body">
+<div class="feature-icon mb-3" style="color: #059669;">
+<i class="fas fa-shield-alt"></i>
+</div>
+<h4 class="card-title">IP66 Protection</h4>
+<p class="card-text">Complete protection against dust ingress and powerful water jets from any direction. Tested to withstand heavy rain, snow, and extreme weather conditions.</p>
+</div>
+</div>
+</div>
+<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+<div class="card h-100">
+<div class="card-body">
+<div class="feature-icon mb-3" style="color: #059669;">
+<i class="fas fa-thermometer-half"></i>
+</div>
+<h4 class="card-title">Wide Temperature Range</h4>
+<p class="card-text">Operates reliably in extreme temperatures from -40°C to +60°C with advanced thermal management and climate-resistant components.</p>
+</div>
+</div>
+</div>
+<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+<div class="card h-100">
+<div class="card-body">
+<div class="feature-icon mb-3" style="color: #059669;">
+<i class="fas fa-sun"></i>
+</div>
+<h4 class="card-title">UV Resistance</h4>
+<p class="card-text">UV8-rated materials and coatings protect against sun damage and color fading, ensuring long-term visual performance and structural integrity.</p>
+</div>
+</div>
+</div>
+<div class="col-lg-4 col-md-6" data-aos="fade-up">
+<div class="card h-100">
+<div class="card-body">
+<div class="feature-icon mb-3" style="color: #059669;">
+<i class="fas fa-wind"></i>
+</div>
+<h4 class="card-title">Wind Resistance</h4>
+<p class="card-text">Engineered to withstand wind speeds up to 200 km/h with reinforced cabinet structure and secure mounting systems for maximum stability.</p>
+</div>
+</div>
+</div>
+<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+<div class="card h-100">
+<div class="card-body">
+<div class="feature-icon mb-3" style="color: #059669;">
+<i class="fas fa-water"></i>
+</div>
+<h4 class="card-title">Corrosion Protection</h4>
+<p class="card-text">Salt spray resistant coating and marine-grade materials provide excellent protection in coastal environments and industrial areas.</p>
+</div>
+</div>
+</div>
+<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+<div class="card h-100">
+<div class="card-body">
+<div class="feature-icon mb-3" style="color: #059669;">
+<i class="fas fa-bolt"></i>
+</div>
+<h4 class="card-title">Lightning Protection</h4>
+<p class="card-text">Built-in surge protection and lightning arresters safeguard the display from electrical storms and power surges, ensuring continuous operation.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Installation Options -->
+<section class="py-5 bg-light">
+<div class="container">
+<div class="text-center mb-5" data-aos="fade-up">
+<h2 class="section-title">Installation Options</h2>
+<p class="section-subtitle">Flexible mounting solutions for any outdoor application</p>
+</div>
+<div class="row g-4">
+<div class="col-lg-6" data-aos="fade-up">
+<div class="installation-card">
+<div class="row g-0">
+<div class="col-md-4">
+<div class="installation-icon">
+<i class="fas fa-building"></i>
+</div>
+</div>
+<div class="col-md-8">
+<div class="card-body">
+<h5 class="card-title">Wall Mounting</h5>
+<p class="card-text">Direct mounting to building facades and walls with adjustable brackets for optimal viewing angles.</p>
+<ul class="list-unstyled small">
+<li><i class="fas fa-check text-success me-2"></i>Adjustable tilt angle</li>
+<li><i class="fas fa-check text-success me-2"></i>Easy maintenance access</li>
+<li><i class="fas fa-check text-success me-2"></i>Wind load certified</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+<div class="installation-card">
+<div class="row g-0">
+<div class="col-md-4">
+<div class="installation-icon">
+<i class="fas fa-broadcast-tower"></i>
+</div>
+</div>
+<div class="col-md-8">
+<div class="card-body">
+<h5 class="card-title">Pole Mounting</h5>
+<p class="card-text">Single or double pole mounting systems for roadside billboards and standalone displays.</p>
+<ul class="list-unstyled small">
+<li><i class="fas fa-check text-success me-2"></i>360° rotation capability</li>
+<li><i class="fas fa-check text-success me-2"></i>Height adjustable</li>
+<li><i class="fas fa-check text-success me-2"></i>Foundation engineering</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-lg-6" data-aos="fade-up">
+<div class="installation-card">
+<div class="row g-0">
+<div class="col-md-4">
+<div class="installation-icon">
+<i class="fas fa-layer-group"></i>
+</div>
+</div>
+<div class="col-md-8">
+<div class="card-body">
+<h5 class="card-title">Ground Support</h5>
+<p class="card-text">Heavy-duty ground support structures for large format displays and temporary installations.</p>
+<ul class="list-unstyled small">
+<li><i class="fas fa-check text-success me-2"></i>Modular design</li>
+<li><i class="fas fa-check text-success me-2"></i>Quick assembly</li>
+<li><i class="fas fa-check text-success me-2"></i>Portable options available</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+<div class="installation-card">
+<div class="row g-0">
+<div class="col-md-4">
+<div class="installation-icon">
+<i class="fas fa-cube"></i>
+</div>
+</div>
+<div class="col-md-8">
+<div class="card-body">
+<h5 class="card-title">Roof Mounting</h5>
+<p class="card-text">Specialized roof mounting systems for building tops and elevated installations.</p>
+<ul class="list-unstyled small">
+<li><i class="fas fa-check text-success me-2"></i>Weatherproof sealing</li>
+<li><i class="fas fa-check text-success me-2"></i>Load distribution</li>
+<li><i class="fas fa-check text-success me-2"></i>Safety access systems</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Case Studies -->
+<section class="py-5">
+<div class="container">
+<div class="text-center mb-5" data-aos="fade-up">
+<h2 class="section-title">Success Stories</h2>
+<p class="section-subtitle">Outdoor LED displays making an impact worldwide</p>
+</div>
+<div class="row g-4">
+<div class="col-lg-4 col-md-6" data-aos="fade-up">
+<div class="case-card">
+<img alt="Highway Billboard" class="img-fluid" src="assets/cases/highway-billboard.jpg"/>
+<div class="case-content">
+<h5>Highway Digital Billboard Network</h5>
+<p class="text-muted">California, USA</p>
+<p>P6 outdoor LED displays across 50 highway locations, delivering dynamic advertising content with remote content management.</p>
+<a class="btn btn-outline-success btn-sm" href="cases.html">View Case Study</a>
+</div>
+</div>
+</div>
+<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+<div class="case-card">
+<img alt="Stadium Perimeter Display" class="img-fluid" src="assets/cases/stadium-perimeter.jpg"/>
+<div class="case-content">
+<h5>Premier League Stadium</h5>
+<p class="text-muted">Manchester, UK</p>
+<p>P8 perimeter LED displays for live match advertising and fan engagement, featuring high refresh rates for broadcast compatibility.</p>
+<a class="btn btn-outline-success btn-sm" href="cases.html">View Case Study</a>
+</div>
+</div>
+</div>
+<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+<div class="case-card">
+<img alt="Shopping Mall Facade" class="img-fluid" src="assets/cases/shopping-mall-facade.jpg"/>
+<div class="case-content">
+<h5>Shopping Mall Facade Display</h5>
+<p class="text-muted">Dubai, UAE</p>
+<p>P4 curved LED facade covering 500m² of building exterior, creating stunning architectural lighting and advertising displays.</p>
+<a class="btn btn-outline-success btn-sm" href="cases.html">View Case Study</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="cta-section" style="background: linear-gradient(135deg, #059669 0%, #10b981 100%);">
+<div class="container">
+<div class="row align-items-center">
+<div class="col-lg-8" data-aos="fade-right">
+<h2 class="mb-3">Ready to Make Your Mark Outdoors?</h2>
+<p class="mb-0 fs-5">Get a customized outdoor LED display solution that stands up to any weather condition.</p>
+</div>
+<div class="col-lg-4 text-lg-end mt-4 mt-lg-0" data-aos="fade-left">
+<a class="btn btn-light btn-lg me-3" href="contact.html">
+<i class="fas fa-envelope me-2"></i>Get Quote
+                    </a>
+<a class="btn btn-outline-light btn-lg" href="tel:+86-755-1234-5678">
+<i class="fas fa-phone me-2"></i>Call Now
+                    </a>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-dark text-light py-5">
+<div class="container">
+<div class="row">
+<div class="col-lg-4 mb-4">
+<h5 class="mb-3">
+<i class="fas fa-tv me-2"></i>
+                        Lianjin LED Display
+                    </h5>
+<p class="mb-3">Leading manufacturer of professional LED display solutions with over 17 years of industry experience.</p>
+<div class="d-flex gap-3">
+<a class="text-light" href="#"><i class="fab fa-linkedin-in"></i></a>
+<a class="text-light" href="#"><i class="fab fa-youtube"></i></a>
+<a class="text-light" href="#"><i class="fab fa-twitter"></i></a>
+<a class="text-light" href="#"><i class="fab fa-facebook-f"></i></a>
+</div>
+</div>
+<div class="col-lg-2 col-md-6 mb-4">
+<h6 class="mb-3">Products</h6>
+<ul class="list-unstyled">
+<li class="mb-2"><a class="text-light-50" href="fine-pitch.html">Fine Pitch LED</a></li>
+<li class="mb-2"><a class="text-light-50" href="outdoor.html">Outdoor LED</a></li>
+<li class="mb-2"><a class="text-light-50" href="rental.html">Rental LED</a></li>
+<li class="mb-2"><a class="text-light-50" href="creative.html">Creative LED</a></li>
+<li class="mb-2"><a class="text-light-50" href="transparent.html">Transparent LED</a></li>
+</ul>
+</div>
+<div class="col-lg-2 col-md-6 mb-4">
+<h6 class="mb-3">Solutions</h6>
+<ul class="list-unstyled">
+<li class="mb-2"><a class="text-light-50" href="solutions.html">Commercial</a></li>
+<li class="mb-2"><a class="text-light-50" href="solutions.html">Broadcast</a></li>
+<li class="mb-2"><a class="text-light-50" href="solutions.html">Events</a></li>
+<li class="mb-2"><a class="text-light-50" href="solutions.html">Rental</a></li>
+</ul>
+</div>
+<div class="col-lg-2 col-md-6 mb-4">
+<h6 class="mb-3">Support</h6>
+<ul class="list-unstyled">
+<li class="mb-2"><a class="text-light-50" href="support.html">Technical Support</a></li>
+<li class="mb-2"><a class="text-light-50" href="support.html">Warranty</a></li>
+<li class="mb-2"><a class="text-light-50" href="support.html">Downloads</a></li>
+<li class="mb-2"><a class="text-light-50" href="support.html">Training</a></li>
+</ul>
+</div>
+<div class="col-lg-2 col-md-6 mb-4">
+<h6 class="mb-3">Company</h6>
+<ul class="list-unstyled">
+<li class="mb-2"><a class="text-light-50" href="about.html">About Us</a></li>
+<li class="mb-2"><a class="text-light-50" href="news.html">News</a></li>
+<li class="mb-2"><a class="text-light-50" href="cases.html">Case Studies</a></li>
+<li class="mb-2"><a class="text-light-50" href="contact.html">Contact</a></li>
+</ul>
+</div>
+</div>
+<hr class="my-4"/>
+<div class="row align-items-center">
+<div class="col-md-6">
+<p class="mb-0">© 2024 Lianjin LED Display Technology Co., Ltd. All rights reserved.</p>
+</div>
+<div class="col-md-6 text-md-end">
+<a class="text-light-50 me-3" href="#">Privacy Policy</a>
+<a class="text-light-50" href="#">Terms of Service</a>
+</div>
+</div>
+</div>
+</footer>
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true
+        });
+    </script>
+</body>
+</html>
