@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="js/global-fix.js"></script>
+    <script>
+    // Patch for getBoundingClientRect to prevent errors
+    (function() {
+        window.Element.prototype.originalGetBoundingClientRect = Element.prototype.getBoundingClientRect;
+        Element.prototype.getBoundingClientRect = function() {
+            try {
+                return this.originalGetBoundingClientRect.apply(this);
+            } catch (error) {
+                console.warn('Error in getBoundingClientRect, returning default values');
+                return {
+                    top: 0, right: 0, bottom: 0, left: 0,
+                    width: 0, height: 0, x: 0, y: 0
+                };
+            }
+        };
+        window.addEventListener('error', function(event) {
+            console.warn('Caught error:', event.error);
+            event.preventDefault();
+        });
+        console.log('✓ getBoundingClientRect patch applied');
+    })();
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Studies - LED Display Projects | Lianjin LED</title>
+    <meta name="description" content="Explore our successful LED display projects and case studies across various industries including retail, broadcast, events, and commercial installations.">
+    
+    <!-- CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-tv me-2"></i>
+                <span class="fw-bold">Lianjin LED</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About Us</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            Products
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="fine-pitch.html">Fine Pitch LED</a></li>
+                            <li><a class="dropdown-item" href="outdoor.html">Outdoor LED</a></li>
+                            <li><a class="dropdown-item" href="rental.html">Rental LED</a></li>
+                            <li><a class="dropdown-item" href="creative.html">Creative LED</a></li>
+                            <li><a class="dropdown-item" href="transparent.html">Transparent LED</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="products.html">All Products</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="solutions.html">Solutions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="cases.html">Cases</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="news.html">News</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="support.html">Support</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">Contact</a>
+                    </li>
+                </ul>
+                <div class="navbar-nav ms-3">
+                    <a class="btn btn-primary btn-sm" href="contact.html">
+                        <i class="fas fa-envelope me-1"></i>Get Quote
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="product-hero-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8" data-aos="fade-right">
+                    <div class="hero-content text-white">
+                        <h1 class="display-4 fw-bold mb-4">Success Stories</h1>
+                        <p class="lead mb-4">Discover how our LED display solutions have transformed businesses and events worldwide. From small retail installations to large-scale stadium projects.</p>
+                        <div class="d-flex flex-wrap gap-3">
+                            <a href="contact.html" class="btn btn-light btn-lg">
+                                <i class="fas fa-envelope me-2"></i>Start Your Project
+                            </a>
+                            <a href="#cases" class="btn btn-outline-light btn-lg">
+                                <i class="fas fa-eye me-2"></i>View Cases
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4" data-aos="fade-left">
+                    <div class="hero-stats bg-white rounded shadow-lg p-4">
+                        <div class="row text-center">
+                            <div class="col-6 border-end">
+                                <h3 class="text-primary mb-1">500+</h3>
+                                <small class="text-muted">Projects</small>
+                            </div>
+                            <div class="col-6">
+                                <h3 class="text-success mb-1">50+</h3>
+                                <small class="text-muted">Countries</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="py-4 bg-light">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h5 class="mb-0">Filter by Industry:</h5>
+                </div>
+                <div class="col-md-6">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-outline-primary active" data-filter="all">All</button>
+                        <button type="button" class="btn btn-outline-primary" data-filter="retail">Retail</button>
+                        <button type="button" class="btn btn-outline-primary" data-filter="broadcast">Broadcast</button>
+                        <button type="button" class="btn btn-outline-primary" data-filter="events">Events</button>
+                        <button type="button" class="btn btn-outline-primary" data-filter="corporate">Corporate</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cases Section -->
+    <section id="cases" class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Case 1: Shopping Mall -->
+                <div class="col-lg-6" data-aos="fade-up" data-category="retail">
+                    <div class="case-card h-100 border rounded shadow-sm overflow-hidden">
+                        <div class="case-image" style="height: 250px; background: linear-gradient(45deg, #667eea, #764ba2); position: relative;">
+                            <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+                                <i class="fas fa-store display-1 mb-3"></i>
+                                <h5>Shopping Mall Display</h5>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h4>Central Plaza Shopping Mall</h4>
+                                <span class="badge bg-primary">Retail</span>
+                            </div>
+                            <p class="text-muted mb-3">Large-scale P4 outdoor LED display installation for advertising and information display at one of Asia's busiest shopping centers.</p>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <small class="text-muted">Location:</small>
+                                    <div class="fw-bold">Singapore</div>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Size:</small>
+                                    <div class="fw-bold">120m²</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <small class="text-muted">Key Features:</small>
+                                <ul class="list-unstyled mt-1">
+                                    <li><i class="fas fa-check text-success me-2"></i>P4 Outdoor LED Display</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>8000 nits brightness</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Remote content management</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>24/7 operation capability</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">Completed: March 2024</small>
+                                <a href="contact.html" class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-envelope me-1"></i>Similar Project
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Case 2: TV Studio -->
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100" data-category="broadcast">
+                    <div class="case-card h-100 border rounded shadow-sm overflow-hidden">
+                        <div class="case-image" style="height: 250px; background: linear-gradient(45deg, #28a745, #20c997); position: relative;">
+                            <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+                                <i class="fas fa-broadcast-tower display-1 mb-3"></i>
+                                <h5>TV Studio Backdrop</h5>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h4>National Broadcasting Studio</h4>
+                                <span class="badge bg-success">Broadcast</span>
+                            </div>
+                            <p class="text-muted mb-3">Ultra-fine pitch P1.25 LED wall for prime time news studio with perfect color reproduction and zero flicker technology.</p>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <small class="text-muted">Location:</small>
+                                    <div class="fw-bold">Malaysia</div>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Size:</small>
+                                    <div class="fw-bold">45m²</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <small class="text-muted">Key Features:</small>
+                                <ul class="list-unstyled mt-1">
+                                    <li><i class="fas fa-check text-success me-2"></i>P1.25 Fine Pitch LED</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>3840Hz refresh rate</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Perfect color accuracy</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Zero flicker technology</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">Completed: January 2024</small>
+                                <a href="contact.html" class="btn btn-outline-success btn-sm">
+                                    <i class="fas fa-envelope me-1"></i>Similar Project
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Case 3: Concert Stage -->
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200" data-category="events">
+                    <div class="case-card h-100 border rounded shadow-sm overflow-hidden">
+                        <div class="case-image" style="height: 250px; background: linear-gradient(45deg, #fd7e14, #e83e8c); position: relative;">
+                            <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+                                <i class="fas fa-music display-1 mb-3"></i>
+                                <h5>Concert Stage Display</h5>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h4>Asia Music Festival 2024</h4>
+                                <span class="badge bg-warning">Events</span>
+                            </div>
+                            <p class="text-muted mb-3">Massive curved LED stage backdrop for international music festival featuring creative shapes and dynamic content display.</p>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <small class="text-muted">Location:</small>
+                                    <div class="fw-bold">Thailand</div>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Size:</small>
+                                    <div class="fw-bold">200m²</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <small class="text-muted">Key Features:</small>
+                                <ul class="list-unstyled mt-1">
+                                    <li><i class="fas fa-check text-success me-2"></i>P3.91 Rental LED Panels</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Curved installation</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Quick setup system</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Weather protection</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">Completed: February 2024</small>
+                                <a href="contact.html" class="btn btn-outline-warning btn-sm">
+                                    <i class="fas fa-envelope me-1"></i>Similar Project
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Case 4: Corporate Lobby -->
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300" data-category="corporate">
+                    <div class="case-card h-100 border rounded shadow-sm overflow-hidden">
+                        <div class="case-image" style="height: 250px; background: linear-gradient(45deg, #6f42c1, #e83e8c); position: relative;">
+                            <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+                                <i class="fas fa-building display-1 mb-3"></i>
+                                <h5>Corporate Display</h5>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h4>Tech Corporation Headquarters</h4>
+                                <span class="badge bg-info">Corporate</span>
+                            </div>
+                            <p class="text-muted mb-3">Elegant transparent LED display installation in corporate lobby for brand presentation and visitor information.</p>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <small class="text-muted">Location:</small>
+                                    <div class="fw-bold">Hong Kong</div>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Size:</small>
+                                    <div class="fw-bold">30m²</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <small class="text-muted">Key Features:</small>
+                                <ul class="list-unstyled mt-1">
+                                    <li><i class="fas fa-check text-success me-2"></i>P7.81 Transparent LED</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>85% transparency</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Architectural integration</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Interactive content</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">Completed: December 2023</small>
+                                <a href="contact.html" class="btn btn-outline-info btn-sm">
+                                    <i class="fas fa-envelope me-1"></i>Similar Project
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Case 5: Stadium Display -->
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="400" data-category="events">
+                    <div class="case-card h-100 border rounded shadow-sm overflow-hidden">
+                        <div class="case-image" style="height: 250px; background: linear-gradient(45deg, #dc3545, #fd7e14); position: relative;">
+                            <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+                                <i class="fas fa-futbol display-1 mb-3"></i>
+                                <h5>Stadium Perimeter</h5>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h4>National Sports Stadium</h4>
+                                <span class="badge bg-danger">Sports</span>
+                            </div>
+                            <p class="text-muted mb-3">Perimeter LED display system for major football stadium providing advertising space and match information display.</p>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <small class="text-muted">Location:</small>
+                                    <div class="fw-bold">Vietnam</div>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Size:</small>
+                                    <div class="fw-bold">400m²</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <small class="text-muted">Key Features:</small>
+                                <ul class="list-unstyled mt-1">
+                                    <li><i class="fas fa-check text-success me-2"></i>P6 Outdoor LED Display</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>High impact resistance</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Sports-grade protection</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Real-time content</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">Completed: November 2023</small>
+                                <a href="contact.html" class="btn btn-outline-danger btn-sm">
+                                    <i class="fas fa-envelope me-1"></i>Similar Project
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Case 6: Hotel Lobby -->
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="500" data-category="retail">
+                    <div class="case-card h-100 border rounded shadow-sm overflow-hidden">
+                        <div class="case-image" style="height: 250px; background: linear-gradient(45deg, #20c997, #6f42c1); position: relative;">
+                            <div class="position-absolute top-50 start-50 translate-middle text-center text-white">
+                                <i class="fas fa-hotel display-1 mb-3"></i>
+                                <h5>Luxury Hotel Display</h5>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h4>Grand Luxury Hotel</h4>
+                                <span class="badge bg-secondary">Hospitality</span>
+                            </div>
+                            <p class="text-muted mb-3">Elegant curved LED display installation in 5-star hotel lobby for guest information and artistic content presentation.</p>
+                            
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <small class="text-muted">Location:</small>
+                                    <div class="fw-bold">Philippines</div>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">Size:</small>
+                                    <div class="fw-bold">25m²</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <small class="text-muted">Key Features:</small>
+                                <ul class="list-unstyled mt-1">
+                                    <li><i class="fas fa-check text-success me-2"></i>P2.5 Indoor LED Display</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Curved design</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Silent operation</li>
+                                    <li><i class="fas fa-check text-success me-2"></i>Luxury aesthetics</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">Completed: October 2023</small>
+                                <a href="contact.html" class="btn btn-outline-secondary btn-sm">
+                                    <i class="fas fa-envelope me-1"></i>Similar Project
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up">
+                    <div class="stat-item">
+                        <h2 class="display-4 text-primary mb-2">500+</h2>
+                        <h5>Completed Projects</h5>
+                        <p class="text-muted">Successfully delivered worldwide</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-item">
+                        <h2 class="display-4 text-success mb-2">50+</h2>
+                        <h5>Countries Served</h5>
+                        <p class="text-muted">Global presence and support</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-item">
+                        <h2 class="display-4 text-info mb-2">17+</h2>
+                        <h5>Years Experience</h5>
+                        <p class="text-muted">Industry expertise and innovation</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-item">
+                        <h2 class="display-4 text-warning mb-2">99%</h2>
+                        <h5>Client Satisfaction</h5>
+                        <p class="text-muted">Proven track record of success</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8" data-aos="fade-right">
+                    <h2 class="mb-3 text-white">Ready to Create Your Success Story?</h2>
+                    <p class="mb-0 fs-5 text-white-50">Join hundreds of satisfied clients worldwide with our proven LED display solutions</p>
+                </div>
+                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0" data-aos="fade-left">
+                    <a class="btn btn-light btn-lg me-3" href="contact.html">
+                        <i class="fas fa-envelope me-2"></i>Start Your Project
+                    </a>
+                    <a class="btn btn-outline-light btn-lg" href="tel:+86-755-1234-5678">
+                        <i class="fas fa-phone me-2"></i>Call Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5 class="mb-3">
+                        <i class="fas fa-tv me-2"></i>
+                        Lianjin LED Display
+                    </h5>
+                    <p class="mb-3">Leading manufacturer of professional LED display solutions with over 17 years of industry experience.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#" class="text-light"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-youtube"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-light"><i class="fab fa-facebook-f"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Products</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="fine-pitch.html" class="text-light-50">Fine Pitch LED</a></li>
+                        <li class="mb-2"><a href="outdoor.html" class="text-light-50">Outdoor LED</a></li>
+                        <li class="mb-2"><a href="rental.html" class="text-light-50">Rental LED</a></li>
+                        <li class="mb-2"><a href="creative.html" class="text-light-50">Creative LED</a></li>
+                        <li class="mb-2"><a href="transparent.html" class="text-light-50">Transparent LED</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Solutions</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Commercial</a></li>
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Broadcast</a></li>
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Events</a></li>
+                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Rental</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Support</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Technical Support</a></li>
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Warranty</a></li>
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Downloads</a></li>
+                        <li class="mb-2"><a href="support.html" class="text-light-50">Training</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h6 class="mb-3">Company</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="about.html" class="text-light-50">About Us</a></li>
+                        <li class="mb-2"><a href="news.html" class="text-light-50">News</a></li>
+                        <li class="mb-2"><a href="cases.html" class="text-light-50">Case Studies</a></li>
+                        <li class="mb-2"><a href="contact.html" class="text-light-50">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">© 2024 Lianjin LED Display Technology Co., Ltd. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-light-50 me-3">Privacy Policy</a>
+                    <a href="#" class="text-light-50">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+
+        // Filter functionality
+        document.querySelectorAll('[data-filter]').forEach(button => {
+            button.addEventListener('click', function() {
+                const filter = this.getAttribute('data-filter');
+                
+                // Update active button
+                document.querySelectorAll('[data-filter]').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Filter cases
+                document.querySelectorAll('[data-category]').forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
