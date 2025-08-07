@@ -271,7 +271,8 @@ p {
 .hero-section {
   background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
   color: white;
-  min-height: 100vh;
+  min-height: 500px;
+  padding: 120px 0 80px;
   display: flex;
   align-items: center;
   position: relative;
@@ -476,16 +477,20 @@ p {
 .cta-section {
     background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
     color: white;
-    padding: 100px 0 60px;
+    padding: 80px 0 60px;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
 }
 
 /* Product Detail Pages */
 .product-hero-section {
-    padding: 100px 0 60px;
+    padding: 120px 0 80px;
     color: white;
-    min-height: 400px;
+    min-height: 300px;
     display: flex;
     align-items: center;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
 }
 
 .hero-content h1 {
@@ -645,6 +650,11 @@ p {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .hero-section {
+        min-height: 400px;
+        padding: 100px 0 60px;
+    }
+    
     .hero-content h1 {
         font-size: 2.5rem;
     }
@@ -655,7 +665,12 @@ p {
     
     .product-hero-section {
         padding: 80px 0 40px;
-        min-height: 300px;
+        min-height: 250px;
+    }
+    
+    .cta-section {
+        padding: 60px 0 40px;
+        min-height: 250px;
     }
     
     .feature-icon, .creative-icon {
