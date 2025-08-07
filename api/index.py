@@ -4,6 +4,13 @@ import sqlite3
 import os
 import json
 from datetime import datetime
+from database_helper import get_database_connection, init_database
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session, send_from_directory
+from flask_cors import CORS
+import sqlite3
+import os
+import json
+from datetime import datetime
 
 # 创建Flask应用
 app = Flask(__name__, 
@@ -15,7 +22,11 @@ CORS(app)
 # 数据库初始化
 def init_database():
     """初始化数据库"""
-    db_path = '/tmp/database.db'
+    # 在Windows环境下使用当前目录
+    db_path = os.path.join(os.getcwd(), 'led_admin.db')
+    
+    # 确保目录存在
+    os.makedirs(os.path.dirname(db_path) if os.path.dirname(db_path) else '.', exist_ok=True)
     
     if not os.path.exists(db_path):
         conn = sqlite3.connect(db_path)

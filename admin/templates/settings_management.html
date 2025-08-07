@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统设置 - LED管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* 完全固定的侧边栏样式 - 与仪表盘一致 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        .sidebar {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 200px !important;
+            height: 100vh !important;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            z-index: 9999 !important;
+            overflow-y: auto !important;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1) !important;
+        }
+        
+        .sidebar-header {
+            background: rgba(0,0,0,0.1) !important;
+            padding: 15px !important;
+            text-align: center !important;
+            border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+        }
+        
+        .sidebar-header h5 {
+            color: white !important;
+            margin: 0 !important;
+            font-size: 16px !important;
+            font-weight: bold !important;
+        }
+        
+        .sidebar-menu {
+            padding: 10px 0 !important;
+        }
+        
+        .sidebar-menu .nav-item {
+            margin: 0 !important;
+        }
+        
+        .sidebar-menu .nav-link {
+            color: rgba(255,255,255,0.9) !important;
+            padding: 12px 20px !important;
+            font-size: 14px !important;
+            border: none !important;
+            border-radius: 0 !important;
+            transition: all 0.3s ease !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+        
+        .sidebar-menu .nav-link:hover {
+            background: rgba(255,255,255,0.1) !important;
+            color: white !important;
+            transform: none !important;
+        }
+        
+        .sidebar-menu .nav-link.active {
+            background: rgba(255,255,255,0.2) !important;
+            color: white !important;
+        }
+        
+        .sidebar-menu .nav-link i {
+            width: 20px !important;
+            margin-right: 10px !important;
+            text-align: center !important;
+        }
+        
+        .content-area {
+            margin-left: 200px !important;
+            min-height: 100vh !important;
+            background: #f8f9fa !important;
+        }
+        
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .setting-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .setting-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+        .setting-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 固定侧边栏 - 与仪表盘完全一致 -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h5><i class="fas fa-tv me-2"></i>LED管理系统</h5>
+        </div>
+        <nav class="sidebar-menu">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('dashboard') }}">
+                        <i class="fas fa-tachometer-alt"></i>
+                        仪表盘
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('frontend_pages') }}">
+                        <i class="fas fa-file-alt"></i>
+                        前端页面管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('products') }}">
+                        <i class="fas fa-cube"></i>
+                        产品管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('inquiries') }}">
+                        <i class="fas fa-envelope"></i>
+                        询盘管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('news') }}">
+                        <i class="fas fa-newspaper"></i>
+                        新闻管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('users') }}">
+                        <i class="fas fa-users"></i>
+                        用户管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('statistics') }}">
+                        <i class="fas fa-chart-bar"></i>
+                        统计分析
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ url_for('settings') }}">
+                        <i class="fas fa-cog"></i>
+                        系统设置
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="file:///c:/Users/Administrator/Desktop/codebuddy%20ledwebsite/index.html" target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                        查看前端网站
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">
+                        <i class="fas fa-sign-out-alt"></i>
+                        退出登录
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- 主内容区域 -->
+    <div class="content-area p-4">
+        <!-- 页面头部 -->
+        <div class="page-header">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 class="mb-2"><i class="fas fa-cog me-2"></i>系统设置</h2>
+                    <p class="mb-0">管理系统配置和参数 - 系统配置管理</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <button class="btn btn-light me-2">
+                        <i class="fas fa-save me-1"></i>保存设置
+                    </button>
+                    <i class="fas fa-cog fa-3x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flash消息 -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- 基本设置 -->
+        <div class="card setting-card">
+            <div class="setting-header">
+                <h5><i class="fas fa-globe me-2"></i>网站基本设置</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">网站名称</label>
+                            <input type="text" class="form-control" value="联锦LED显示屏">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">网站描述</label>
+                            <textarea class="form-control" rows="3">专业LED显示屏制造商</textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">网站关键词</label>
+                            <input type="text" class="form-control" value="LED显示屏,户外LED,室内LED">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">网站Logo</label>
+                            <input type="file" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 联系信息设置 -->
+        <div class="card setting-card">
+            <div class="setting-header">
+                <h5><i class="fas fa-address-book me-2"></i>联系信息设置</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">公司名称</label>
+                            <input type="text" class="form-control" value="深圳联锦LED科技有限公司">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">联系电话</label>
+                            <input type="text" class="form-control" value="+86-755-12345678">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">联系邮箱</label>
+                            <input type="email" class="form-control" value="info@lianjinled.com">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">公司地址</label>
+                            <textarea class="form-control" rows="3">深圳市南山区科技园南区高新南七道数字技术园B2栋5楼</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">传真号码</label>
+                            <input type="text" class="form-control" value="+86-755-87654321">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 系统配置 -->
+        <div class="card setting-card">
+            <div class="setting-header">
+                <h5><i class="fas fa-server me-2"></i>系统配置</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">时区设置</label>
+                            <select class="form-control">
+                                <option>Asia/Shanghai (UTC+8)</option>
+                                <option>UTC (UTC+0)</option>
+                                <option>America/New_York (UTC-5)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">语言设置</label>
+                            <select class="form-control">
+                                <option>中文简体</option>
+                                <option>English</option>
+                                <option>中文繁体</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">每页显示数量</label>
+                            <input type="number" class="form-control" value="20">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">文件上传大小限制 (MB)</label>
+                            <input type="number" class="form-control" value="32">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 邮件设置 -->
+        <div class="card setting-card">
+            <div class="setting-header">
+                <h5><i class="fas fa-envelope me-2"></i>邮件设置</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">SMTP服务器</label>
+                            <input type="text" class="form-control" value="smtp.qq.com">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">SMTP端口</label>
+                            <input type="number" class="form-control" value="587">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">发送邮箱</label>
+                            <input type="email" class="form-control" value="noreply@lianjinled.com">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">邮箱密码</label>
+                            <input type="password" class="form-control" placeholder="请输入邮箱密码">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">加密方式</label>
+                            <select class="form-control">
+                                <option>TLS</option>
+                                <option>SSL</option>
+                                <option>无加密</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn btn-info">
+                                <i class="fas fa-paper-plane me-1"></i>测试邮件发送
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        {% if settings %}
+            <!-- 自定义设置 -->
+            <div class="card setting-card">
+                <div class="setting-header">
+                    <h5><i class="fas fa-sliders-h me-2"></i>自定义设置</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>设置项</th>
+                                    <th>当前值</th>
+                                    <th>描述</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for setting in settings %}
+                                <tr>
+                                    <td><strong>{{ setting.setting_key }}</strong></td>
+                                    <td>{{ setting.setting_value }}</td>
+                                    <td>{{ setting.description }}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Fix getBoundingClientRect error
+        window.addEventListener('error', function(e) {
+            console.warn('Error caught:', e.message);
+            e.preventDefault();
+            return true;
+        });
+        
+        // Fix getBoundingClientRect error
+        if (Element.prototype.getBoundingClientRect) {
+            const original = Element.prototype.getBoundingClientRect;
+            Element.prototype.getBoundingClientRect = function() {
+                try {
+                    return original.apply(this);
+                } catch (e) {
+                    return { top: 0, right: 0, bottom: 0, left: 0, width: 0, height: 0, x: 0, y: 0 };
+                }
+            };
+        }
+    </script>
+</body>
+</html>

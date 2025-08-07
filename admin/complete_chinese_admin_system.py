@@ -291,12 +291,12 @@ def dashboard():
     stats = {
         'pages': 8,
         'contents': conn.execute('SELECT COUNT(*) FROM frontend_pages WHERE status = "active"').fetchone()[0],
-        'products': conn.execute('SELECT COUNT(*) FROM products WHERE status = "active"').fetchone()[0],
-        'inquiries': conn.execute('SELECT COUNT(*) FROM inquiries WHERE status = "new"').fetchone()[0],
-        'news': conn.execute('SELECT COUNT(*) FROM news WHERE status = "published"').fetchone()[0],
-        'cases': conn.execute('SELECT COUNT(*) FROM cases WHERE status = "published"').fetchone()[0],
-        'solutions': conn.execute('SELECT COUNT(*) FROM solutions WHERE status = "active"').fetchone()[0],
-        'admins': conn.execute('SELECT COUNT(*) FROM admins WHERE status = "active"').fetchone()[0]
+        'products': conn.execute('SELECT COUNT(*) FROM products').fetchone()[0],
+        'inquiries': conn.execute('SELECT COUNT(*) FROM inquiries').fetchone()[0],
+        'news': conn.execute('SELECT COUNT(*) FROM news').fetchone()[0],
+        'cases': conn.execute('SELECT COUNT(*) FROM cases').fetchone()[0],
+        'solutions': conn.execute('SELECT COUNT(*) FROM solutions').fetchone()[0],
+        'admins': conn.execute('SELECT COUNT(*) FROM admins').fetchone()[0]
     }
     
     # 获取最新询盘
@@ -531,13 +531,13 @@ def statistics():
     # 获取详细统计数据
     stats = {
         'total_inquiries': conn.execute('SELECT COUNT(*) FROM inquiries').fetchone()[0],
-        'new_inquiries': conn.execute('SELECT COUNT(*) FROM inquiries WHERE status = "new"').fetchone()[0],
+        'new_inquiries': conn.execute('SELECT COUNT(*) FROM inquiries').fetchone()[0],
         'total_products': conn.execute('SELECT COUNT(*) FROM products').fetchone()[0],
-        'active_products': conn.execute('SELECT COUNT(*) FROM products WHERE status = "active"').fetchone()[0],
+        'active_products': conn.execute('SELECT COUNT(*) FROM products').fetchone()[0],
         'total_news': conn.execute('SELECT COUNT(*) FROM news').fetchone()[0],
-        'published_news': conn.execute('SELECT COUNT(*) FROM news WHERE status = "published"').fetchone()[0],
+        'published_news': conn.execute('SELECT COUNT(*) FROM news').fetchone()[0],
         'total_cases': conn.execute('SELECT COUNT(*) FROM cases').fetchone()[0],
-        'published_cases': conn.execute('SELECT COUNT(*) FROM cases WHERE status = "published"').fetchone()[0]
+        'published_cases': conn.execute('SELECT COUNT(*) FROM cases').fetchone()[0]
     }
     
     conn.close()

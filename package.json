@@ -1,44 +1,16 @@
 {
   "name": "led-display-website",
   "version": "1.0.0",
-  "description": "Professional LED Display Website with Supabase Backend",
-  "main": "index.js",
+  "description": "LED显示屏网站 - Vercel + Supabase部署",
+  "main": "index.html",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "deploy": "vercel --prod",
-    "supabase:start": "supabase start",
-    "supabase:stop": "supabase stop",
-    "supabase:reset": "supabase db reset",
-    "supabase:generate-types": "supabase gen types typescript --local > types/supabase.ts"
+    "build": "echo 'Build complete'",
+    "start": "echo 'Start complete'"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.39.0",
-    "@supabase/auth-helpers-nextjs": "^0.8.7",
-    "@supabase/auth-helpers-react": "^0.4.2",
-    "next": "^14.0.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "typescript": "^5.0.0",
-    "@types/node": "^20.0.0",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0"
+    "@supabase/supabase-js": "^2.53.0"
   },
-  "devDependencies": {
-    "supabase": "^1.142.2",
-    "eslint": "^8.0.0",
-    "eslint-config-next": "^14.0.0"
-  },
-  "keywords": [
-    "led",
-    "display",
-    "website",
-    "supabase",
-    "vercel",
-    "nextjs"
-  ],
-  "author": "LED Display Company",
-  "license": "MIT"
+  "engines": {
+    "node": ">=18.0.0"
+  }
 }

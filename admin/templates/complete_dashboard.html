@@ -160,61 +160,61 @@
         <nav class="sidebar-menu">
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a class="nav-link active" href="{{ url_for('admin_dashboard') }}">
+    <a class="nav-link active" href="{{ url_for('dashboard') }}">
                         <i class="fas fa-tachometer-alt"></i>
                         仪表盘
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('admin_frontend_pages') }}">
+                    <a class="nav-link" href="{{ url_for('frontend_pages') }}">
                         <i class="fas fa-file-alt"></i>
                         前端页面管理
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('admin_products') }}">
+                    <a class="nav-link" href="{{ url_for('products') }}">
                         <i class="fas fa-cube"></i>
                         产品管理
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('admin_inquiries') }}">
+                    <a class="nav-link" href="{{ url_for('inquiries') }}">
                         <i class="fas fa-envelope"></i>
                         询盘管理
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('admin_news') }}">
+                    <a class="nav-link" href="{{ url_for('news') }}">
                         <i class="fas fa-newspaper"></i>
                         新闻管理
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('admin_users') }}">
+                    <a class="nav-link" href="{{ url_for('users') }}">
                         <i class="fas fa-users"></i>
                         用户管理
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('admin_statistics') }}">
+                    <a class="nav-link" href="{{ url_for('statistics') }}">
                         <i class="fas fa-chart-bar"></i>
                         统计分析
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('admin_settings') }}">
+                    <a class="nav-link" href="{{ url_for('settings') }}">
                         <i class="fas fa-cog"></i>
                         系统设置
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="http://localhost:8000" target="_blank">
+                    <a class="nav-link" href="http://localhost:8000/index.html" target="_blank">
                         <i class="fas fa-external-link-alt"></i>
                         查看前端网站
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('admin_logout') }}">
+                    <a class="nav-link" href="{{ url_for('logout') }}">
                         <i class="fas fa-sign-out-alt"></i>
                         退出登录
                     </a>
@@ -303,7 +303,7 @@
                                     </div>
                                     <h6>前端页面管理</h6>
                                     <p class="text-muted small">8个子模块独立页面内容编辑</p>
-                                    <a href="{{ url_for('admin_frontend_pages') }}" class="btn btn-primary btn-sm">进入管理</a>
+                                    <a href="{{ url_for('frontend_pages') }}" class="btn btn-primary btn-sm">进入管理</a>
                                 </div>
                             </div>
                         </div>
@@ -315,7 +315,7 @@
                                     </div>
                                     <h6>产品管理</h6>
                                     <p class="text-muted small">完整CRUD操作</p>
-                                    <a href="{{ url_for('admin_products') }}" class="btn btn-warning btn-sm">进入管理</a>
+                                    <a href="{{ url_for('products') }}" class="btn btn-warning btn-sm">进入管理</a>
                                 </div>
                             </div>
                         </div>
@@ -327,7 +327,7 @@
                                     </div>
                                     <h6>询盘管理</h6>
                                     <p class="text-muted small">客户询盘全面管理</p>
-                                    <a href="{{ url_for('admin_inquiries') }}" class="btn btn-info btn-sm">进入管理</a>
+                                    <a href="{{ url_for('inquiries') }}" class="btn btn-info btn-sm">进入管理</a>
                                 </div>
                             </div>
                         </div>
@@ -339,7 +339,7 @@
                                     </div>
                                     <h6>新闻管理</h6>
                                     <p class="text-muted small">新闻发布管理</p>
-                                    <a href="{{ url_for('admin_news') }}" class="btn btn-danger btn-sm">进入管理</a>
+                                    <a href="{{ url_for('news') }}" class="btn btn-danger btn-sm">进入管理</a>
                                 </div>
                             </div>
                         </div>
@@ -351,7 +351,7 @@
                                     </div>
                                     <h6>用户管理</h6>
                                     <p class="text-muted small">用户权限管理</p>
-                                    <a href="{{ url_for('admin_users') }}" class="btn btn-success btn-sm">进入管理</a>
+                                    <a href="{{ url_for('users') }}" class="btn btn-success btn-sm">进入管理</a>
                                 </div>
                             </div>
                         </div>
@@ -363,7 +363,7 @@
                                     </div>
                                     <h6>统计分析</h6>
                                     <p class="text-muted small">实时数据统计</p>
-                                    <a href="{{ url_for('admin_statistics') }}" class="btn btn-secondary btn-sm">进入管理</a>
+                                    <a href="{{ url_for('statistics') }}" class="btn btn-secondary btn-sm">进入管理</a>
                                 </div>
                             </div>
                         </div>
@@ -375,7 +375,7 @@
                                     </div>
                                     <h6>系统设置</h6>
                                     <p class="text-muted small">系统配置管理</p>
-                                    <a href="{{ url_for('admin_settings') }}" class="btn btn-dark btn-sm">进入管理</a>
+                                    <a href="{{ url_for('settings') }}" class="btn btn-dark btn-sm">进入管理</a>
                                 </div>
                             </div>
                         </div>

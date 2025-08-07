@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前后端集成测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .status-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .status-success { border-left: 4px solid #28a745; }
+        .status-error { border-left: 4px solid #dc3545; }
+        .status-warning { border-left: 4px solid #ffc107; }
+        .test-section {
+            margin: 30px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        .data-display {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .loading { color: #6c757d; }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 LED网站前后端集成测试</h1>
+        
+        <div class="status-card" id="connectionStatus">
+            <h3>📡 连接状态检测</h3>
+            <div id="statusResults">检测中...</div>
+        </div>
+
+        <div class="test-section">
+            <h3>🗄️ 本地API测试</h3>
+            <button onclick="testLocalAPI()">测试本地API</button>
+            <button onclick="testLocalProducts()">获取本地产品</button>
+            <button onclick="testLocalNews()">获取本地新闻</button>
+            <div id="localResults" class="data-display"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>☁️ Supabase云数据库测试</h3>
+            <button onclick="testSupabase()">测试Supabase连接</button>
+            <button onclick="testSupabaseProducts()">获取云端产品</button>
+            <button onclick="testSupabaseNews()">获取云端新闻</button>
+            <div id="supabaseResults" class="data-display"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📝 表单提交测试</h3>
+            <form id="testForm">
+                <input type="text" placeholder="姓名" id="testName" required style="margin: 5px; padding: 8px;">
+                <input type="email" placeholder="邮箱" id="testEmail" required style="margin: 5px; padding: 8px;">
+                <input type="text" placeholder="电话" id="testPhone" style="margin: 5px; padding: 8px;">
+                <textarea placeholder="留言内容" id="testMessage" style="margin: 5px; padding: 8px; width: 200px;"></textarea>
+                <br>
+                <button type="button" onclick="submitToLocal()">提交到本地</button>
+                <button type="button" onclick="submitToSupabase()">提交到Supabase</button>
+            </form>
+            <div id="formResults" class="data-display"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 系统信息</h3>
+            <div id="systemInfo" class="data-display"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // 全局变量声明
+        let supabaseClient = null;
+        let localAPI = null;
+
+        // 初始化配置
+        function initializeClients() {
+            // Supabase配置
+            const supabaseUrl = 'https://jirudzbqcxviytcmxegf.supabase.co'
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppcnVkemJxY3h2aXl0Y214ZWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0NTExOTUsImV4cCI6MjA3MDAyNzE5NX0.qi0YhrxQmbRa6YsbVA13IpddImIjJKJyd1fgz5jIlt4'
+            
+            try {
+                supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey)
+                console.log('✅ Supabase客户端初始化成功')
+            } catch (error) {
+                console.error('❌ Supabase客户端初始化失败:', error)
+            }
+
+            // 本地API地址 - 使用5002端口
+            localAPI = 'http://127.0.0.1:5002'
+            console.log('✅ 本地API配置完成:', localAPI)
+        }
+
+        // 页面加载时初始化并检测连接状态
+        window.addEventListener('DOMContentLoaded', async function() {
+            // 确保DOM完全加载
+            setTimeout(async () => {
+                try {
+                    initializeClients()
+                    await checkConnectionStatus()
+                    showSystemInfo()
+                } catch (error) {
+                    console.error('初始化错误:', error)
+                }
+            }, 100)
+        })
+
+        // 备用初始化
+        window.onload = async function() {
+            if (!document.getElementById('statusResults').innerHTML.includes('检测中')) {
+                return // 已经初始化过了
+            }
+            try {
+                initializeClients()
+                await checkConnectionStatus()
+                showSystemInfo()
+            } catch (error) {
+                console.error('备用初始化错误:', error)
+            }
+        }
+
+        async function checkConnectionStatus() {
+            const statusDiv = document.getElementById('statusResults')
+            statusDiv.innerHTML = '<div class="loading">🔄 检测连接状态...</div>'
+            
+            let html = ''
+            
+            // 检测本地API
+            try {
+                const response = await fetch(`${localAPI}/api/health`)
+                if (response.ok) {
+                    const data = await response.json()
+                    html += '<div class="success">✅ 本地API: 连接正常 (端口5002)</div>'
+                } else {
+                    html += '<div class="error">❌ 本地API: 连接失败</div>'
+                }
+            } catch (error) {
+                html += '<div class="error">❌ 本地API: 无法连接 (请确保服务器运行在5002端口)</div>'
+            }
+
+            // 检测Supabase
+            try {
+                if (supabaseClient) {
+                    const { data, error } = await supabaseClient.from('products').select('count').limit(1)
+                    if (!error) {
+                        html += '<div class="success">✅ Supabase: 连接正常</div>'
+                    } else {
+                        html += '<div class="error">❌ Supabase: ' + error.message + '</div>'
+                    }
+                } else {
+                    html += '<div class="error">❌ Supabase: 客户端未初始化</div>'
+                }
+            } catch (error) {
+                html += '<div class="error">❌ Supabase: 连接失败 - ' + error.message + '</div>'
+            }
+
+            statusDiv.innerHTML = html
+        }
+
+        async function testLocalAPI() {
+            const resultsDiv = document.getElementById('localResults')
+            resultsDiv.innerHTML = '<div class="loading">🔄 测试本地API...</div>'
+            
+            try {
+                const response = await fetch(`${localAPI}/api/health`)
+                const data = await response.json()
+                resultsDiv.innerHTML = `<div class="success">✅ 本地API响应:</div><pre>${JSON.stringify(data, null, 2)}</pre>`
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">❌ 错误: ${error.message}</div>`
+            }
+        }
+
+        async function testLocalProducts() {
+            const resultsDiv = document.getElementById('localResults')
+            resultsDiv.innerHTML = '<div class="loading">🔄 获取本地产品数据...</div>'
+            
+            try {
+                const response = await fetch(`${localAPI}/api/products`)
+                const data = await response.json()
+                resultsDiv.innerHTML = `<div class="success">✅ 本地产品数据 (${data.length}条):</div><pre>${JSON.stringify(data, null, 2)}</pre>`
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">❌ 错误: ${error.message}</div>`
+            }
+        }
+
+        async function testLocalNews() {
+            const resultsDiv = document.getElementById('localResults')
+            resultsDiv.innerHTML = '<div class="loading">🔄 获取本地新闻数据...</div>'
+            
+            try {
+                const response = await fetch(`${localAPI}/api/news`)
+                const data = await response.json()
+                resultsDiv.innerHTML = `<div class="success">✅ 本地新闻数据 (${data.length}条):</div><pre>${JSON.stringify(data, null, 2)}</pre>`
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">❌ 错误: ${error.message}</div>`
+            }
+        }
+
+        async function testSupabase() {
+            const resultsDiv = document.getElementById('supabaseResults')
+            resultsDiv.innerHTML = '<div class="loading">🔄 测试Supabase连接...</div>'
+            
+            try {
+                if (!supabaseClient) {
+                    throw new Error('Supabase客户端未初始化')
+                }
+                const { data, error } = await supabaseClient.from('products').select('count').limit(1)
+                if (error) throw error
+                resultsDiv.innerHTML = `<div class="success">✅ Supabase连接成功</div><pre>连接状态: 正常</pre>`
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">❌ Supabase错误: ${error.message}</div>`
+            }
+        }
+
+        async function testSupabaseProducts() {
+            const resultsDiv = document.getElementById('supabaseResults')
+            resultsDiv.innerHTML = '<div class="loading">🔄 获取Supabase产品数据...</div>'
+            
+            try {
+                if (!supabaseClient) {
+                    throw new Error('Supabase客户端未初始化')
+                }
+                const { data, error } = await supabaseClient.from('products').select('*').order('created_at', { ascending: false })
+                if (error) throw error
+                resultsDiv.innerHTML = `<div class="success">✅ Supabase产品数据 (${data.length}条):</div><pre>${JSON.stringify(data, null, 2)}</pre>`
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">❌ 错误: ${error.message}</div>`
+            }
+        }
+
+        async function testSupabaseNews() {
+            const resultsDiv = document.getElementById('supabaseResults')
+            resultsDiv.innerHTML = '<div class="loading">🔄 获取Supabase新闻数据...</div>'
+            
+            try {
+                if (!supabaseClient) {
+                    throw new Error('Supabase客户端未初始化')
+                }
+                const { data, error } = await supabaseClient.from('news').select('*').eq('status', 'published').order('created_at', { ascending: false })
+                if (error) throw error
+                resultsDiv.innerHTML = `<div class="success">✅ Supabase新闻数据 (${data.length}条):</div><pre>${JSON.stringify(data, null, 2)}</pre>`
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">❌ 错误: ${error.message}</div>`
+            }
+        }
+
+        async function submitToLocal() {
+            const resultsDiv = document.getElementById('formResults')
+            const formData = {
+                name: document.getElementById('testName').value,
+                email: document.getElementById('testEmail').value,
+                phone: document.getElementById('testPhone').value,
+                message: document.getElementById('testMessage').value
+            }
+
+            if (!formData.name || !formData.email) {
+                resultsDiv.innerHTML = '<div class="error">❌ 请填写姓名和邮箱</div>'
+                return
+            }
+
+            resultsDiv.innerHTML = '<div class="loading">🔄 提交到本地API...</div>'
+            
+            try {
+                const response = await fetch(`${localAPI}/api/contact`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                })
+                const data = await response.json()
+                resultsDiv.innerHTML = `<div class="success">✅ 本地提交成功:</div><pre>${JSON.stringify(data, null, 2)}</pre>`
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">❌ 本地提交失败: ${error.message}</div>`
+            }
+        }
+
+        async function submitToSupabase() {
+            const resultsDiv = document.getElementById('formResults')
+            const formData = {
+                name: document.getElementById('testName').value,
+                email: document.getElementById('testEmail').value,
+                phone: document.getElementById('testPhone').value,
+                message: document.getElementById('testMessage').value,
+                status: 'pending'
+            }
+
+            if (!formData.name || !formData.email) {
+                resultsDiv.innerHTML = '<div class="error">❌ 请填写姓名和邮箱</div>'
+                return
+            }
+
+            resultsDiv.innerHTML = '<div class="loading">🔄 提交到Supabase...</div>'
+            
+            try {
+                if (!supabaseClient) {
+                    throw new Error('Supabase客户端未初始化')
+                }
+                const { data, error } = await supabaseClient.from('inquiries').insert([formData]).select()
+                if (error) throw error
+                resultsDiv.innerHTML = `<div class="success">✅ Supabase提交成功:</div><pre>${JSON.stringify(data, null, 2)}</pre>`
+            } catch (error) {
+                resultsDiv.innerHTML = `<div class="error">❌ Supabase提交失败: ${error.message}</div>`
+            }
+        }
+
+        function showSystemInfo() {
+            const infoDiv = document.getElementById('systemInfo')
+            const info = {
+                '本地服务器': 'http://127.0.0.1:5002',
+                '管理后台': 'http://127.0.0.1:5002/admin',
+                'Supabase项目': 'https://jirudzbqcxviytcmxegf.supabase.co',
+                'Supabase控制台': 'https://supabase.com/dashboard/project/jirudzbqcxviytcmxegf',
+                '当前时间': new Date().toLocaleString('zh-CN'),
+                '浏览器': navigator.userAgent.split(' ')[0],
+                '测试页面': window.location.href
+            }
+            
+            let html = '<h4>🔧 系统配置信息:</h4>'
+            for (const [key, value] of Object.entries(info)) {
+                html += `<div><strong>${key}:</strong> ${value}</div>`
+            }
+            
+            infoDiv.innerHTML = html
+        }
+    </script>
+</body>
+</html>
