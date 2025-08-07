@@ -478,19 +478,60 @@ p {
     background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
     color: white;
     padding: 80px 0 60px;
-    min-height: 300px;
+    min-height: 400px;
     display: flex;
     align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.cta-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.3;
+}
+
+.cta-section .container {
+    position: relative;
+    z-index: 2;
 }
 
 /* Product Detail Pages */
 .product-hero-section {
     padding: 120px 0 80px;
     color: white;
-    min-height: 300px;
+    min-height: 500px;
     display: flex;
     align-items: center;
     background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-blue-light) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.product-hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    opacity: 0.3;
+}
+
+.product-hero-section .hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.product-hero-section .hero-image {
+    position: relative;
+    z-index: 2;
 }
 
 .hero-content h1 {
@@ -664,17 +705,42 @@ p {
     }
     
     .product-hero-section {
-        padding: 80px 0 40px;
-        min-height: 250px;
+        padding: 100px 0 60px;
+        min-height: 400px;
     }
     
     .cta-section {
-        padding: 60px 0 40px;
-        min-height: 250px;
+        padding: 80px 0 60px;
+        min-height: 350px;
     }
     
     .feature-icon, .creative-icon {
         font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-section {
+        min-height: 350px;
+        padding: 80px 0 50px;
+    }
+    
+    .product-hero-section {
+        padding: 80px 0 50px;
+        min-height: 350px;
+    }
+    
+    .cta-section {
+        padding: 60px 0 50px;
+        min-height: 300px;
+    }
+    
+    .hero-content h1, .product-hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
     }
 }
 /* LED Display Website - Professional B2B Styles */
