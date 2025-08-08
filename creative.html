@@ -32,8 +32,8 @@
     console.log('✓ getBoundingClientRect patch applied');
 })();
 </script>
-<meta charset="utf-8"/><meta charset="utf-8">
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta charset="utf-8"/><meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
 <title>Creative LED Display - Flexible &amp; Curved LED Solutions | Lianjin LED</title>
 <meta content="Creative LED displays with flexible modules, curved configurations, and unique shapes. Perfect for architectural integration, art installations, and innovative designs." name="description"/>
 <meta content="creative LED display, flexible LED screen, curved LED display, shaped LED display, architectural LED" name="keywords"/>
@@ -103,6 +103,13 @@
 </nav>
 <!-- Hero Section -->
 <section class="product-hero-section" style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+     
+     
+     
+    padding: 120px 0 80px !important;
+    display: flex !important;
+    align-items: center !important;
+
     min-height: 600px !important; 
     max-height: 600px !important; 
     height: 600px !important; 
@@ -111,6 +118,12 @@
     align-items: center !important;
 ">
 <div class="container" style="
+    position: relative !important;
+    z-index: 10 !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+
     position: relative !important;
     z-index: 10 !important;
     height: auto !important;
@@ -599,6 +612,13 @@
 </section>
 <!-- CTA Section -->
 <section class="cta-section" style="background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+     
+     
+     
+    padding: 120px 0 80px !important;
+    display: flex !important;
+    align-items: center !important;
+
     min-height: 600px !important; 
     max-height: 600px !important; 
     height: 600px !important; 
@@ -607,6 +627,12 @@
     align-items: center !important;
 ">
 <div class="container" style="
+    position: relative !important;
+    z-index: 10 !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+
     position: relative !important;
     z-index: 10 !important;
     height: auto !important;
@@ -707,6 +733,29 @@
         });
     </script>
 <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Force hero sections to correct height
+            document.querySelectorAll('.hero-section, .product-hero-section, section[class*="hero"], .cta-section').forEach(function(el) {
+                el.style.minHeight = '600px';
+                el.style.maxHeight = '600px';
+                el.style.height = '600px';
+                el.style.padding = '120px 0 80px';
+                el.style.display = 'flex';
+                el.style.alignItems = 'center';
+            });
+            
+            // Force containers within hero sections
+            document.querySelectorAll('.hero-section .container, .product-hero-section .container, .cta-section .container').forEach(function(el) {
+                el.style.position = 'relative';
+                el.style.zIndex = '10';
+                el.style.height = 'auto';
+                el.style.display = 'flex';
+                el.style.alignItems = 'center';
+            });
+            
+            console.log('✅ Emergency hero fix applied via JavaScript');
+        });
+        </script><script>
         document.addEventListener('DOMContentLoaded', function() {
             // Force hero sections to correct height
             document.querySelectorAll('.hero-section, .product-hero-section, section[class*="hero"], .cta-section').forEach(function(el) {

@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>联锦LED管理系统 - 完整版</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: #f8f9fa;
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 200px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 20px;
+            border-radius: 0;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .main-content {
+            margin-left: 200px;
+            padding: 20px;
+        }
+        
+        .header {
+            background: white;
+            padding: 15px 30px;
+            margin: -20px -20px 20px -20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .card {
+            border: none;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        .table th {
+            background: #f8f9fa;
+            border: none;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+        }
+    </style>
+</head>
+<body>
+    <!-- 登录界面 -->
+    <div id="login-section" class="login-container">
+        <div class="login-card">
+            <div class="text-center mb-4">
+                <div class="mb-3">
+                    <i class="fas fa-tv display-4" style="color: #667eea;"></i>
+                </div>
+                <h3>联锦LED管理系统</h3>
+                <p class="text-muted">Complete Chinese LED Admin System</p>
+            </div>
+            
+            <form id="login-form">
+                <div class="mb-3">
+                    <label class="form-label">用户名</label>
+                    <input type="text" class="form-control" id="username" value="admin" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">密码</label>
+                    <input type="password" class="form-control" id="password" value="admin123" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-sign-in-alt me-2"></i>登录管理后台
+                </button>
+            </form>
+            
+            <div class="mt-3 text-center">
+                <small class="text-muted">默认账号: admin / admin123</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- 管理界面 -->
+    <div id="admin-section" style="display: none;">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <div class="p-3 text-center border-bottom border-light">
+                <h5 class="mb-0">
+                    <i class="fas fa-tv me-2"></i>
+                    联锦LED
+                </h5>
+                <small>管理系统</small>
+            </div>
+            
+            <nav class="nav flex-column">
+                <a class="nav-link active" href="#" data-section="dashboard">
+                    <i class="fas fa-tachometer-alt me-2"></i>仪表盘总览
+                </a>
+                <a class="nav-link" href="#" data-section="frontend">
+                    <i class="fas fa-globe me-2"></i>前端页面管理
+                </a>
+                <a class="nav-link" href="#" data-section="products">
+                    <i class="fas fa-cube me-2"></i>产品管理
+                </a>
+                <a class="nav-link" href="#" data-section="inquiries">
+                    <i class="fas fa-envelope me-2"></i>询盘管理
+                </a>
+                <a class="nav-link" href="#" data-section="news">
+                    <i class="fas fa-newspaper me-2"></i>新闻管理
+                </a>
+                <a class="nav-link" href="#" data-section="users">
+                    <i class="fas fa-users me-2"></i>用户管理
+                </a>
+                <a class="nav-link" href="#" data-section="settings">
+                    <i class="fas fa-cog me-2"></i>系统设置
+                </a>
+                <a class="nav-link" href="#" data-section="statistics">
+                    <i class="fas fa-chart-bar me-2"></i>统计分析
+                </a>
+            </nav>
+            
+            <div class="p-3 mt-auto border-top border-light">
+                <button class="btn btn-outline-light btn-sm w-100" onclick="logout()">
+                    <i class="fas fa-sign-out-alt me-2"></i>退出登录
+                </button>
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <!-- 头部 -->
+            <div class="header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0" id="page-title">仪表盘总览</h4>
+                    <div>
+                        <span class="text-muted">欢迎，</span>
+                        <span id="admin-username">admin</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 仪表盘 -->
+            <div id="dashboard-content" class="content-section active">
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-number" id="stat-pages">8</div>
+                            <div>页面模块</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-number" id="stat-products">0</div>
+                            <div>产品数量</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-number" id="stat-inquiries">0</div>
+                            <div>询盘数量</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-number" id="stat-news">0</div>
+                            <div>新闻数量</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">最新询盘</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>姓名</th>
+                                        <th>邮箱</th>
+                                        <th>公司</th>
+                                        <th>留言</th>
+                                        <th>时间</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-inquiries">
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted">暂无数据</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 前端页面管理 -->
+            <div id="frontend-content" class="content-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">前端页面管理</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-home display-4 text-primary mb-3"></i>
+                                        <h6>首页管理</h6>
+                                        <button class="btn btn-primary btn-sm" onclick="editPage('home')">编辑内容</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-info-circle display-4 text-primary mb-3"></i>
+                                        <h6>关于我们</h6>
+                                        <button class="btn btn-primary btn-sm" onclick="editPage('about')">编辑内容</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body text-center">
+                                        <i class="fas fa-cube display-4 text-primary mb-3"></i>
+                                        <h6>产品中心</h6>
+                                        <button class="btn btn-primary btn-sm" onclick="editPage('products')">编辑内容</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 产品管理 -->
+            <div id="products-content" class="content-section">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">产品管理</h5>
+                        <button class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus me-2"></i>添加产品
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>产品名称</th>
+                                        <th>分类</th>
+                                        <th>价格</th>
+                                        <th>状态</th>
+                                        <th>时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="news-table">
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">暂无数据</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 用户管理 -->
+            <div id="users-content" class="content-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">用户管理</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>用户名</th>
+                                        <th>邮箱</th>
+                                        <th>角色</th>
+                                        <th>状态</th>
+                                        <th>最后登录</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-table">
+                                    <tr>
+                                        <td colspan="7" class="text-center text-muted">暂无数据</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 系统设置 -->
+            <div id="settings-content" class="content-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">系统设置</h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="settings-form">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">网站名称</label>
+                                        <input type="text" class="form-control" id="site_name" value="联锦LED显示屏">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">联系邮箱</label>
+                                        <input type="email" class="form-control" id="contact_email" value="info@lianjinled.com">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">联系电话</label>
+                                        <input type="text" class="form-control" id="contact_phone" value="+86-755-12345678">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">公司地址</label>
+                                        <input type="text" class="form-control" id="company_address" value="深圳市南山区科技园">
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="mb-3">
+                                        <label class="form-label">网站描述</label>
+                                        <textarea class="form-control" id="site_description" rows="3">专业LED显示屏制造商</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>保存设置
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 统计分析 -->
+            <div id="statistics-content" class="content-section">
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h3 class="text-primary" id="total-inquiries">0</h3>
+                                <p class="mb-0">总询盘数</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h3 class="text-success" id="total-products">0</h3>
+                                <p class="mb-0">总产品数</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h3 class="text-info" id="total-news">0</h3>
+                                <p class="mb-0">总新闻数</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h3 class="text-warning" id="total-users">0</h3>
+                                <p class="mb-0">总用户数</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // API基础URL
+        const API_BASE = '/api';
+        let currentAdmin = null;
+
+        // 登录处理
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    currentAdmin = data.admin;
+                    document.getElementById('admin-username').textContent = data.admin.username;
+                    document.getElementById('login-section').style.display = 'none';
+                    document.getElementById('admin-section').style.display = 'block';
+                    loadDashboard();
+                } else {
+                    alert(data.message || '登录失败');
+                }
+            } catch (error) {
+                console.error('登录错误:', error);
+                alert('登录失败，请检查网络连接');
+            }
+        });
+
+        // 导航处理
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // 更新导航状态
+                document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+                
+                // 显示对应内容
+                const section = link.getAttribute('data-section');
+                showSection(section);
+                
+                // 更新页面标题
+                const titles = {
+                    'dashboard': '仪表盘总览',
+                    'frontend': '前端页面管理',
+                    'products': '产品管理',
+                    'inquiries': '询盘管理',
+                    'news': '新闻管理',
+                    'users': '用户管理',
+                    'settings': '系统设置',
+                    'statistics': '统计分析'
+                };
+                document.getElementById('page-title').textContent = titles[section] || section;
+            });
+        });
+
+        // 显示指定内容区域
+        function showSection(section) {
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(`${section}-content`).classList.add('active');
+            
+            // 根据不同section加载对应数据
+            switch(section) {
+                case 'dashboard':
+                    loadDashboard();
+                    break;
+                case 'products':
+                    loadProducts();
+                    break;
+                case 'inquiries':
+                    loadInquiries();
+                    break;
+                case 'news':
+                    loadNews();
+                    break;
+                case 'statistics':
+                    loadStatistics();
+                    break;
+            }
+        }
+
+        // 加载仪表盘数据
+        async function loadDashboard() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/dashboard`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    // 更新统计数据
+                    document.getElementById('stat-pages').textContent = data.stats.pages;
+                    document.getElementById('stat-products').textContent = data.stats.products;
+                    document.getElementById('stat-inquiries').textContent = data.stats.inquiries;
+                    document.getElementById('stat-news').textContent = data.stats.news;
+                    
+                    // 更新最新询盘
+                    const tbody = document.getElementById('recent-inquiries');
+                    tbody.innerHTML = '';
+                    
+                    if (data.recent_inquiries && data.recent_inquiries.length > 0) {
+                        data.recent_inquiries.forEach(inquiry => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${inquiry.name}</td>
+                                <td>${inquiry.email}</td>
+                                <td>${inquiry.company || '-'}</td>
+                                <td>${inquiry.message ? inquiry.message.substring(0, 50) + '...' : '-'}</td>
+                                <td>${new Date(inquiry.created_at).toLocaleDateString()}</td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">暂无数据</td></tr>';
+                    }
+                }
+            } catch (error) {
+                console.error('加载仪表盘数据失败:', error);
+            }
+        }
+
+        // 加载产品数据
+        async function loadProducts() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/products`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    const tbody = document.getElementById('products-table');
+                    tbody.innerHTML = '';
+                    
+                    if (data.products && data.products.length > 0) {
+                        data.products.forEach(product => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${product.id}</td>
+                                <td>${product.name}</td>
+                                <td>${product.category || '-'}</td>
+                                <td>${product.price ? '¥' + product.price : '-'}</td>
+                                <td><span class="badge bg-success">${product.status}</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary">编辑</button>
+                                    <button class="btn btn-sm btn-outline-danger">删除</button>
+                                </td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">暂无数据</td></tr>';
+                    }
+                }
+            } catch (error) {
+                console.error('加载产品数据失败:', error);
+            }
+        }
+
+        // 加载询盘数据
+        async function loadInquiries() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/inquiries`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    const tbody = document.getElementById('inquiries-table');
+                    tbody.innerHTML = '';
+                    
+                    if (data.inquiries && data.inquiries.length > 0) {
+                        data.inquiries.forEach(inquiry => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${inquiry.id}</td>
+                                <td>${inquiry.name}</td>
+                                <td>${inquiry.email}</td>
+                                <td>${inquiry.company || '-'}</td>
+                                <td>${inquiry.phone || '-'}</td>
+                                <td><span class="badge bg-primary">${inquiry.status}</span></td>
+                                <td>${new Date(inquiry.created_at).toLocaleDateString()}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary">查看</button>
+                                    <button class="btn btn-sm btn-outline-success">处理</button>
+                                </td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">暂无数据</td></tr>';
+                    }
+                }
+            } catch (error) {
+                console.error('加载询盘数据失败:', error);
+            }
+        }
+
+        // 加载新闻数据
+        async function loadNews() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/news`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    const tbody = document.getElementById('news-table');
+                    tbody.innerHTML = '';
+                    
+                    if (data.news && data.news.length > 0) {
+                        data.news.forEach(news => {
+                            const row = document.createElement('tr');
+                            row.innerHTML = `
+                                <td>${news.id}</td>
+                                <td>${news.title}</td>
+                                <td>${news.author || '-'}</td>
+                                <td><span class="badge bg-success">${news.status}</span></td>
+                                <td>${new Date(news.created_at).toLocaleDateString()}</td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline-primary">编辑</button>
+                                    <button class="btn btn-sm btn-outline-danger">删除</button>
+                                </td>
+                            `;
+                            tbody.appendChild(row);
+                        });
+                    } else {
+                        tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">暂无数据</td></tr>';
+                    }
+                }
+            } catch (error) {
+                console.error('加载新闻数据失败:', error);
+            }
+        }
+
+        // 加载统计数据
+        async function loadStatistics() {
+            // 这里可以加载更详细的统计数据
+            loadDashboard(); // 复用仪表盘数据
+        }
+
+        // 编辑页面内容
+        function editPage(pageName) {
+            alert(`编辑${pageName}页面功能开发中...`);
+        }
+
+        // 退出登录
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                currentAdmin = null;
+                document.getElementById('login-section').style.display = 'flex';
+                document.getElementById('admin-section').style.display = 'none';
+            }
+        }
+
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('联锦LED管理系统已加载');
+        });
+    </script>
+</body>
+</html>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="products-table">
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">暂无数据</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 询盘管理 -->
+            <div id="inquiries-content" class="content-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">询盘管理</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>姓名</th>
+                                        <th>邮箱</th>
+                                        <th>公司</th>
+                                        <th>电话</th>
+                                        <th>状态</th>
+                                        <th>时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inquiries-table">
+                                    <tr>
+                                        <td colspan="8" class="text-center text-muted">暂无数据</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 新闻管理 -->
+            <div id="news-content" class="content-section">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">新闻管理</h5>
+                        <button class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus me-2"></i>添加新闻
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>标题</th>
+                                        <th>作者</th>
+                                        <th>状态</th

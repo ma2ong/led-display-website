@@ -602,6 +602,130 @@ def api_contact():
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+@app.route('/api/products')
+def api_products():
+    """获取产品列表API"""
+    conn = get_db_connection()
+    products = conn.execute('''
+        SELECT * FROM products 
+        WHERE status = 'active'
+        ORDER BY created_at DESC
+    ''').fetchall()
+    conn.close()
+    
+    product_list = []
+    for product in products:
+        product_list.append({
+            'id': product['id'],
+            'name': product['name'],
+            'category': product['category'],
+            'description': product['description'],
+            'specifications': product['specifications'],
+            'features': product['features'],
+            'images': product['images'],
+            'price': product['price'],
+            'status': product['status'],
+            'created_at': product['created_at']
+        })
+    
+    return jsonify({'status': 'success', 'products': product_list})
+
+@app.route('/api/news')
+def api_news():
+    """获取新闻列表API"""
+    conn = get_db_connection()
+    news_list = conn.execute('''
+        SELECT * FROM news 
+        WHERE status = 'published'
+        ORDER BY created_at DESC
+    ''').fetchall()
+    conn.close()
+    
+    news_data = []
+    for news in news_list:
+        news_data.append({
+            'id': news['id'],
+            'title': news['title'],
+            'content': news['content'],
+            'category': news['category'],
+            'image': news['image'],
+            'author': news['author'],
+            'status': news['status'],
+            'created_at': news['created_at']
+        })
+    
+    return jsonify({'status': 'success', 'news': news_data})
+
+@app.route('/api/cases')
+def api_cases():
+    """获取案例列表API"""
+    conn = get_db_connection()
+    cases = conn.execute('''
+        SELECT * FROM cases 
+        WHERE status = 'published'
+        ORDER BY created_at DESC
+    ''').fetchall()
+    conn.close()
+    
+    case_list = []
+    for case in cases:
+        case_list.append({
+            'id': case['id'],
+            'title': case['title'],
+            'description': case['description'],
+            'category': case['category'],
+            'location': case['location'],
+            'client': case['client'],
+            'images': case['images'],
+            'project_date': case['project_date'],
+            'status': case['status'],
+            'created_at': case['created_at']
+        })
+    
+    return jsonify({'status': 'success', 'cases': case_list})
+
+@app.route('/api/solutions')
+def api_solutions():
+    """获取解决方案列表API"""
+    conn = get_db_connection()
+    solutions = conn.execute('''
+        SELECT * FROM solutions 
+        WHERE status = 'active'
+        ORDER BY created_at DESC
+    ''').fetchall()
+    conn.close()
+    
+    solution_list = []
+    for solution in solutions:
+        solution_list.append({
+            'id': solution['id'],
+            'title': solution['title'],
+            'description': solution['description'],
+            'category': solution['category'],
+            'image': solution['image'],
+            'features': solution['features'],
+            'applications': solution['applications'],
+            'status': solution['status'],
+            'created_at': solution['created_at']
+        })
+    
+    return jsonify({'status': 'success', 'solutions': solution_list})
+
+@app.route('/api/settings')
+def api_settings():
+    """获取系统设置API"""
+    conn = get_db_connection()
+    settings = conn.execute('''
+        SELECT * FROM system_settings
+    ''').fetchall()
+    conn.close()
+    
+    settings_dict = {}
+    for setting in settings:
+        settings_dict[setting['setting_key']] = setting['setting_value']
+    
+    return jsonify({'status': 'success', 'settings': settings_dict})
+
 def main():
     """主函数"""
     print("=" * 60)

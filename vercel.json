@@ -9,9 +9,21 @@
     {
       "src": "api/*.py",
       "use": "@vercel/python"
+    },
+    {
+      "src": "api/*.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
+    {
+      "src": "/admin-system",
+      "dest": "/admin-system.html"
+    },
+    {
+      "src": "/api/admin/(.*)",
+      "dest": "/api/admin.py"
+    },
     {
       "src": "/api/(.*)",
       "dest": "/api/$1"

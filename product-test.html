@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品表测试 - 诊断HTTP 400错误</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .result-card {
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .log-container {
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: #212529;
+            color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        .log-entry {
+            margin-bottom: 5px;
+        }
+        .log-success { color: #28a745; }
+        .log-error { color: #dc3545; }
+        .log-info { color: #17a2b8; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-tools me-2"></i>产品表诊断工具
+            </a>
+        </div>
+    </nav>
+
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">产品表写入失败诊断 (HTTP 错误: 400)</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <h5>可能的原因:</h5>
+                            <ul>
+                                <li>products 表不存在</li>
+                                <li>表结构与提交的数据不匹配</li>
+                                <li>没有写入权限</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="test-section">
+                    <h4>1. 数据库连接测试</h4>
+                    <p>测试与Supabase数据库的连接是否正常</p>
+                    <button id="test-connection" class="btn btn-primary">测试连接</button>
+                    <div id="connection-result" class="mt-3"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="test-section">
+                    <h4>2. 表结构测试</h4>
+                    <p>检查products表是否存在及其结构</p>
+                    <button id="test-structure" class="btn btn-primary">检查表结构</button>
+                    <div id="structure-result" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="test-section">
+                    <h4>3. 权限测试</h4>
+                    <p>测试是否有读取和写入权限</p>
+                    <button id="test-permissions" class="btn btn-primary">测试权限</button>
+                    <div id="permissions-result" class="mt-3"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="test-section">
+                    <h4>4. 数据插入测试</h4>
+                    <p>尝试插入测试数据</p>
+                    <button id="test-insert" class="btn btn-primary">测试插入</button>
+                    <div id="insert-result" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="test-section">
+                    <h4>5. 完整诊断</h4>
+                    <p>运行所有测试并生成诊断报告</p>
+                    <button id="run-all-tests" class="btn btn-success">运行完整诊断</button>
+                    <div id="full-diagnosis" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">控制台日志</h4>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="log-container" class="log-container"></div>
+                    </div>
+                    <div class="card-footer">
+                        <button id="clear-logs" class="btn btn-secondary btn-sm">清除日志</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // 初始化Supabase客户端
+        const supabaseUrl = 'https://tfkzzgufbftlafsdyrmj.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRma3p6Z3VmYmZ0bGFmc2R5cm1qIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzODQxOTQsImV4cCI6MjA2OTk2MDE5NH0.z5VqNaBohG-9Kwm3thBnrgAca8bePxnbBamFCBiXoLY';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        // 日志系统
+        const logContainer = document.getElementById('log-container');
+        function log(message, type = 'info') {
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${type}`;
+            logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        // 清除日志
+        document.getElementById('clear-logs').addEventListener('click', () => {
+            logContainer.innerHTML = '';
+        });
+
+        // 显示结果函数
+        function showResult(elementId, success, message, details = null) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `
+                <div class="alert alert-${success ? 'success' : 'danger'}">
+                    <h5>${success ? '成功' : '失败'}</h5>
+                    <p>${message}</p>
+                    ${details ? `<pre class="mt-2">${JSON.stringify(details, null, 2)}</pre>` : ''}
+                </div>
+            `;
+        }
+
+        // 1. 测试数据库连接
+        document.getElementById('test-connection').addEventListener('click', async () => {
+            log('开始测试数据库连接...');
+            try {
+                const { data, error } = await supabase
+                    .from('products')
+                    .select('count')
+                    .limit(1);
+                    
+                if (error) {
+                    log(`数据库连接失败: ${error.message}`, 'error');
+                    showResult('connection-result', false, '数据库连接失败', error);
+                } else {
+                    log('数据库连接成功', 'success');
+                    showResult('connection-result', true, '数据库连接成功', data);
+                }
+            } catch (err) {
+                log(`连接测试异常: ${err.message}`, 'error');
+                showResult('connection-result', false, '连接测试异常', err);
+            }
+        });
+
+        // 2. 测试表结构
+        document.getElementById('test-structure').addEventListener('click', async () => {
+            log('开始检查表结构...');
+            try {
+                const { data, error } = await supabase
+                    .from('products')
+                    .select('id, name, category, description, price, image_url, specifications, created_at')
+                    .limit(1);
+                    
+                if (error) {
+                    log(`表结构检查失败: ${error.message}`, 'error');
+                    showResult('structure-result', false, '表结构检查失败', error);
+                } else {
+                    log('表结构检查成功', 'success');
+                    
+                    // 获取列信息
+                    const columns = Object.keys(data[0] || {});
+                    showResult('structure-result', true, '表结构检查成功', {
+                        columns,
+                        sample: data[0]
+                    });
+                }
+            } catch (err) {
+                log(`表结构检查异常: ${err.message}`, 'error');
+                showResult('structure-result', false, '表结构检查异常', err);
+            }
+        });
+
+        // 3. 测试权限
+        document.getElementById('test-permissions').addEventListener('click', async () => {
+            log('开始测试权限...');
+            
+            // 测试读取权限
+            try {
+                log('测试读取权限...');
+                const { data: readData, error: readError } = await supabase
+                    .from('products')
+                    .select('id')
+                    .limit(1);
+                    
+                if (readError) {
+                    log(`读取权限测试失败: ${readError.message}`, 'error');
+                    showResult('permissions-result', false, '读取权限测试失败', readError);
+                    return;
+                }
+                
+                log('读取权限测试成功', 'success');
+                
+                // 测试写入权限
+                log('测试写入权限...');
+                const testProduct = {
+                    name: '权限测试产品',
+                    category: '测试分类',
+                    description: '这是一个用于测试权限的产品'
+                };
+                
+                const { data: writeData, error: writeError } = await supabase
+                    .from('products')
+                    .insert(testProduct)
+                    .select();
+                    
+                if (writeError) {
+                    log(`写入权限测试失败: ${writeError.message}`, 'error');
+                    showResult('permissions-result', false, '写入权限测试失败', {
+                        readAccess: true,
+                        writeAccess: false,
+                        error: writeError
+                    });
+                    return;
+                }
+                
+                log('写入权限测试成功', 'success');
+                
+                // 清理测试数据
+                if (writeData && writeData.length > 0) {
+                    log('清理测试数据...');
+                    await supabase
+                        .from('products')
+                        .delete()
+                        .eq('id', writeData[0].id);
+                    log('测试数据已清理', 'info');
+                }
+                
+                showResult('permissions-result', true, '权限测试成功', {
+                    readAccess: true,
+                    writeAccess: true
+                });
+                
+            } catch (err) {
+                log(`权限测试异常: ${err.message}`, 'error');
+                showResult('permissions-result', false, '权限测试异常', err);
+            }
+        });
+
+        // 4. 测试数据插入
+        document.getElementById('test-insert').addEventListener('click', async () => {
+            log('开始测试数据插入...');
+            
+            try {
+                // 准备测试数据
+                        const testProduct = {
+                            name: '测试LED显示屏',
+                            category: '室内显示屏',
+                            description: '高清LED显示屏，适用于室内环境',
+                            price: 2999.99,
+                            image_url: 'assets/products/test-led.jpg',
+                            specifications: JSON.stringify(['分辨率: 1920x1080', '亮度: 800nits'])
+                        };
+                        
+                        const { data, error } = await supabase
+                            .from('products')
+                            .insert(testProduct)
+                            .select();
+                            
+                        diagnosis.insertTest = !error;
+                        
+                        if (error) {
+                            diagnosis.errors.push({ stage: 'insert_test', error });
+                            diagnosis.recommendations.push('数据插入失败，可能是数据格式问题');
+                        } else if (data && data.length > 0) {
+                            // 清理测试数据
+                            await supabase
+                                .from('products')
+                                .delete()
+                                .eq('id', data[0].id);
+                        }
+                    } catch (err) {
+                        diagnosis.errors.push({ stage: 'insert_test', error: err });
+                    }
+                }
+                
+                // 5. 生成诊断报告
+                statusDiv.textContent = '生成诊断报告...';
+                progressBar.style.width = '100%';
+                
+                // 添加额外建议
+                if (diagnosis.errors.length === 0) {
+                    diagnosis.recommendations.push('所有测试通过，产品表可以正常写入');
+                } else {
+                    // 检查常见错误模式
+                    const errorMessages = diagnosis.errors.map(e => e.error?.message || '').join(' ');
+                    
+                    if (errorMessages.includes('not found')) {
+                        diagnosis.recommendations.push('表不存在，需要创建products表');
+                    }
+                    
+                    if (errorMessages.includes('permission denied')) {
+                        diagnosis.recommendations.push('权限被拒绝，检查RLS策略或禁用RLS');
+                    }
+                    
+                    if (errorMessages.includes('violates not-null constraint')) {
+                        diagnosis.recommendations.push('违反非空约束，检查必填字段');
+                    }
+                    
+                    if (errorMessages.includes('invalid input syntax')) {
+                        diagnosis.recommendations.push('数据格式错误，检查字段类型');
+                    }
+                }
+                
+                // 显示诊断结果
+                let resultHtml = `
+                    <div class="alert alert-${diagnosis.errors.length === 0 ? 'success' : 'warning'}">
+                        <h5>诊断完成</h5>
+                        <p>${diagnosis.errors.length === 0 ? '所有测试通过！' : `发现 ${diagnosis.errors.length} 个问题`}</p>
+                    </div>
+                    
+                    <div class="card mb-3">
+                        <div class="card-header">诊断结果</div>
+                        <div class="card-body">
+                            <ul class="list-group">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    数据库连接
+                                    <span class="badge bg-${diagnosis.connection ? 'success' : 'danger'} rounded-pill">
+                                        ${diagnosis.connection ? '成功' : '失败'}
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    表存在
+                                    <span class="badge bg-${diagnosis.tableExists ? 'success' : 'danger'} rounded-pill">
+                                        ${diagnosis.tableExists ? '是' : '否'}
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    读取权限
+                                    <span class="badge bg-${diagnosis.permissions.read ? 'success' : 'danger'} rounded-pill">
+                                        ${diagnosis.permissions.read ? '有' : '无'}
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    写入权限
+                                    <span class="badge bg-${diagnosis.permissions.write ? 'success' : 'danger'} rounded-pill">
+                                        ${diagnosis.permissions.write ? '有' : '无'}
+                                    </span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    数据插入测试
+                                    <span class="badge bg-${diagnosis.insertTest ? 'success' : 'danger'} rounded-pill">
+                                        ${diagnosis.insertTest ? '成功' : '失败'}
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                
+                // 添加建议
+                if (diagnosis.recommendations.length > 0) {
+                    resultHtml += `
+                        <div class="card mb-3">
+                            <div class="card-header">修复建议</div>
+                            <div class="card-body">
+                                <ol class="list-group list-group-numbered">
+                                    ${diagnosis.recommendations.map(rec => `
+                                        <li class="list-group-item">${rec}</li>
+                                    `).join('')}
+                                </ol>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                // 添加错误详情
+                if (diagnosis.errors.length > 0) {
+                    resultHtml += `
+                        <div class="card">
+                            <div class="card-header">错误详情</div>
+                            <div class="card-body">
+                                <div class="accordion" id="errorAccordion">
+                                    ${diagnosis.errors.map((err, index) => `
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#error${index}">
+                                                    ${err.stage} 阶段错误: ${err.error?.message || '未知错误'}
+                                                </button>
+                                            </h2>
+                                            <div id="error${index}" class="accordion-collapse collapse" data-bs-parent="#errorAccordion">
+                                                <div class="accordion-body">
+                                                    <pre>${JSON.stringify(err.error, null, 2)}</pre>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                document.getElementById('full-diagnosis').innerHTML = resultHtml;
+                
+            } catch (err) {
+                log(`诊断过程异常: ${err.message}`, 'error');
+                document.getElementById('full-diagnosis').innerHTML = `
+                    <div class="alert alert-danger">
+                        <h5>诊断过程出错</h5>
+                        <p>${err.message}</p>
+                        <pre>${err.stack}</pre>
+                    </div>
+                `;
+            }
+        });
+
+        // 页面加载完成后显示欢迎信息
+        document.addEventListener('DOMContentLoaded', () => {
+            log('产品表诊断工具已加载', 'info');
+            log('请点击上方按钮开始测试', 'info');
+        });
+    </script>
+</body>
+</html>
+                log(`准备插入测试数据: ${JSON.stringify(testProduct)}`);
+                
+                // 插入数据
+                const { data, error } = await supabase
+                    .from('products')
+                    .insert(testProduct)
+                    .select();
+                    
+                if (error) {
+                    log(`数据插入失败: ${error.message}`, 'error');
+                    showResult('insert-result', false, '数据插入失败', {
+                        error,
+                        data: testProduct
+                    });
+                    return;
+                }
+                
+                log('数据插入成功', 'success');
+                
+                // 清理测试数据
+                if (data && data.length > 0) {
+                    log('清理测试数据...');
+                    await supabase
+                        .from('products')
+                        .delete()
+                        .eq('id', data[0].id);
+                    log('测试数据已清理', 'info');
+                }
+                
+                showResult('insert-result', true, '数据插入成功', {
+                    insertedData: data[0]
+                });
+                
+            } catch (err) {
+                log(`数据插入测试异常: ${err.message}`, 'error');
+                showResult('insert-result', false, '数据插入测试异常', err);
+            }
+        });
+
+        // 5. 运行完整诊断
+        document.getElementById('run-all-tests').addEventListener('click', async () => {
+            log('开始运行完整诊断...', 'info');
+            document.getElementById('full-diagnosis').innerHTML = `
+                <div class="progress mb-3">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0%"></div>
+                </div>
+                <div id="diagnosis-status">准备中...</div>
+            `;
+            
+            const progressBar = document.querySelector('#full-diagnosis .progress-bar');
+            const statusDiv = document.getElementById('diagnosis-status');
+            
+            // 诊断结果
+            const diagnosis = {
+                connection: false,
+                tableExists: false,
+                permissions: { read: false, write: false },
+                insertTest: false,
+                errors: [],
+                recommendations: []
+            };
+            
+            try {
+                // 1. 测试连接
+                statusDiv.textContent = '测试数据库连接...';
+                progressBar.style.width = '20%';
+                
+                try {
+                    const { data, error } = await supabase
+                        .from('products')
+                        .select('count')
+                        .limit(1);
+                        
+                    if (error) {
+                        diagnosis.errors.push({ stage: 'connection', error });
+                        diagnosis.recommendations.push('检查 Supabase URL 和 API Key 配置');
+                    } else {
+                        diagnosis.connection = true;
+                    }
+                } catch (err) {
+                    diagnosis.errors.push({ stage: 'connection', error: err });
+                    diagnosis.recommendations.push('检查 Supabase 客户端配置');
+                }
+                
+                // 2. 测试表是否存在
+                statusDiv.textContent = '检查表是否存在...';
+                progressBar.style.width = '40%';
+                
+                if (diagnosis.connection) {
+                    try {
+                        const { data, error } = await supabase
+                            .from('products')
+                            .select('id')
+                            .limit(1);
+                            
+                        if (error) {
+                            diagnosis.errors.push({ stage: 'table_exists', error });
+                            diagnosis.recommendations.push('products 表不存在，需要创建表');
+                        } else {
+                            diagnosis.tableExists = true;
+                        }
+                    } catch (err) {
+                        diagnosis.errors.push({ stage: 'table_exists', error: err });
+                    }
+                }
+                
+                // 3. 测试权限
+                statusDiv.textContent = '测试表权限...';
+                progressBar.style.width = '60%';
+                
+                if (diagnosis.tableExists) {
+                    // 测试读取权限
+                    try {
+                        const { data, error } = await supabase
+                            .from('products')
+                            .select('id')
+                            .limit(1);
+                            
+                        diagnosis.permissions.read = !error;
+                        
+                        if (error) {
+                            diagnosis.errors.push({ stage: 'read_permission', error });
+                            diagnosis.recommendations.push('没有读取权限，检查 RLS 策略');
+                        }
+                    } catch (err) {
+                        diagnosis.errors.push({ stage: 'read_permission', error: err });
+                    }
+                    
+                    // 测试写入权限
+                    try {
+                        const testProduct = {
+                            name: '权限测试产品',
+                            category: '测试分类'
+                        };
+                        
+                        const { data, error } = await supabase
+                            .from('products')
+                            .insert(testProduct)
+                            .select();
+                            
+                        diagnosis.permissions.write = !error;
+                        
+                        if (error) {
+                            diagnosis.errors.push({ stage: 'write_permission', error });
+                            diagnosis.recommendations.push('没有写入权限，检查 RLS 策略或 API Key 权限');
+                        } else if (data && data.length > 0) {
+                            // 清理测试数据
+                            await supabase
+                                .from('products')
+                                .delete()
+                                .eq('id', data[0].id);
+                        }
+                    } catch (err) {
+                        diagnosis.errors.push({ stage: 'write_permission', error: err });
+                    }
+                }
+                
+                // 4. 测试插入完整数据
+                statusDiv.textContent = '测试数据插入...';
+                progressBar.style.width = '80%';
+                
+                if (diagnosis.permissions.write) {
+                    try {
+                        const testProduct = {
+                            name: '测试LED显示屏',
+                            category: '室内显示屏',
+                            description: '高清LED显示屏，适用于室内环境',
+                            price: 2999.99,
+                            image_url: 'assets/products/test-led.jpg',
+                            specifications: JSON.stringify(['分辨率: 1920x1080', '亮度: 800nits'])
+                        };

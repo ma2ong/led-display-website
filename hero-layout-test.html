@@ -51,6 +51,13 @@
 <strong>Expected:</strong> min-height: 500px, padding: 120px 0 80px, background gradient
             </div>
 <section class="hero-section" style="
+     
+     
+     
+    padding: 120px 0 80px !important;
+    display: flex !important;
+    align-items: center !important;
+
     min-height: 600px !important; 
     max-height: 600px !important; 
     height: 600px !important; 
@@ -59,6 +66,12 @@
     align-items: center !important;
 ">
 <div class="container" style="
+    position: relative !important;
+    z-index: 10 !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+
     position: relative !important;
     z-index: 10 !important;
     height: auto !important;
@@ -101,6 +114,13 @@
 <strong>Expected:</strong> min-height: 500px, padding: 120px 0 80px, background gradient with grid pattern
             </div>
 <section class="product-hero-section" style="
+     
+     
+     
+    padding: 120px 0 80px !important;
+    display: flex !important;
+    align-items: center !important;
+
     min-height: 600px !important; 
     max-height: 600px !important; 
     height: 600px !important; 
@@ -109,6 +129,12 @@
     align-items: center !important;
 ">
 <div class="container" style="
+    position: relative !important;
+    z-index: 10 !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+
     position: relative !important;
     z-index: 10 !important;
     height: auto !important;
@@ -153,6 +179,13 @@
 <strong>Expected:</strong> min-height: 400px, padding: 80px 0 60px, flex alignment
             </div>
 <section class="cta-section" style="
+     
+     
+     
+    padding: 120px 0 80px !important;
+    display: flex !important;
+    align-items: center !important;
+
     min-height: 600px !important; 
     max-height: 600px !important; 
     height: 600px !important; 
@@ -161,6 +194,12 @@
     align-items: center !important;
 ">
 <div class="container" style="
+    position: relative !important;
+    z-index: 10 !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+
     position: relative !important;
     z-index: 10 !important;
     height: auto !important;
@@ -269,6 +308,29 @@
         });
     </script>
 <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Force hero sections to correct height
+            document.querySelectorAll('.hero-section, .product-hero-section, section[class*="hero"], .cta-section').forEach(function(el) {
+                el.style.minHeight = '600px';
+                el.style.maxHeight = '600px';
+                el.style.height = '600px';
+                el.style.padding = '120px 0 80px';
+                el.style.display = 'flex';
+                el.style.alignItems = 'center';
+            });
+            
+            // Force containers within hero sections
+            document.querySelectorAll('.hero-section .container, .product-hero-section .container, .cta-section .container').forEach(function(el) {
+                el.style.position = 'relative';
+                el.style.zIndex = '10';
+                el.style.height = 'auto';
+                el.style.display = 'flex';
+                el.style.alignItems = 'center';
+            });
+            
+            console.log('✅ Emergency hero fix applied via JavaScript');
+        });
+        </script><script>
         document.addEventListener('DOMContentLoaded', function() {
             // Force hero sections to correct height
             document.querySelectorAll('.hero-section, .product-hero-section, section[class*="hero"], .cta-section').forEach(function(el) {
