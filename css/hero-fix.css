@@ -1,0 +1,97 @@
+/* HERO Section Fix for Vercel Deployment */
+
+/* Override all HERO sections with fixed heights */
+.hero-section,
+.product-hero-section,
+.cta-section {
+    min-height: 600px !important;
+    max-height: 600px !important;
+    padding: 120px 0 80px !important;
+    display: flex !important;
+    align-items: center !important;
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* Ensure content is properly positioned */
+.hero-content,
+.product-hero-section .hero-content {
+    position: relative !important;
+    z-index: 10 !important;
+    width: 100% !important;
+}
+
+/* Background patterns */
+.hero-section::before,
+.product-hero-section::before,
+.cta-section::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>') !important;
+    opacity: 0.3 !important;
+    z-index: 1 !important;
+}
+
+/* Container positioning */
+.hero-section .container,
+.product-hero-section .container,
+.cta-section .container {
+    position: relative !important;
+    z-index: 10 !important;
+}
+
+/* Responsive fixes */
+@media (max-width: 768px) {
+    .hero-section,
+    .product-hero-section,
+    .cta-section {
+        min-height: 500px !important;
+        max-height: 500px !important;
+        padding: 100px 0 60px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-section,
+    .product-hero-section,
+    .cta-section {
+        min-height: 400px !important;
+        max-height: 400px !important;
+        padding: 80px 0 50px !important;
+    }
+    
+    .hero-title,
+    .product-hero-section h1 {
+        font-size: 2rem !important;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem !important;
+    }
+}
+
+/* Text sizing fixes */
+.hero-title {
+    font-size: clamp(2.5rem, 5vw, 4rem) !important;
+    font-weight: 700 !important;
+    margin-bottom: 1.5rem !important;
+    line-height: 1.1 !important;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem !important;
+    margin-bottom: 2rem !important;
+    opacity: 0.9 !important;
+    line-height: 1.5 !important;
+}
+
+/* Button spacing */
+.hero-section .btn,
+.product-hero-section .btn,
+.cta-section .btn {
+    margin: 0.5rem !important;
+}
