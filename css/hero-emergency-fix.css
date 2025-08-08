@@ -1,0 +1,153 @@
+/* EMERGENCY HERO FIX - HIGHEST PRIORITY */
+/* This file must be loaded LAST to override all other styles */
+
+/* Force all hero sections to proper height with !important */
+.hero-section,
+.product-hero-section,
+section[class*="hero"],
+section[style*="background"],
+.cta-section {
+    min-height: 600px !important;
+    max-height: 600px !important;
+    height: 600px !important;
+    padding: 120px 0 80px !important;
+    display: flex !important;
+    align-items: center !important;
+    position: relative !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+}
+
+/* Override any viewport height settings */
+*[style*="100vh"],
+*[style*="min-height: 100vh"],
+*[class*="hero"][style*="height"] {
+    min-height: 600px !important;
+    max-height: 600px !important;
+    height: 600px !important;
+}
+
+/* Ensure containers are properly sized */
+.hero-section .container,
+.product-hero-section .container,
+.cta-section .container {
+    position: relative !important;
+    z-index: 10 !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    min-height: 400px !important;
+}
+
+/* Fix content positioning */
+.hero-content,
+.product-hero-section .hero-content {
+    position: relative !important;
+    z-index: 10 !important;
+    width: 100% !important;
+    padding: 2rem 0 !important;
+}
+
+/* Background patterns */
+.hero-section::before,
+.product-hero-section::before,
+.cta-section::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>') !important;
+    opacity: 0.3 !important;
+    z-index: 1 !important;
+}
+
+/* Text sizing */
+.hero-title,
+.product-hero-section h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem) !important;
+    font-weight: 700 !important;
+    margin-bottom: 1.5rem !important;
+    line-height: 1.1 !important;
+    color: white !important;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem !important;
+    margin-bottom: 2rem !important;
+    opacity: 0.9 !important;
+    line-height: 1.5 !important;
+    color: white !important;
+}
+
+/* Button spacing */
+.hero-section .btn,
+.product-hero-section .btn,
+.cta-section .btn {
+    margin: 0.5rem !important;
+    padding: 0.75rem 1.5rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+}
+
+/* Responsive fixes */
+@media (max-width: 768px) {
+    .hero-section,
+    .product-hero-section,
+    .cta-section {
+        min-height: 500px !important;
+        max-height: 500px !important;
+        height: 500px !important;
+        padding: 100px 0 60px !important;
+    }
+    
+    .hero-section .container,
+    .product-hero-section .container,
+    .cta-section .container {
+        min-height: 300px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-section,
+    .product-hero-section,
+    .cta-section {
+        min-height: 450px !important;
+        max-height: 450px !important;
+        height: 450px !important;
+        padding: 80px 0 50px !important;
+    }
+    
+    .hero-title,
+    .product-hero-section h1 {
+        font-size: 2rem !important;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem !important;
+    }
+    
+    .hero-section .container,
+    .product-hero-section .container,
+    .cta-section .container {
+        min-height: 270px !important;
+    }
+}
+
+/* Override Bootstrap or any framework styles */
+.container-fluid .hero-section,
+.container .hero-section,
+.row .hero-section {
+    min-height: 600px !important;
+    max-height: 600px !important;
+    height: 600px !important;
+}
+
+/* Fix any flexbox issues */
+.d-flex.hero-section,
+.d-flex .hero-section {
+    min-height: 600px !important;
+    max-height: 600px !important;
+    height: 600px !important;
+}
