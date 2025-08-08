@@ -1,8 +1,9 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <script src="js/global-fix.js"></script>
-    <script>
+<script src="js/global-fix.js"></script>
+<script>
     // Patch for getBoundingClientRect to prevent errors
     (function() {
         window.Element.prototype.originalGetBoundingClientRect = Element.prototype.getBoundingClientRect;
@@ -24,377 +25,391 @@
         console.log('✓ getBoundingClientRect patch applied');
     })();
     </script>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fine Pitch LED Display - Ultra High Resolution | Lianjin LED</title>
-    <meta name="description" content="Professional fine pitch LED displays with pixel pitches from P0.9 to P1.56. Perfect for control rooms, broadcast studios, and corporate environments.">
-    
-    <!-- CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link href="css/style.css" rel="stylesheet">
-    <link href="css/hero-emergency-fix.css" rel="stylesheet">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Fine Pitch LED Display - Ultra High Resolution | Lianjin LED</title>
+<meta content="Professional fine pitch LED displays with pixel pitches from P0.9 to P1.56. Perfect for control rooms, broadcast studios, and corporate environments." name="description"/>
+<!-- CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
+<link href="css/style.css" rel="stylesheet"/>
+<link href="css/hero-emergency-fix.css" rel="stylesheet"/>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <i class="fas fa-tv me-2"></i>
-                <span class="fw-bold">Lianjin LED</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="about.html">About Us</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown">
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+<div class="container">
+<a class="navbar-brand" href="index.html">
+<i class="fas fa-tv me-2"></i>
+<span class="fw-bold">Lianjin LED</span>
+</a>
+<button class="navbar-toggler" data-bs-target="#navbarNav" data-bs-toggle="collapse" type="button">
+<span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarNav">
+<ul class="navbar-nav ms-auto">
+<li class="nav-item">
+<a class="nav-link" href="index.html">Home</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="about.html">About Us</a>
+</li>
+<li class="nav-item dropdown">
+<a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button">
                             Products
                         </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item active" href="fine-pitch.html">Fine Pitch LED</a></li>
-                            <li><a class="dropdown-item" href="outdoor.html">Outdoor LED</a></li>
-                            <li><a class="dropdown-item" href="rental.html">Rental LED</a></li>
-                            <li><a class="dropdown-item" href="creative.html">Creative LED</a></li>
-                            <li><a class="dropdown-item" href="transparent.html">Transparent LED</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="products.html">All Products</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="solutions.html">Solutions</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cases.html">Cases</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="news.html">News</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="support.html">Support</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact</a>
-                    </li>
-                </ul>
-                <div class="navbar-nav ms-3">
-                    <a class="btn btn-primary btn-sm" href="contact.html">
-                        <i class="fas fa-envelope me-1"></i>Get Quote
+<ul class="dropdown-menu">
+<li><a class="dropdown-item active" href="fine-pitch.html">Fine Pitch LED</a></li>
+<li><a class="dropdown-item" href="outdoor.html">Outdoor LED</a></li>
+<li><a class="dropdown-item" href="rental.html">Rental LED</a></li>
+<li><a class="dropdown-item" href="creative.html">Creative LED</a></li>
+<li><a class="dropdown-item" href="transparent.html">Transparent LED</a></li>
+<li><hr class="dropdown-divider"/></li>
+<li><a class="dropdown-item" href="products.html">All Products</a></li>
+</ul>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="solutions.html">Solutions</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="cases.html">Cases</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="news.html">News</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="support.html">Support</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="contact.html">Contact</a>
+</li>
+</ul>
+<div class="navbar-nav ms-3">
+<a class="btn btn-primary btn-sm" href="contact.html">
+<i class="fas fa-envelope me-1"></i>Get Quote
                     </a>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="product-hero-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6" data-aos="fade-right">
-                    <div class="hero-content text-white">
-                        <h1 class="display-4 fw-bold mb-4">Fine Pitch LED Display</h1>
-                        <p class="lead mb-4">Ultra-high resolution displays with pixel pitches from P0.9 to P1.56, perfect for control rooms, broadcast studios, and corporate environments where image quality is paramount.</p>
-                        <div class="d-flex flex-wrap gap-3">
-                            <a href="contact.html" class="btn btn-light btn-lg">
-                                <i class="fas fa-envelope me-2"></i>Get Quote
+</div>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<section class="product-hero-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 600px !important; 
+    max-height: 600px !important; 
+    height: 600px !important; 
+    padding: 120px 0 80px !important;
+    display: flex !important;
+    align-items: center !important;
+">
+<div class="container" style="
+    position: relative !important;
+    z-index: 10 !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+">
+<div class="row align-items-center">
+<div class="col-lg-6" data-aos="fade-right">
+<div class="hero-content text-white">
+<h1 class="display-4 fw-bold mb-4">Fine Pitch LED Display</h1>
+<p class="lead mb-4">Ultra-high resolution displays with pixel pitches from P0.9 to P1.56, perfect for control rooms, broadcast studios, and corporate environments where image quality is paramount.</p>
+<div class="d-flex flex-wrap gap-3">
+<a class="btn btn-light btn-lg" href="contact.html">
+<i class="fas fa-envelope me-2"></i>Get Quote
                             </a>
-                            <a href="#specifications" class="btn btn-outline-light btn-lg">
-                                <i class="fas fa-info-circle me-2"></i>View Specs
+<a class="btn btn-outline-light btn-lg" href="#specifications">
+<i class="fas fa-info-circle me-2"></i>View Specs
                             </a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6" data-aos="fade-left">
-                    <div class="hero-image text-center">
-                        <div class="bg-light rounded shadow-lg p-5">
-                            <i class="fas fa-desktop display-1 text-primary mb-3"></i>
-                            <h4 class="text-dark">Ultra High Resolution</h4>
-                            <p class="text-muted">P0.9 - P1.56 Pixel Pitch</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="py-5">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="section-title">Fine Pitch LED Features</h2>
-                <p class="section-subtitle">Exceptional image quality and performance</p>
-            </div>
-            
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6" data-aos="fade-up">
-                    <div class="feature-card text-center h-100 p-4">
-                        <div class="feature-icon mb-3">
-                            <i class="fas fa-eye display-4 text-primary"></i>
-                        </div>
-                        <h5>Ultra High Resolution</h5>
-                        <p class="text-muted">Pixel pitches from P0.9 to P1.56 deliver exceptional image clarity and detail for close viewing distances.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="feature-card text-center h-100 p-4">
-                        <div class="feature-icon mb-3">
-                            <i class="fas fa-tv display-4 text-success"></i>
-                        </div>
-                        <h5>4K/8K Support</h5>
-                        <p class="text-muted">Native support for 4K and 8K content with seamless splicing technology for large format displays.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                    <div class="feature-card text-center h-100 p-4">
-                        <div class="feature-icon mb-3">
-                            <i class="fas fa-tachometer-alt display-4 text-info"></i>
-                        </div>
-                        <h5>High Refresh Rate</h5>
-                        <p class="text-muted">Up to 3840Hz refresh rate ensures smooth video playback without flicker or scan lines.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                    <div class="feature-card text-center h-100 p-4">
-                        <div class="feature-icon mb-3">
-                            <i class="fas fa-feather display-4 text-warning"></i>
-                        </div>
-                        <h5>Ultra-Thin Design</h5>
-                        <p class="text-muted">Slim profile design with lightweight construction for easy installation and minimal space requirements.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
-                    <div class="feature-card text-center h-100 p-4">
-                        <div class="feature-icon mb-3">
-                            <i class="fas fa-tools display-4 text-danger"></i>
-                        </div>
-                        <h5>Easy Maintenance</h5>
-                        <p class="text-muted">Front and rear service access with modular design for quick maintenance and module replacement.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
-                    <div class="feature-card text-center h-100 p-4">
-                        <div class="feature-icon mb-3">
-                            <i class="fas fa-palette display-4 text-secondary"></i>
-                        </div>
-                        <h5>Wide Color Gamut</h5>
-                        <p class="text-muted">Superior color reproduction with wide color gamut and excellent color uniformity across the display.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Specifications Section -->
-    <section id="specifications" class="py-5 bg-light">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="section-title">Technical Specifications</h2>
-                <p class="section-subtitle">Detailed specifications for fine pitch LED displays</p>
-            </div>
-            
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <div class="table-responsive" data-aos="fade-up">
-                        <table class="table table-striped">
-                            <tbody>
-                                <tr>
-                                    <td><strong>Pixel Pitch</strong></td>
-                                    <td>P0.9, P1.25, P1.56mm</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Resolution</strong></td>
-                                    <td>4K/8K native support</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Brightness</strong></td>
-                                    <td>600-1200 nits</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Refresh Rate</strong></td>
-                                    <td>Up to 3840Hz</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Viewing Angle</strong></td>
-                                    <td>160°/160° (H/V)</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Color Temperature</strong></td>
-                                    <td>3200K-9300K adjustable</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Contrast Ratio</strong></td>
-                                    <td>5000:1</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Lifespan</strong></td>
-                                    <td>100,000 hours</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Operating Temperature</strong></td>
-                                    <td>-10°C to +40°C</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Power Consumption</strong></td>
-                                    <td>150-300W/m²</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Applications Section -->
-    <section class="py-5">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="section-title">Applications</h2>
-                <p class="section-subtitle">Perfect for professional environments</p>
-            </div>
-            
-            <div class="row g-4">
-                <div class="col-lg-3 col-md-6" data-aos="fade-up">
-                    <div class="application-card text-center h-100 p-4">
-                        <div class="application-icon mb-3">
-                            <i class="fas fa-desktop display-4 text-primary"></i>
-                        </div>
-                        <h5>Control Rooms</h5>
-                        <p class="text-muted">Mission-critical monitoring and control applications</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
-                    <div class="application-card text-center h-100 p-4">
-                        <div class="application-icon mb-3">
-                            <i class="fas fa-broadcast-tower display-4 text-success"></i>
-                        </div>
-                        <h5>Broadcast Studios</h5>
-                        <p class="text-muted">Television and media production environments</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
-                    <div class="application-card text-center h-100 p-4">
-                        <div class="application-icon mb-3">
-                            <i class="fas fa-building display-4 text-info"></i>
-                        </div>
-                        <h5>Corporate Offices</h5>
-                        <p class="text-muted">Conference rooms and executive presentations</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
-                    <div class="application-card text-center h-100 p-4">
-                        <div class="application-icon mb-3">
-                            <i class="fas fa-graduation-cap display-4 text-warning"></i>
-                        </div>
-                        <h5>Education</h5>
-                        <p class="text-muted">Universities and training facilities</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-8" data-aos="fade-right">
-                    <h2 class="mb-3 text-white">Ready for Ultra High Resolution?</h2>
-                    <p class="mb-0 fs-5 text-white-50">Get a customized quote for your fine pitch LED display project</p>
-                </div>
-                <div class="col-lg-4 text-lg-end mt-4 mt-lg-0" data-aos="fade-left">
-                    <a class="btn btn-light btn-lg me-3" href="contact.html">
-                        <i class="fas fa-envelope me-2"></i>Get Quote
+</div>
+</div>
+</div>
+<div class="col-lg-6" data-aos="fade-left">
+<div class="hero-image text-center">
+<div class="bg-light rounded shadow-lg p-5">
+<i class="fas fa-desktop display-1 text-primary mb-3"></i>
+<h4 class="text-dark">Ultra High Resolution</h4>
+<p class="text-muted">P0.9 - P1.56 Pixel Pitch</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Features Section -->
+<section class="py-5">
+<div class="container">
+<div class="text-center mb-5" data-aos="fade-up">
+<h2 class="section-title">Fine Pitch LED Features</h2>
+<p class="section-subtitle">Exceptional image quality and performance</p>
+</div>
+<div class="row g-4">
+<div class="col-lg-4 col-md-6" data-aos="fade-up">
+<div class="feature-card text-center h-100 p-4">
+<div class="feature-icon mb-3">
+<i class="fas fa-eye display-4 text-primary"></i>
+</div>
+<h5>Ultra High Resolution</h5>
+<p class="text-muted">Pixel pitches from P0.9 to P1.56 deliver exceptional image clarity and detail for close viewing distances.</p>
+</div>
+</div>
+<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+<div class="feature-card text-center h-100 p-4">
+<div class="feature-icon mb-3">
+<i class="fas fa-tv display-4 text-success"></i>
+</div>
+<h5>4K/8K Support</h5>
+<p class="text-muted">Native support for 4K and 8K content with seamless splicing technology for large format displays.</p>
+</div>
+</div>
+<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+<div class="feature-card text-center h-100 p-4">
+<div class="feature-icon mb-3">
+<i class="fas fa-tachometer-alt display-4 text-info"></i>
+</div>
+<h5>High Refresh Rate</h5>
+<p class="text-muted">Up to 3840Hz refresh rate ensures smooth video playback without flicker or scan lines.</p>
+</div>
+</div>
+<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+<div class="feature-card text-center h-100 p-4">
+<div class="feature-icon mb-3">
+<i class="fas fa-feather display-4 text-warning"></i>
+</div>
+<h5>Ultra-Thin Design</h5>
+<p class="text-muted">Slim profile design with lightweight construction for easy installation and minimal space requirements.</p>
+</div>
+</div>
+<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+<div class="feature-card text-center h-100 p-4">
+<div class="feature-icon mb-3">
+<i class="fas fa-tools display-4 text-danger"></i>
+</div>
+<h5>Easy Maintenance</h5>
+<p class="text-muted">Front and rear service access with modular design for quick maintenance and module replacement.</p>
+</div>
+</div>
+<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+<div class="feature-card text-center h-100 p-4">
+<div class="feature-icon mb-3">
+<i class="fas fa-palette display-4 text-secondary"></i>
+</div>
+<h5>Wide Color Gamut</h5>
+<p class="text-muted">Superior color reproduction with wide color gamut and excellent color uniformity across the display.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Specifications Section -->
+<section class="py-5 bg-light" id="specifications">
+<div class="container">
+<div class="text-center mb-5" data-aos="fade-up">
+<h2 class="section-title">Technical Specifications</h2>
+<p class="section-subtitle">Detailed specifications for fine pitch LED displays</p>
+</div>
+<div class="row">
+<div class="col-lg-8 mx-auto">
+<div class="table-responsive" data-aos="fade-up">
+<table class="table table-striped">
+<tbody>
+<tr>
+<td><strong>Pixel Pitch</strong></td>
+<td>P0.9, P1.25, P1.56mm</td>
+</tr>
+<tr>
+<td><strong>Resolution</strong></td>
+<td>4K/8K native support</td>
+</tr>
+<tr>
+<td><strong>Brightness</strong></td>
+<td>600-1200 nits</td>
+</tr>
+<tr>
+<td><strong>Refresh Rate</strong></td>
+<td>Up to 3840Hz</td>
+</tr>
+<tr>
+<td><strong>Viewing Angle</strong></td>
+<td>160°/160° (H/V)</td>
+</tr>
+<tr>
+<td><strong>Color Temperature</strong></td>
+<td>3200K-9300K adjustable</td>
+</tr>
+<tr>
+<td><strong>Contrast Ratio</strong></td>
+<td>5000:1</td>
+</tr>
+<tr>
+<td><strong>Lifespan</strong></td>
+<td>100,000 hours</td>
+</tr>
+<tr>
+<td><strong>Operating Temperature</strong></td>
+<td>-10°C to +40°C</td>
+</tr>
+<tr>
+<td><strong>Power Consumption</strong></td>
+<td>150-300W/m²</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Applications Section -->
+<section class="py-5">
+<div class="container">
+<div class="text-center mb-5" data-aos="fade-up">
+<h2 class="section-title">Applications</h2>
+<p class="section-subtitle">Perfect for professional environments</p>
+</div>
+<div class="row g-4">
+<div class="col-lg-3 col-md-6" data-aos="fade-up">
+<div class="application-card text-center h-100 p-4">
+<div class="application-icon mb-3">
+<i class="fas fa-desktop display-4 text-primary"></i>
+</div>
+<h5>Control Rooms</h5>
+<p class="text-muted">Mission-critical monitoring and control applications</p>
+</div>
+</div>
+<div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+<div class="application-card text-center h-100 p-4">
+<div class="application-icon mb-3">
+<i class="fas fa-broadcast-tower display-4 text-success"></i>
+</div>
+<h5>Broadcast Studios</h5>
+<p class="text-muted">Television and media production environments</p>
+</div>
+</div>
+<div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+<div class="application-card text-center h-100 p-4">
+<div class="application-icon mb-3">
+<i class="fas fa-building display-4 text-info"></i>
+</div>
+<h5>Corporate Offices</h5>
+<p class="text-muted">Conference rooms and executive presentations</p>
+</div>
+</div>
+<div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+<div class="application-card text-center h-100 p-4">
+<div class="application-icon mb-3">
+<i class="fas fa-graduation-cap display-4 text-warning"></i>
+</div>
+<h5>Education</h5>
+<p class="text-muted">Universities and training facilities</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="cta-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 600px !important; 
+    max-height: 600px !important; 
+    height: 600px !important; 
+    padding: 120px 0 80px !important;
+    display: flex !important;
+    align-items: center !important;
+">
+<div class="container" style="
+    position: relative !important;
+    z-index: 10 !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+">
+<div class="row align-items-center">
+<div class="col-lg-8" data-aos="fade-right">
+<h2 class="mb-3 text-white">Ready for Ultra High Resolution?</h2>
+<p class="mb-0 fs-5 text-white-50">Get a customized quote for your fine pitch LED display project</p>
+</div>
+<div class="col-lg-4 text-lg-end mt-4 mt-lg-0" data-aos="fade-left">
+<a class="btn btn-light btn-lg me-3" href="contact.html">
+<i class="fas fa-envelope me-2"></i>Get Quote
                     </a>
-                    <a class="btn btn-outline-light btn-lg" href="tel:+86-755-1234-5678">
-                        <i class="fas fa-phone me-2"></i>Call Now
+<a class="btn btn-outline-light btn-lg" href="tel:+86-755-1234-5678">
+<i class="fas fa-phone me-2"></i>Call Now
                     </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-dark text-light py-5">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-4 mb-4">
-                    <h5 class="mb-3">
-                        <i class="fas fa-tv me-2"></i>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-dark text-light py-5">
+<div class="container">
+<div class="row">
+<div class="col-lg-4 mb-4">
+<h5 class="mb-3">
+<i class="fas fa-tv me-2"></i>
                         Lianjin LED Display
                     </h5>
-                    <p class="mb-3">Leading manufacturer of professional LED display solutions with over 17 years of industry experience.</p>
-                    <div class="d-flex gap-3">
-                        <a href="#" class="text-light"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" class="text-light"><i class="fab fa-youtube"></i></a>
-                        <a href="#" class="text-light"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-light"><i class="fab fa-facebook-f"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-2 col-md-6 mb-4">
-                    <h6 class="mb-3">Products</h6>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="fine-pitch.html" class="text-light-50">Fine Pitch LED</a></li>
-                        <li class="mb-2"><a href="outdoor.html" class="text-light-50">Outdoor LED</a></li>
-                        <li class="mb-2"><a href="rental.html" class="text-light-50">Rental LED</a></li>
-                        <li class="mb-2"><a href="creative.html" class="text-light-50">Creative LED</a></li>
-                        <li class="mb-2"><a href="transparent.html" class="text-light-50">Transparent LED</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-2 col-md-6 mb-4">
-                    <h6 class="mb-3">Solutions</h6>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Commercial</a></li>
-                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Broadcast</a></li>
-                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Events</a></li>
-                        <li class="mb-2"><a href="solutions.html" class="text-light-50">Rental</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-2 col-md-6 mb-4">
-                    <h6 class="mb-3">Support</h6>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="support.html" class="text-light-50">Technical Support</a></li>
-                        <li class="mb-2"><a href="support.html" class="text-light-50">Warranty</a></li>
-                        <li class="mb-2"><a href="support.html" class="text-light-50">Downloads</a></li>
-                        <li class="mb-2"><a href="support.html" class="text-light-50">Training</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-2 col-md-6 mb-4">
-                    <h6 class="mb-3">Company</h6>
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><a href="about.html" class="text-light-50">About Us</a></li>
-                        <li class="mb-2"><a href="news.html" class="text-light-50">News</a></li>
-                        <li class="mb-2"><a href="cases.html" class="text-light-50">Case Studies</a></li>
-                        <li class="mb-2"><a href="contact.html" class="text-light-50">Contact</a></li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="my-4">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <p class="mb-0">© 2024 Lianjin LED Display Technology Co., Ltd. All rights reserved.</p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <a href="#" class="text-light-50 me-3">Privacy Policy</a>
-                    <a href="#" class="text-light-50">Terms of Service</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
+<p class="mb-3">Leading manufacturer of professional LED display solutions with over 17 years of industry experience.</p>
+<div class="d-flex gap-3">
+<a class="text-light" href="#"><i class="fab fa-linkedin-in"></i></a>
+<a class="text-light" href="#"><i class="fab fa-youtube"></i></a>
+<a class="text-light" href="#"><i class="fab fa-twitter"></i></a>
+<a class="text-light" href="#"><i class="fab fa-facebook-f"></i></a>
+</div>
+</div>
+<div class="col-lg-2 col-md-6 mb-4">
+<h6 class="mb-3">Products</h6>
+<ul class="list-unstyled">
+<li class="mb-2"><a class="text-light-50" href="fine-pitch.html">Fine Pitch LED</a></li>
+<li class="mb-2"><a class="text-light-50" href="outdoor.html">Outdoor LED</a></li>
+<li class="mb-2"><a class="text-light-50" href="rental.html">Rental LED</a></li>
+<li class="mb-2"><a class="text-light-50" href="creative.html">Creative LED</a></li>
+<li class="mb-2"><a class="text-light-50" href="transparent.html">Transparent LED</a></li>
+</ul>
+</div>
+<div class="col-lg-2 col-md-6 mb-4">
+<h6 class="mb-3">Solutions</h6>
+<ul class="list-unstyled">
+<li class="mb-2"><a class="text-light-50" href="solutions.html">Commercial</a></li>
+<li class="mb-2"><a class="text-light-50" href="solutions.html">Broadcast</a></li>
+<li class="mb-2"><a class="text-light-50" href="solutions.html">Events</a></li>
+<li class="mb-2"><a class="text-light-50" href="solutions.html">Rental</a></li>
+</ul>
+</div>
+<div class="col-lg-2 col-md-6 mb-4">
+<h6 class="mb-3">Support</h6>
+<ul class="list-unstyled">
+<li class="mb-2"><a class="text-light-50" href="support.html">Technical Support</a></li>
+<li class="mb-2"><a class="text-light-50" href="support.html">Warranty</a></li>
+<li class="mb-2"><a class="text-light-50" href="support.html">Downloads</a></li>
+<li class="mb-2"><a class="text-light-50" href="support.html">Training</a></li>
+</ul>
+</div>
+<div class="col-lg-2 col-md-6 mb-4">
+<h6 class="mb-3">Company</h6>
+<ul class="list-unstyled">
+<li class="mb-2"><a class="text-light-50" href="about.html">About Us</a></li>
+<li class="mb-2"><a class="text-light-50" href="news.html">News</a></li>
+<li class="mb-2"><a class="text-light-50" href="cases.html">Case Studies</a></li>
+<li class="mb-2"><a class="text-light-50" href="contact.html">Contact</a></li>
+</ul>
+</div>
+</div>
+<hr class="my-4"/>
+<div class="row align-items-center">
+<div class="col-md-6">
+<p class="mb-0">© 2024 Lianjin LED Display Technology Co., Ltd. All rights reserved.</p>
+</div>
+<div class="col-md-6 text-md-end">
+<a class="text-light-50 me-3" href="#">Privacy Policy</a>
+<a class="text-light-50" href="#">Terms of Service</a>
+</div>
+</div>
+</div>
+</footer>
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
         // Initialize AOS
         AOS.init({
             duration: 800,
@@ -403,5 +418,28 @@
             offset: 100
         });
     </script>
-</body>
+<script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Force hero sections to correct height
+            document.querySelectorAll('.hero-section, .product-hero-section, section[class*="hero"], .cta-section').forEach(function(el) {
+                el.style.minHeight = '600px';
+                el.style.maxHeight = '600px';
+                el.style.height = '600px';
+                el.style.padding = '120px 0 80px';
+                el.style.display = 'flex';
+                el.style.alignItems = 'center';
+            });
+            
+            // Force containers within hero sections
+            document.querySelectorAll('.hero-section .container, .product-hero-section .container, .cta-section .container').forEach(function(el) {
+                el.style.position = 'relative';
+                el.style.zIndex = '10';
+                el.style.height = 'auto';
+                el.style.display = 'flex';
+                el.style.alignItems = 'center';
+            });
+            
+            console.log('✅ Emergency hero fix applied via JavaScript');
+        });
+        </script></body>
 </html>
