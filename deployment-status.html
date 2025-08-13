@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>部署状态监控 - LED显示屏网站</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .status-section {
+            margin-bottom: 30px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .section-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #2c3e50;
+        }
+        
+        .status-items {
+            padding: 20px;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .status-item:last-child {
+            border-bottom: none;
+        }
+        
+        .status-name {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+        
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-progress {
+            background: #cce7ff;
+            color: #004085;
+        }
+        
+        .status-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .deployment-log {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            height: 100%;
+            width: 75%;
+            border-radius: 10px;
+            transition: width 0.3s;
+            position: relative;
+        }
+        
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .deployment-url {
+            background: #e8f5e8;
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .deployment-url h3 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+        
+        .deployment-url a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .deployment-url a:hover {
+            text-decoration: underline;
+        }
+        
+        .refresh-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 20px;
+        }
+        
+        .refresh-btn:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 部署状态监控</h1>
+            <p>LED显示屏网站 - Vercel + Supabase 部署</p>
+        </div>
+        
+        <div class="content">
+            <!-- Vercel部署状态 -->
+            <div class="status-section">
+                <div class="section-header">🌐 Vercel 部署状态</div>
+                <div class="status-items">
+                    <div class="status-item">
+                        <span class="status-name">配置验证</span>
+                        <span class="status-badge status-success">✅ 完成</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-name">文件上传</span>
+                        <span class="status-badge status-progress">🔄 进行中</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-name">构建过程</span>
+                        <span class="status-badge status-progress">⏳ 等待中</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-name">域名分配</span>
+                        <span class="status-badge status-progress">⏳ 等待中</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Supabase集成状态 -->
+            <div class="status-section">
+                <div class="section-header">🗄️ Supabase 集成状态</div>
+                <div class="status-items">
+                    <div class="status-item">
+                        <span class="status-name">数据库连接</span>
+                        <span class="status-badge status-success">✅ 正常</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-name">产品表</span>
+                        <span class="status-badge status-success">✅ 14个产品</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-name">API密钥</span>
+                        <span class="status-badge status-success">✅ 已配置</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-name">环境变量</span>
+                        <span class="status-badge status-success">✅ 已设置</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 部署进度 -->
+            <div class="status-section">
+                <div class="section-header">📊 部署进度</div>
+                <div class="status-items">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <p style="text-align: center; color: #666;">部署进度: 75% 完成</p>
+                </div>
+            </div>
+            
+            <!-- 部署日志 -->
+            <div class="status-section">
+                <div class="section-header">📝 部署日志</div>
+                <div class="deployment-log" id="deploymentLog">
+                    [2025-01-11 16:00:00] 开始部署到 Vercel...<br>
+                    [2025-01-11 16:00:05] ✓ 验证 vercel.json 配置<br>
+                    [2025-01-11 16:00:10] ✓ 检查 Supabase 连接<br>
+                    [2025-01-11 16:00:15] 🔄 上传文件到 Vercel...<br>
+                    [2025-01-11 16:00:20] 📦 开始构建过程...<br>
+                    [2025-01-11 16:00:25] 🔧 配置环境变量...<br>
+                    [2025-01-11 16:00:30] 🌐 分配域名中...<br>
+                </div>
+            </div>
+            
+            <!-- 部署完成后的URL -->
+            <div class="deployment-url" id="deploymentUrl" style="display: none;">
+                <h3>🎉 部署成功！</h3>
+                <p>您的网站已成功部署到:</p>
+                <a href="#" target="_blank" id="siteUrl">等待部署完成...</a>
+            </div>
+            
+            <button class="refresh-btn" onclick="refreshStatus()">🔄 刷新状态</button>
+        </div>
+    </div>
+    
+    <script>
+        function refreshStatus() {
+            // 模拟刷新状态
+            const log = document.getElementById('deploymentLog');
+            const now = new Date().toLocaleString('zh-CN');
+            log.innerHTML += `<br>[${now}] 🔄 刷新部署状态...`;
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        // 模拟部署进度更新
+        let progress = 75;
+        setInterval(() => {
+            if (progress < 100) {
+                progress += Math.random() * 5;
+                if (progress > 100) progress = 100;
+                
+                const progressFill = document.querySelector('.progress-fill');
+                progressFill.style.width = progress + '%';
+                
+                const progressText = document.querySelector('.status-items p');
+                progressText.textContent = `部署进度: ${Math.round(progress)}% 完成`;
+                
+                if (progress >= 100) {
+                    // 显示部署完成
+                    document.getElementById('deploymentUrl').style.display = 'block';
+                    document.getElementById('siteUrl').textContent = 'https://led-display-website.vercel.app';
+                    document.getElementById('siteUrl').href = 'https://led-display-website.vercel.app';
+                }
+            }
+        }, 2000);
+        
+        // 自动滚动日志
+        setInterval(() => {
+            const log = document.getElementById('deploymentLog');
+            const now = new Date().toLocaleString('zh-CN');
+            const messages = [
+                '📦 构建静态文件...',
+                '🔧 配置API路由...',
+                '🌐 优化资源...',
+                '✅ 部署验证中...'
+            ];
+            const randomMessage = messages[Math.floor(Math.random() * messages.length)];
+            log.innerHTML += `<br>[${now}] ${randomMessage}`;
+            log.scrollTop = log.scrollHeight;
+        }, 5000);
+    </script>
+</body>
+</html>

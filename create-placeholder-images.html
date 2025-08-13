@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>创建产品图片占位符</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .image-generator {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            margin: 10px 0;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .download-link {
+            display: inline-block;
+            margin: 10px 0;
+            padding: 10px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>LED产品图片占位符生成器</h1>
+    <p>为缺失的产品图片创建占位符</p>
+
+    <div class="image-generator">
+        <h3>生成产品图片占位符</h3>
+        <button onclick="generateAllImages()">生成所有产品图片</button>
+        <div id="generated-images"></div>
+    </div>
+
+    <script>
+        const productImages = [
+            { name: 'all-products.jpg', text: 'LED显示屏产品', width: 800, height: 600 },
+            { name: 'p2.5-indoor.jpg', text: 'P2.5室内LED', width: 400, height: 300 },
+            { name: 'p4-outdoor.jpg', text: 'P4户外LED', width: 400, height: 300 },
+            { name: 'p3.91-rental.jpg', text: 'P3.91租赁LED', width: 400, height: 300 },
+            { name: 'outdoor-led-1.jpg', text: '户外LED显示屏', width: 400, height: 300 },
+            { name: 'outdoor-led-2.jpg', text: '大型户外屏', width: 400, height: 300 },
+            { name: 'rental-led-1.jpg', text: '租赁LED屏', width: 400, height: 300 },
+            { name: 'rental-led-2.jpg', text: '舞台LED屏', width: 400, height: 300 },
+            { name: 'creative-led-1.jpg', text: '创意LED屏', width: 400, height: 300 },
+            { name: 'creative-led-2.jpg', text: '异形LED屏', width: 400, height: 300 },
+            { name: 'transparent-led-1.jpg', text: '透明LED屏', width: 400, height: 300 },
+            { name: 'fine-pitch-1.jpg', text: '小间距LED', width: 400, height: 300 }
+        ];
+
+        function createPlaceholderImage(text, width, height) {
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            
+            const ctx = canvas.getContext('2d');
+            
+            // 背景渐变
+            const gradient = ctx.createLinearGradient(0, 0, width, height);
+            gradient.addColorStop(0, '#4a90e2');
+            gradient.addColorStop(1, '#357abd');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+            
+            // 添加网格效果
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < width; i += 20) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, height);
+                ctx.stroke();
+            }
+            for (let i = 0; i < height; i += 20) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(width, i);
+                ctx.stroke();
+            }
+            
+            // 主标题
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 24px Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(text, width / 2, height / 2 - 20);
+            
+            // 副标题
+            ctx.font = '16px Arial, sans-serif';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.fillText(`${width} x ${height}`, width / 2, height / 2 + 10);
+            
+            // LED点阵效果
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            for (let x = 10; x < width - 10; x += 8) {
+                for (let y = 10; y < height - 10; y += 8) {
+                    if (Math.random() > 0.7) {
+                        ctx.beginPath();
+                        ctx.arc(x, y, 1, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+            }
+            
+            return canvas;
+        }
+
+        function generateAllImages() {
+            const container = document.getElementById('generated-images');
+            container.innerHTML = '';
+            
+            productImages.forEach(img => {
+                const canvas = createPlaceholderImage(img.text, img.width, img.height);
+                
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <h4>${img.name}</h4>
+                    <div>${canvas.outerHTML}</div>
+                    <a href="${canvas.toDataURL()}" download="${img.name}" class="download-link">
+                        下载 ${img.name}
+                    </a>
+                `;
+                
+                container.appendChild(div);
+            });
+        }
+
+        // 页面加载时自动生成
+        window.onload = function() {
+            generateAllImages();
+        };
+    </script>
+</body>
+</html>

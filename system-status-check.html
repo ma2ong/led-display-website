@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LED网站系统状态检查</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .status-card {
+            transition: all 0.3s ease;
+        }
+        .status-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .status-success { background-color: #28a745; }
+        .status-warning { background-color: #ffc107; }
+        .status-error { background-color: #dc3545; }
+        .status-info { background-color: #17a2b8; }
+        .log-container {
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: #212529;
+            color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid my-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="mb-0">🔍 LED网站系统状态检查</h2>
+                        <small>实时监控系统各组件运行状态</small>
+                    </div>
+                    <div class="card-body">
+                        <button id="check-all-btn" class="btn btn-primary btn-lg me-3">🚀 全面检查</button>
+                        <button id="auto-refresh-btn" class="btn btn-outline-secondary">🔄 自动刷新</button>
+                        <span id="last-check" class="text-muted ms-3"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- 核心服务状态 -->
+            <div class="col-lg-6 mb-4">
+                <div class="card status-card">
+                    <div class="card-header">
+                        <h4 class="mb-0">🖥️ 核心服务状态</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="core-services-status">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span><span class="status-indicator status-info"></span>HTTP服务器 (8000)</span>
+                                <span id="http-status" class="badge bg-secondary">检查中...</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span><span class="status-indicator status-info"></span>Flask管理系统 (5003)</span>
+                                <span id="flask-status" class="badge bg-secondary">检查中...</span>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span><span class="status-indicator status-info"></span>Supabase数据库</span>
+                                <span id="supabase-status" class="badge bg-secondary">检查中...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 数据统计 -->
+            <div class="col-lg-6 mb-4">
+                <div class="card status-card">
+                    <div class="card-header">
+                        <h4 class="mb-0">📊 数据统计</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="data-stats">
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <h3 id="products-count" class="text-primary">-</h3>
+                                    <small class="text-muted">产品数量</small>
+                                </div>
+                                <div class="col-4">
+                                    <h3 id="pages-count" class="text-success">8</h3>
+                                    <small class="text-muted">页面数量</small>
+                                </div>
+                                <div class="col-4">
+                                    <h3 id="api-count" class="text-info">-</h3>
+                                    <small class="text-muted">API接口</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- API接口测试 -->
+            <div class="col-lg-8 mb-4">
+                <div class="card status-card">
+                    <div class="card-header">
+                        <h4 class="mb-0">🔌 API接口测试</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="api-tests">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>Flask管理系统API</h6>
+                                    <div class="mb-2">
+                                        <span class="status-indicator status-info"></span>
+                                        <span>/api/products</span>
+                                        <span id="api-products" class="badge bg-secondary ms-2">待测试</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <span class="status-indicator status-info"></span>
+                                        <span>/api/status</span>
+                                        <span id="api-status" class="badge bg-secondary ms-2">待测试</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <span class="status-indicator status-info"></span>
+                                        <span>/api/news</span>
+                                        <span id="api-news" class="badge bg-secondary ms-2">待测试</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6>Supabase数据库</h6>
+                                    <div class="mb-2">
+                                        <span class="status-indicator status-info"></span>
+                                        <span>products表</span>
+                                        <span id="db-products" class="badge bg-secondary ms-2">待测试</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <span class="status-indicator status-info"></span>
+                                        <span>连接状态</span>
+                                        <span id="db-connection" class="badge bg-secondary ms-2">待测试</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 系统建议 -->
+            <div class="col-lg-4 mb-4">
+                <div class="card status-card">
+                    <div class="card-header">
+                        <h4 class="mb-0">💡 系统建议</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="system-recommendations">
+                            <p class="text-muted">点击"全面检查"获取系统建议</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">📝 检查日志</h4>
+                    </div>
+                    <div class="card-body p-0">
+                        <div id="log-container" class="log-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // 初始化Supabase客户端
+        const { createClient } = supabase;
+        const supabaseUrl = 'https://jirudzbqcxviytcmxegf.supabase.co';
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppcnVkemJxY3h2aXl0Y214ZWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0NTExOTUsImV4cCI6MjA3MDAyNzE5NX0.qi0YhrxQmbRa6YsbVA13IpddImIjJKJyd1fgz5jIlt4';
+        const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+
+        // 日志系统
+        const logContainer = document.getElementById('log-container');
+        function log(message, type = 'info') {
+            const logEntry = document.createElement('div');
+            logEntry.className = `text-${type === 'error' ? 'danger' : type === 'success' ? 'success' : type === 'warning' ? 'warning' : 'info'}`;
+            logEntry.innerHTML = `<span class="text-muted">[${new Date().toLocaleTimeString()}]</span> ${message}`;
+            logContainer.appendChild(logEntry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+
+        // 更新状态指示器
+        function updateStatus(elementId, status, message = '') {
+            const element = document.getElementById(elementId);
+            if (!element) {
+                console.warn(`Element with ID '${elementId}' not found`);
+                return;
+            }
+            
+            element.className = `badge bg-${status === 'success' ? 'success' : status === 'error' ? 'danger' : status === 'warning' ? 'warning' : 'secondary'}`;
+            element.textContent = message || (status === 'success' ? '正常' : status === 'error' ? '异常' : status === 'warning' ? '警告' : '未知');
+        }
+
+        // 检查HTTP服务器
+        async function checkHttpServer() {
+            try {
+                const response = await fetch('/test-products-simple.html', { method: 'HEAD' });
+                if (response.ok) {
+                    updateStatus('http-status', 'success');
+                    log('✅ HTTP服务器运行正常 (端口8000)', 'success');
+                    return true;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                updateStatus('http-status', 'error');
+                log(`❌ HTTP服务器连接失败: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // 检查Flask管理系统
+        async function checkFlaskSystem() {
+            try {
+                const response = await fetch('http://localhost:5003/api/status');
+                if (response.ok) {
+                    const data = await response.json();
+                    updateStatus('flask-status', 'success');
+                    log('✅ Flask管理系统运行正常 (端口5003)', 'success');
+                    return true;
+                } else {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+            } catch (error) {
+                updateStatus('flask-status', 'error');
+                log(`❌ Flask管理系统连接失败: ${error.message}`, 'error');
+                return false;
+            }
+        }
+
+        // 检查Supabase数据库
+        async function checkSupabase() {
+            try {
+                const { data, error, count } = await supabaseClient
+                    .from('products')
+                    .select('*', { count: 'exact', head: true });
+                
+                if (error) throw error;
+                
+                updateStatus('supabase-status', 'success');
+                updateStatus('db-connection', 'success');
+                updateStatus('db-products', 'success', `${count}条记录`);
+                document.getElementById('products-count').textContent = count || 0;
+                
+                log(`✅ Supabase数据库连接正常，产品表有 ${count || 0} 条记录`, 'success');
+                return { success: true, count: count || 0 };
+            } catch (error) {
+                updateStatus('supabase-status', 'error');
+                updateStatus('db-connection', 'error');
+                updateStatus('db-products', 'error');
+                log(`❌ Supabase数据库连接失败: ${error.message}`, 'error');
+                return { success: false, count: 0 };
+            }
+        }
+
+        // 测试Flask API接口
+        async function testFlaskAPIs() {
+            const apis = [
+                { name: 'products', url: '/api/products', elementId: 'api-products' },
+                { name: 'status', url: '/api/status', elementId: 'api-status' },
+                { name: 'news', url: '/api/news', elementId: 'api-news' }
+            ];
+
+            let successCount = 0;
+            
+            for (const api of apis) {
+                try {
+                    const response = await fetch(`http://localhost:5003${api.url}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        updateStatus(api.elementId, 'success');
+                        log(`✅ API ${api.name} 响应正常`, 'success');
+                        successCount++;
+                    } else {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+                } catch (error) {
+                    updateStatus(api.elementId, 'error');
+                    log(`❌ API ${api.name} 测试失败: ${error.message}`, 'error');
+                }
+                
+                // 添加延迟避免请求过快
+                await new Promise(resolve => setTimeout(resolve, 200));
+            }
+            
+            document.getElementById('api-count').textContent = successCount;
+            return successCount;
+        }
+
+        // 生成系统建议
+        function generateRecommendations(results) {
+            const recommendations = [];
+            
+            if (!results.http) {
+                recommendations.push('🔴 启动HTTP服务器: python -m http.server 8000');
+            }
+            
+            if (!results.flask) {
+                recommendations.push('🔴 启动Flask管理系统: cd admin && python complete_chinese_admin_system.py');
+            }
+            
+            if (!results.supabase.success) {
+                recommendations.push('🔴 检查Supabase配置和网络连接');
+            }
+            
+            if (results.supabase.count === 0) {
+                recommendations.push('🟡 数据库中暂无产品数据，建议添加示例产品');
+            }
+            
+            if (results.apiCount < 3) {
+                recommendations.push('🟡 部分API接口异常，检查Flask系统日志');
+            }
+            
+            if (recommendations.length === 0) {
+                recommendations.push('🟢 系统运行正常，所有组件状态良好！');
+                recommendations.push('💡 建议定期检查系统状态');
+                recommendations.push('📊 可以开始正常使用LED网站管理系统');
+            }
+            
+            const container = document.getElementById('system-recommendations');
+            container.innerHTML = recommendations.map(rec => `<div class="mb-2">${rec}</div>`).join('');
+        }
+
+        // 全面检查
+        async function performFullCheck() {
+            log('🚀 开始全面系统检查...', 'info');
+            document.getElementById('last-check').textContent = `最后检查: ${new Date().toLocaleString()}`;
+            
+            const results = {
+                http: false,
+                flask: false,
+                supabase: { success: false, count: 0 },
+                apiCount: 0
+            };
+            
+            // 并行检查核心服务
+            log('检查核心服务状态...', 'info');
+            const [httpResult, flaskResult, supabaseResult] = await Promise.all([
+                checkHttpServer(),
+                checkFlaskSystem(),
+                checkSupabase()
+            ]);
+            
+            results.http = httpResult;
+            results.flask = flaskResult;
+            results.supabase = supabaseResult;
+            
+            // 如果Flask正常，测试API接口
+            if (flaskResult) {
+                log('测试API接口...', 'info');
+                results.apiCount = await testFlaskAPIs();
+            }
+            
+            // 生成建议
+            generateRecommendations(results);
+            
+            log('✅ 全面检查完成', 'success');
+        }
+
+        // 自动刷新功能
+        let autoRefreshInterval = null;
+        document.getElementById('auto-refresh-btn').addEventListener('click', function() {
+            if (autoRefreshInterval) {
+                clearInterval(autoRefreshInterval);
+                autoRefreshInterval = null;
+                this.textContent = '🔄 自动刷新';
+                this.className = 'btn btn-outline-secondary';
+                log('⏹️ 自动刷新已停止', 'info');
+            } else {
+                autoRefreshInterval = setInterval(performFullCheck, 30000); // 30秒刷新一次
+                this.textContent = '⏸️ 停止刷新';
+                this.className = 'btn btn-outline-warning';
+                log('🔄 自动刷新已启动 (30秒间隔)', 'info');
+            }
+        });
+
+        // 事件监听
+        document.getElementById('check-all-btn').addEventListener('click', performFullCheck);
+
+        // 页面加载完成
+        document.addEventListener('DOMContentLoaded', () => {
+            log('🔍 LED网站系统状态检查工具已加载', 'info');
+            log('点击"全面检查"开始系统诊断', 'info');
+            
+            // 自动执行一次检查
+            setTimeout(performFullCheck, 1000);
+        });
+    </script>
+</body>
+</html>

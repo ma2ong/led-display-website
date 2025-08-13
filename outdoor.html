@@ -33,9 +33,9 @@
 })();
 </script>
 <meta charset="utf-8"/><meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Outdoor LED Display - Weather-Resistant High-Brightness LED Screens | Lianjin LED</title>
-<meta content="Professional outdoor LED displays with IP65 protection, high brightness up to 10,000 nits, and weather-resistant design for advertising, sports venues, and outdoor events." name="description"/>
+<meta content="Professional outdoor LED displays with IP65 protection, high brightness up to 10,000 nits, and weather-resistant design for advertising, sports venues, and outdoor events." name="description">
 <meta content="outdoor LED display, weatherproof LED screen, high brightness LED, digital billboard, outdoor advertising display" name="keywords"/>
 <!-- CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
@@ -110,6 +110,13 @@
     display: flex !important;
     align-items: center !important;
 
+     
+     
+     
+    padding: 120px 0 80px !important;
+    display: flex !important;
+    align-items: center !important;
+
     min-height: 600px !important; 
     max-height: 600px !important; 
     height: 600px !important; 
@@ -118,6 +125,12 @@
     align-items: center !important;
 ">
 <div class="container" style="
+    position: relative !important;
+    z-index: 10 !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+
     position: relative !important;
     z-index: 10 !important;
     height: auto !important;
@@ -569,6 +582,13 @@
     display: flex !important;
     align-items: center !important;
 
+     
+     
+     
+    padding: 120px 0 80px !important;
+    display: flex !important;
+    align-items: center !important;
+
     min-height: 600px !important; 
     max-height: 600px !important; 
     height: 600px !important; 
@@ -577,6 +597,12 @@
     align-items: center !important;
 ">
 <div class="container" style="
+    position: relative !important;
+    z-index: 10 !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+
     position: relative !important;
     z-index: 10 !important;
     height: auto !important;
@@ -683,6 +709,29 @@
         });
     </script>
 <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Force hero sections to correct height
+            document.querySelectorAll('.hero-section, .product-hero-section, section[class*="hero"], .cta-section').forEach(function(el) {
+                el.style.minHeight = '600px';
+                el.style.maxHeight = '600px';
+                el.style.height = '600px';
+                el.style.padding = '120px 0 80px';
+                el.style.display = 'flex';
+                el.style.alignItems = 'center';
+            });
+            
+            // Force containers within hero sections
+            document.querySelectorAll('.hero-section .container, .product-hero-section .container, .cta-section .container').forEach(function(el) {
+                el.style.position = 'relative';
+                el.style.zIndex = '10';
+                el.style.height = 'auto';
+                el.style.display = 'flex';
+                el.style.alignItems = 'center';
+            });
+            
+            console.log('✅ Emergency hero fix applied via JavaScript');
+        });
+        </script><script>
         document.addEventListener('DOMContentLoaded', function() {
             // Force hero sections to correct height
             document.querySelectorAll('.hero-section, .product-hero-section, section[class*="hero"], .cta-section').forEach(function(el) {

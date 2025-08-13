@@ -355,6 +355,7 @@ def logout():
 
 # 前端页面管理路由
 @app.route('/frontend')
+@app.route('/frontend_pages')
 @login_required
 def frontend_pages():
     """前端页面管理总览"""
@@ -608,7 +609,6 @@ def api_products():
     conn = get_db_connection()
     products = conn.execute('''
         SELECT * FROM products 
-        WHERE status = 'active'
         ORDER BY created_at DESC
     ''').fetchall()
     conn.close()
@@ -636,7 +636,6 @@ def api_news():
     conn = get_db_connection()
     news_list = conn.execute('''
         SELECT * FROM news 
-        WHERE status = 'published'
         ORDER BY created_at DESC
     ''').fetchall()
     conn.close()
@@ -662,7 +661,6 @@ def api_cases():
     conn = get_db_connection()
     cases = conn.execute('''
         SELECT * FROM cases 
-        WHERE status = 'published'
         ORDER BY created_at DESC
     ''').fetchall()
     conn.close()
@@ -710,6 +708,39 @@ def api_solutions():
         })
     
     return jsonify({'status': 'success', 'solutions': solution_list})
+
+@app.route('/api/status')
+def api_status():
+    """系统状态检查API"""
+    try:
+        conn = get_db_connection()
+        
+        # 检查各表的记录数
+        products_count = conn.execute('SELECT COUNT(*) as count FROM products').fetchone()[0]
+        news_count = conn.execute('SELECT COUNT(*) as count FROM news').fetchone()[0]
+        cases_count = conn.execute('SELECT COUNT(*) as count FROM cases').fetchone()[0]
+        inquiries_count = conn.execute('SELECT COUNT(*) as count FROM inquiries').fetchone()[0]
+        
+        conn.close()
+        
+        return jsonify({
+            'success': True,
+            'status': 'running',
+            'database': 'connected',
+            'tables': {
+                'products': products_count,
+                'news': news_count,
+                'cases': cases_count,
+                'inquiries': inquiries_count
+            },
+            'timestamp': datetime.now().isoformat()
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'timestamp': datetime.now().isoformat()
+        }), 500
 
 @app.route('/api/settings')
 def api_settings():

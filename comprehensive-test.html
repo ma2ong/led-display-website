@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>综合功能测试</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .test-section {
+            margin-bottom: 2rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+        .test-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 0.25rem;
+        }
+        .test-success {
+            background-color: #d1edff;
+            border: 1px solid #0ea5e9;
+            color: #0369a1;
+        }
+        .test-error {
+            background-color: #fee2e2;
+            border: 1px solid #ef4444;
+            color: #dc2626;
+        }
+        .test-warning {
+            background-color: #fef3c7;
+            border: 1px solid #f59e0b;
+            color: #d97706;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">
+            <i class="fas fa-flask text-primary"></i>
+            LED 网站综合功能测试
+        </h1>
+        
+        <!-- 页面加载测试 -->
+        <div class="test-section">
+            <h3><i class="fas fa-globe text-info"></i> 页面加载测试</h3>
+            <p class="text-muted">测试主要页面是否能正常加载</p>
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="btn btn-outline-primary btn-sm me-2" onclick="testPage('index.html')">主页</button>
+                    <button class="btn btn-outline-primary btn-sm me-2" onclick="testPage('products.html')">产品</button>
+                    <button class="btn btn-outline-primary btn-sm me-2" onclick="testPage('about.html')">关于</button>
+                    <button class="btn btn-outline-primary btn-sm me-2" onclick="testPage('contact.html')">联系</button>
+                </div>
+                <div class="col-md-6">
+                    <button class="btn btn-outline-success btn-sm me-2" onclick="testPage('admin-login.html')">管理登录</button>
+                    <button class="btn btn-outline-success btn-sm me-2" onclick="testPage('admin-complete-supabase.html')">管理系统</button>
+                </div>
+            </div>
+            <div id="page-test-result" class="test-result" style="display: none;"></div>
+        </div>
+
+        <!-- Hero 部分测试 -->
+        <div class="test-section">
+            <h3><i class="fas fa-image text-warning"></i> Hero 部分测试</h3>
+            <p class="text-muted">检查 Hero 部分样式是否正确应用</p>
+            <button class="btn btn-warning" onclick="testHeroSections()">测试 Hero 样式</button>
+            <div id="hero-test-result" class="test-result" style="display: none;"></div>
+        </div>
+
+        <!-- 数据库连接测试 -->
+        <div class="test-section">
+            <h3><i class="fas fa-database text-success"></i> 数据库连接测试</h3>
+            <p class="text-muted">测试 Supabase 数据库连接和产品数据</p>
+            <button class="btn btn-success me-2" onclick="testSupabaseConnection()">测试连接</button>
+            <button class="btn btn-outline-success" onclick="testProductData()">测试产品数据</button>
+            <div id="db-test-result" class="test-result" style="display: none;"></div>
+        </div>
+
+        <!-- API 接口测试 -->
+        <div class="test-section">
+            <h3><i class="fas fa-plug text-danger"></i> API 接口测试</h3>
+            <p class="text-muted">测试统一 API 接口功能</p>
+            <button class="btn btn-danger me-2" onclick="testUnifiedAPI()">测试统一 API</button>
+            <button class="btn btn-outline-danger" onclick="testContactAPI()">测试联系表单 API</button>
+            <div id="api-test-result" class="test-result" style="display: none;"></div>
+        </div>
+
+        <!-- 管理系统测试 -->
+        <div class="test-section">
+            <h3><i class="fas fa-cog text-secondary"></i> 管理系统测试</h3>
+            <p class="text-muted">测试管理系统功能</p>
+            <button class="btn btn-secondary me-2" onclick="testAdminLogin()">测试登录功能</button>
+            <button class="btn btn-outline-secondary" onclick="testAdminDashboard()">测试管理面板</button>
+            <div id="admin-test-result" class="test-result" style="display: none;"></div>
+        </div>
+
+        <!-- 部署准备检查 -->
+        <div class="test-section">
+            <h3><i class="fas fa-rocket text-primary"></i> 部署准备检查</h3>
+            <p class="text-muted">检查项目是否准备好部署</p>
+            <button class="btn btn-primary" onclick="checkDeploymentReadiness()">检查部署准备</button>
+            <div id="deployment-test-result" class="test-result" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getSupabaseClient } from './lib/supabase.js';
+        
+        const supabase = getSupabaseClient();
+        
+        // 全局函数
+        window.testPage = function(pageName) {
+            const resultDiv = document.getElementById('page-test-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `<i class="fas fa-spinner fa-spin"></i> 测试页面 ${pageName}...`;
+            
+            fetch(pageName)
+                .then(response => {
+                    if (response.ok) {
+                        resultDiv.className = 'test-result test-success';
+                        resultDiv.innerHTML = `<i class="fas fa-check"></i> ✅ ${pageName} 加载成功 (状态码: ${response.status})`;
+                    } else {
+                        resultDiv.className = 'test-result test-error';
+                        resultDiv.innerHTML = `<i class="fas fa-times"></i> ❌ ${pageName} 加载失败 (状态码: ${response.status})`;
+                    }
+                })
+                .catch(error => {
+                    resultDiv.className = 'test-result test-error';
+                    resultDiv.innerHTML = `<i class="fas fa-times"></i> ❌ ${pageName} 加载出错: ${error.message}`;
+                });
+        };
+        
+        window.testHeroSections = function() {
+            const resultDiv = document.getElementById('hero-test-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 检查 Hero 样式...';
+            
+            // 检查 Hero CSS 文件是否存在
+            const heroFiles = [
+                'css/hero-ultimate-fix.css',
+                'js/hero-ultimate-fix.js'
+            ];
+            
+            let results = [];
+            let completed = 0;
+            
+            heroFiles.forEach(file => {
+                fetch(file)
+                    .then(response => {
+                        completed++;
+                        if (response.ok) {
+                            results.push(`✅ ${file} 存在`);
+                        } else {
+                            results.push(`❌ ${file} 不存在`);
+                        }
+                        
+                        if (completed === heroFiles.length) {
+                            resultDiv.className = 'test-result test-success';
+                            resultDiv.innerHTML = `<i class="fas fa-check"></i> Hero 文件检查完成:<br>${results.join('<br>')}`;
+                        }
+                    })
+                    .catch(error => {
+                        completed++;
+                        results.push(`❌ ${file} 检查出错: ${error.message}`);
+                        
+                        if (completed === heroFiles.length) {
+                            resultDiv.className = 'test-result test-warning';
+                            resultDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Hero 文件检查完成:<br>${results.join('<br>')}`;
+                        }
+                    });
+            });
+        };
+        
+        window.testSupabaseConnection = async function() {
+            const resultDiv = document.getElementById('db-test-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 测试 Supabase 连接...';
+            
+            try {
+                const { data, error } = await supabase
+                    .from('products')
+                    .select('count', { count: 'exact', head: true });
+                
+                if (error) {
+                    resultDiv.className = 'test-result test-warning';
+                    resultDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ⚠️ 连接成功但查询出错: ${error.message}`;
+                } else {
+                    resultDiv.className = 'test-result test-success';
+                    resultDiv.innerHTML = `<i class="fas fa-check"></i> ✅ Supabase 连接成功！产品表记录数: ${data || 0}`;
+                }
+            } catch (err) {
+                resultDiv.className = 'test-result test-error';
+                resultDiv.innerHTML = `<i class="fas fa-times"></i> ❌ Supabase 连接失败: ${err.message}`;
+            }
+        };
+        
+        window.testProductData = async function() {
+            const resultDiv = document.getElementById('db-test-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 测试产品数据...';
+            
+            try {
+                const { data, error } = await supabase
+                    .from('products')
+                    .select('*')
+                    .limit(5);
+                
+                if (error) {
+                    resultDiv.className = 'test-result test-error';
+                    resultDiv.innerHTML = `<i class="fas fa-times"></i> ❌ 产品数据查询失败: ${error.message}`;
+                } else if (!data || data.length === 0) {
+                    resultDiv.className = 'test-result test-warning';
+                    resultDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ⚠️ 数据库中暂无产品数据`;
+                } else {
+                    resultDiv.className = 'test-result test-success';
+                    resultDiv.innerHTML = `<i class="fas fa-check"></i> ✅ 成功获取 ${data.length} 个产品数据<br>示例产品: ${data[0].name || '未命名'}`;
+                }
+            } catch (err) {
+                resultDiv.className = 'test-result test-error';
+                resultDiv.innerHTML = `<i class="fas fa-times"></i> ❌ 产品数据测试失败: ${err.message}`;
+            }
+        };
+        
+        window.testUnifiedAPI = function() {
+            const resultDiv = document.getElementById('api-test-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 测试统一 API...';
+            
+            if (window.unifiedAPI) {
+                resultDiv.className = 'test-result test-success';
+                resultDiv.innerHTML = `<i class="fas fa-check"></i> ✅ 统一 API 已加载，可用方法: ${Object.keys(window.unifiedAPI).join(', ')}`;
+            } else {
+                resultDiv.className = 'test-result test-warning';
+                resultDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ⚠️ 统一 API 未加载，请检查 js/unified-api.js`;
+            }
+        };
+        
+        window.testContactAPI = function() {
+            const resultDiv = document.getElementById('api-test-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 测试联系表单 API...';
+            
+            // 模拟联系表单提交
+            const testData = {
+                name: '测试用户',
+                email: 'test@example.com',
+                message: '这是一个测试消息'
+            };
+            
+            // 这里应该调用实际的联系表单 API
+            setTimeout(() => {
+                resultDiv.className = 'test-result test-warning';
+                resultDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ⚠️ 联系表单 API 测试需要实际的后端接口`;
+            }, 1000);
+        };
+        
+        window.testAdminLogin = function() {
+            const resultDiv = document.getElementById('admin-test-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 测试管理员登录...';
+            
+            fetch('admin-login.html')
+                .then(response => {
+                    if (response.ok) {
+                        resultDiv.className = 'test-result test-success';
+                        resultDiv.innerHTML = `<i class="fas fa-check"></i> ✅ 管理员登录页面可访问`;
+                    } else {
+                        resultDiv.className = 'test-result test-error';
+                        resultDiv.innerHTML = `<i class="fas fa-times"></i> ❌ 管理员登录页面不可访问`;
+                    }
+                })
+                .catch(error => {
+                    resultDiv.className = 'test-result test-error';
+                    resultDiv.innerHTML = `<i class="fas fa-times"></i> ❌ 管理员登录测试失败: ${error.message}`;
+                });
+        };
+        
+        window.testAdminDashboard = function() {
+            const resultDiv = document.getElementById('admin-test-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 测试管理面板...';
+            
+            fetch('admin-complete-supabase.html')
+                .then(response => {
+                    if (response.ok) {
+                        resultDiv.className = 'test-result test-success';
+                        resultDiv.innerHTML = `<i class="fas fa-check"></i> ✅ 管理面板页面可访问`;
+                    } else {
+                        resultDiv.className = 'test-result test-error';
+                        resultDiv.innerHTML = `<i class="fas fa-times"></i> ❌ 管理面板页面不可访问`;
+                    }
+                })
+                .catch(error => {
+                    resultDiv.className = 'test-result test-error';
+                    resultDiv.innerHTML = `<i class="fas fa-times"></i> ❌ 管理面板测试失败: ${error.message}`;
+                });
+        };
+        
+        window.checkDeploymentReadiness = function() {
+            const resultDiv = document.getElementById('deployment-test-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 检查部署准备...';
+            
+            const requiredFiles = [
+                'package.json',
+                'vercel.json',
+                '.env.local',
+                'lib/supabase.js'
+            ];
+            
+            let results = [];
+            let completed = 0;
+            let allGood = true;
+            
+            requiredFiles.forEach(file => {
+                fetch(file)
+                    .then(response => {
+                        completed++;
+                        if (response.ok) {
+                            results.push(`✅ ${file}`);
+                        } else {
+                            results.push(`❌ ${file} 缺失`);
+                            allGood = false;
+                        }
+                        
+                        if (completed === requiredFiles.length) {
+                            if (allGood) {
+                                resultDiv.className = 'test-result test-success';
+                                resultDiv.innerHTML = `<i class="fas fa-rocket"></i> 🚀 项目已准备好部署！<br>${results.join('<br>')}`;
+                            } else {
+                                resultDiv.className = 'test-result test-warning';
+                                resultDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ⚠️ 部署准备检查:<br>${results.join('<br>')}`;
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        completed++;
+                        results.push(`❌ ${file} 检查出错`);
+                        allGood = false;
+                        
+                        if (completed === requiredFiles.length) {
+                            resultDiv.className = 'test-result test-warning';
+                            resultDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ⚠️ 部署准备检查:<br>${results.join('<br>')}`;
+                        }
+                    });
+            });
+        };
+    </script>
+</body>
+</html>

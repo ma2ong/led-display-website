@@ -1,6 +1,8 @@
 /**
  * 产品加载器 - 从Flask后端或Supabase数据库加载产品数据并显示在页面上
  */
+import supabase from '../lib/supabase.js';
+
 class ProductLoader {
   constructor() {
     this.productsContainer = document.getElementById('products-grid');
@@ -50,24 +52,32 @@ class ProductLoader {
         this.productsContainer.querySelector('.row').appendChild(this.loadingIndicator);
       }
 
-      // 从Supabase数据库加载产品数据
-      const { data: products, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('status', 'active')
-        .order('created_at', { ascending: false });
+      // 尝试使用统一API获取产品
+      let products = [];
+      if (this.api && typeof this.api.getProducts === 'function') {
+        products = await this.api.getProducts();
+      } else {
+        // 从Supabase数据库加载产品数据
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('status', 'active')
+          .order('created_at', { ascending: false });
+        
+        if (error) {
+          throw new Error(error.message);
+        }
+        
+        products = data || [];
+      }
       
       // 移除加载指示器
       if (this.loadingIndicator.parentNode) {
         this.loadingIndicator.parentNode.removeChild(this.loadingIndicator);
       }
 
-      if (error) {
-        throw new Error(error.message);
-      }
-
       // 渲染产品
-      this.renderProducts(products || []);
+      this.renderProducts(products);
     } catch (error) {
       console.error('加载产品失败:', error);
       this.showError('加载产品数据时出错，请稍后再试。');
@@ -86,25 +96,35 @@ class ProductLoader {
         this.productsContainer.querySelector('.row').appendChild(this.loadingIndicator);
       }
 
-      // 从Supabase数据库按类别加载产品数据
-      const { data: products, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('status', 'active')
-        .eq('category', category)
-        .order('created_at', { ascending: false });
+      let products = [];
+      
+      // 尝试使用统一API获取产品
+      if (this.api && typeof this.api.getProducts === 'function') {
+        const allProducts = await this.api.getProducts();
+        products = allProducts.filter(p => p.category === category);
+      } else {
+        // 从Supabase数据库按类别加载产品数据
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('status', 'active')
+          .eq('category', category)
+          .order('created_at', { ascending: false });
+        
+        if (error) {
+          throw new Error(error.message);
+        }
+        
+        products = data || [];
+      }
       
       // 移除加载指示器
       if (this.loadingIndicator.parentNode) {
         this.loadingIndicator.parentNode.removeChild(this.loadingIndicator);
       }
-
-      if (error) {
-        throw new Error(error.message);
-      }
         
       // 渲染产品
-      this.renderProducts(products || []);
+      this.renderProducts(products);
     } catch (error) {
       console.error(`加载${category}类别产品失败:`, error);
       this.showError(`加载${category}类别产品数据时出错，请稍后再试。`);

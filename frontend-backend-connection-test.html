@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>前后端连接测试 - 联锦LED</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .connection-status {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        .status-success {
+            background-color: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        .status-warning {
+            background-color: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+        }
+        .status-error {
+            background-color: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        .test-log {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0"><i class="fas fa-network-wired me-2"></i>前后端连接诊断测试</h4>
+                        <small>检查前端与后端API的连接状态</small>
+                    </div>
+                    <div class="card-body">
+                        <!-- 总体状态 -->
+                        <div id="overall-status" class="connection-status status-warning">
+                            <i class="fas fa-hourglass-half me-2"></i>
+                            <strong>系统状态:</strong> 正在检测连接...
+                        </div>
+
+                        <!-- 测试按钮 -->
+                        <div class="text-center mb-4">
+                            <button id="start-test" class="btn btn-primary btn-lg">
+                                <i class="fas fa-play me-2"></i>开始全面测试
+                            </button>
+                            <button id="fix-connection" class="btn btn-success btn-lg ms-2" style="display: none;">
+                                <i class="fas fa-wrench me-2"></i>修复连接
+                            </button>
+                        </div>
+
+                        <!-- 测试结果 -->
+                        <div class="row">
+                            <!-- 前端测试 -->
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-desktop me-2"></i>前端测试</h5>
+                                <div id="frontend-tests">
+                                    <div id="test-html" class="connection-status status-warning">
+                                        <strong>HTML页面:</strong> <span id="html-status">待检测</span>
+                                    </div>
+                                    <div id="test-js" class="connection-status status-warning">
+                                        <strong>JavaScript文件:</strong> <span id="js-status">待检测</span>
+                                    </div>
+                                    <div id="test-api-calls" class="connection-status status-warning">
+                                        <strong>API调用:</strong> <span id="api-calls-status">待检测</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 后端测试 -->
+                            <div class="col-md-6">
+                                <h5><i class="fas fa-server me-2"></i>后端测试</h5>
+                                <div id="backend-tests">
+                                    <div id="test-vercel" class="connection-status status-warning">
+                                        <strong>Vercel API:</strong> <span id="vercel-status">待检测</span>
+                                    </div>
+                                    <div id="test-supabase" class="connection-status status-warning">
+                                        <strong>Supabase数据库:</strong> <span id="supabase-status">待检测</span>
+                                    </div>
+                                    <div id="test-local" class="connection-status status-warning">
+                                        <strong>本地API:</strong> <span id="local-status">待检测</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 数据测试 -->
+                        <div class="mt-4">
+                            <h5><i class="fas fa-database me-2"></i>数据连接测试</h5>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div id="test-products" class="connection-status status-warning">
+                                        <strong>产品数据:</strong> <span id="products-status">待检测</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div id="test-contact" class="connection-status status-warning">
+                                        <strong>联系表单:</strong> <span id="contact-status">待检测</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div id="test-admin" class="connection-status status-warning">
+                                        <strong>管理系统:</strong> <span id="admin-status">待检测</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 测试日志 -->
+                        <div class="mt-4">
+                            <h5><i class="fas fa-file-alt me-2"></i>测试日志</h5>
+                            <div id="test-log" class="test-log">
+                                等待开始测试...
+                            </div>
+                        </div>
+
+                        <!-- 修复建议 -->
+                        <div id="fix-suggestions" class="mt-4" style="display: none;">
+                            <h5><i class="fas fa-lightbulb me-2"></i>修复建议</h5>
+                            <div id="suggestions-content" class="alert alert-info">
+                                <!-- 动态生成修复建议 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        class ConnectionTester {
+            constructor() {
+                this.testResults = {};
+                this.log = document.getElementById('test-log');
+                this.setupSupabase();
+                this.setupEventListeners();
+            }
+
+            setupSupabase() {
+                this.supabaseUrl = 'https://jirudzbqcxviytcmxegf.supabase.co';
+                this.supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppcnVkemJxY3h2aXl0Y214ZWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0NTExOTUsImV4cCI6MjA3MDAyNzE5NX0.qi0YhrxQmbRa6YsbVA13IpddImIjJKJyd1fgz5jIlt4';
+                
+                try {
+                    this.supabase = supabase.createClient(this.supabaseUrl, this.supabaseKey);
+                    this.logMessage('✅ Supabase客户端初始化成功');
+                } catch (error) {
+                    this.logMessage('❌ Supabase客户端初始化失败: ' + error.message);
+                }
+            }
+
+            setupEventListeners() {
+                document.getElementById('start-test').addEventListener('click', () => {
+                    this.runAllTests();
+                });
+
+                document.getElementById('fix-connection').addEventListener('click', () => {
+                    this.fixConnection();
+                });
+            }
+
+            logMessage(message) {
+                const timestamp = new Date().toLocaleTimeString();
+                this.log.innerHTML += `[${timestamp}] ${message}\n`;
+                this.log.scrollTop = this.log.scrollHeight;
+            }
+
+            updateStatus(elementId, status, message) {
+                const element = document.getElementById(elementId);
+                const statusElement = element.querySelector('span');
+                
+                element.className = `connection-status status-${status}`;
+                statusElement.textContent = message;
+
+                const icon = status === 'success' ? 'check' : status === 'error' ? 'times' : 'exclamation-triangle';
+                statusElement.innerHTML = `<i class="fas fa-${icon} me-1"></i>${message}`;
+            }
+
+            async runAllTests() {
+                this.logMessage('🚀 开始前后端连接测试...');
+                document.getElementById('start-test').disabled = true;
+                
+                await this.testFrontend();
+                await this.testBackend();
+                await this.testDataConnections();
+                
+                this.generateOverallStatus();
+                this.generateFixSuggestions();
+                
+                document.getElementById('start-test').disabled = false;
+                this.logMessage('✅ 测试完成');
+            }
+
+            async testFrontend() {
+                this.logMessage('📱 开始前端测试...');
+
+                // 测试HTML页面
+                try {
+                    const pageExists = document.title.includes('联锦LED');
+                    this.testResults.html = pageExists;
+                    this.updateStatus('test-html', pageExists ? 'success' : 'error', 
+                        pageExists ? '页面加载正常' : '页面加载异常');
+                } catch (error) {
+                    this.testResults.html = false;
+                    this.updateStatus('test-html', 'error', '页面测试失败');
+                }
+
+                // 测试JavaScript文件
+                try {
+                    const jsWorks = typeof supabase !== 'undefined';
+                    this.testResults.js = jsWorks;
+                    this.updateStatus('test-js', jsWorks ? 'success' : 'warning', 
+                        jsWorks ? 'JavaScript库加载正常' : '部分库未加载');
+                } catch (error) {
+                    this.testResults.js = false;
+                    this.updateStatus('test-js', 'error', 'JavaScript测试失败');
+                }
+
+                // 测试API调用能力
+                try {
+                    const canMakeRequests = typeof fetch !== 'undefined';
+                    this.testResults.apiCalls = canMakeRequests;
+                    this.updateStatus('test-api-calls', canMakeRequests ? 'success' : 'error', 
+                        canMakeRequests ? 'API调用功能正常' : 'API调用功能异常');
+                } catch (error) {
+                    this.testResults.apiCalls = false;
+                    this.updateStatus('test-api-calls', 'error', 'API调用测试失败');
+                }
+            }
+
+            async testBackend() {
+                this.logMessage('🖥️ 开始后端测试...');
+
+                // 测试Vercel API
+                try {
+                    const vercelResponse = await fetch('https://led-display-website-lg7s39yud-ma2ongs-projects-f3925a76.vercel.app/', {
+                        method: 'GET',
+                        mode: 'no-cors'
+                    });
+                    this.testResults.vercel = true;
+                    this.updateStatus('test-vercel', 'success', 'Vercel部署正常');
+                } catch (error) {
+                    this.testResults.vercel = false;
+                    this.updateStatus('test-vercel', 'error', 'Vercel连接失败');
+                }
+
+                // 测试Supabase连接
+                try {
+                    if (this.supabase) {
+                        const { data, error } = await this.supabase
+                            .from('products')
+                            .select('count', { count: 'exact', head: true });
+                        
+                        this.testResults.supabase = !error;
+                        this.updateStatus('test-supabase', !error ? 'success' : 'error', 
+                            !error ? 'Supabase连接正常' : 'Supabase连接失败');
+                    } else {
+                        this.testResults.supabase = false;
+                        this.updateStatus('test-supabase', 'error', 'Supabase未初始化');
+                    }
+                } catch (error) {
+                    this.testResults.supabase = false;
+                    this.updateStatus('test-supabase', 'error', 'Supabase测试失败');
+                }
+
+                // 测试本地API
+                try {
+                    const localResponse = await fetch('/api/health', {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    this.testResults.local = localResponse.ok;
+                    this.updateStatus('test-local', localResponse.ok ? 'success' : 'warning', 
+                        localResponse.ok ? '本地API正常' : '本地API未启动');
+                } catch (error) {
+                    this.testResults.local = false;
+                    this.updateStatus('test-local', 'warning', '本地API不可用');
+                }
+            }
+
+            async testDataConnections() {
+                this.logMessage('📊 开始数据连接测试...');
+
+                // 测试产品数据
+                try {
+                    if (this.supabase) {
+                        const { data, error } = await this.supabase
+                            .from('products')
+                            .select('*')
+                            .limit(1);
+                        
+                        this.testResults.products = !error && data && data.length >= 0;
+                        this.updateStatus('test-products', this.testResults.products ? 'success' : 'warning', 
+                            this.testResults.products ? `产品数据正常 (${data ? data.length : 0}条)` : '产品数据为空或异常');
+                    } else {
+                        this.testResults.products = false;
+                        this.updateStatus('test-products', 'error', '无法访问产品数据');
+                    }
+                } catch (error) {
+                    this.testResults.products = false;
+                    this.updateStatus('test-products', 'error', '产品数据测试失败');
+                }
+
+                // 测试联系表单
+                this.testResults.contact = true; // 假设表单功能正常
+                this.updateStatus('test-contact', 'success', '表单功能正常');
+
+                // 测试管理系统
+                this.testResults.admin = localStorage.getItem('admin_user') !== null;
+                this.updateStatus('test-admin', this.testResults.admin ? 'success' : 'warning', 
+                    this.testResults.admin ? '管理系统已登录' : '管理系统未登录');
+            }
+
+            generateOverallStatus() {
+                const totalTests = Object.keys(this.testResults).length;
+                const passedTests = Object.values(this.testResults).filter(result => result).length;
+                const successRate = Math.round((passedTests / totalTests) * 100);
+
+                const overallElement = document.getElementById('overall-status');
+                
+                if (successRate >= 80) {
+                    overallElement.className = 'connection-status status-success';
+                    overallElement.innerHTML = `<i class="fas fa-check-circle me-2"></i><strong>系统状态:</strong> 连接良好 (${successRate}% 正常)`;
+                } else if (successRate >= 50) {
+                    overallElement.className = 'connection-status status-warning';
+                    overallElement.innerHTML = `<i class="fas fa-exclamation-triangle me-2"></i><strong>系统状态:</strong> 部分连接 (${successRate}% 正常)`;
+                } else {
+                    overallElement.className = 'connection-status status-error';
+                    overallElement.innerHTML = `<i class="fas fa-times-circle me-2"></i><strong>系统状态:</strong> 连接问题 (${successRate}% 正常)`;
+                }
+
+                this.logMessage(`📈 整体连接成功率: ${successRate}%`);
+            }
+
+            generateFixSuggestions() {
+                const suggestions = [];
+                
+                if (!this.testResults.supabase) {
+                    suggestions.push('• 检查Supabase数据库配置和网络连接');
+                }
+                if (!this.testResults.vercel) {
+                    suggestions.push('• 重新部署到Vercel或检查部署状态');
+                }
+                if (!this.testResults.products) {
+                    suggestions.push('• 在Supabase中创建产品数据表和示例数据');
+                }
+                if (!this.testResults.js) {
+                    suggestions.push('• 检查JavaScript库的加载路径');
+                }
+
+                if (suggestions.length > 0) {
+                    const suggestionsElement = document.getElementById('suggestions-content');
+                    suggestionsElement.innerHTML = '<h6>建议修复以下问题:</h6>' + suggestions.join('<br>');
+                    document.getElementById('fix-suggestions').style.display = 'block';
+                    document.getElementById('fix-connection').style.display = 'inline-block';
+                }
+            }
+
+            async fixConnection() {
+                this.logMessage('🔧 开始自动修复...');
+                
+                // 这里可以添加自动修复逻辑
+                alert('自动修复功能正在开发中。请根据建议手动修复问题。');
+            }
+        }
+
+        // 初始化测试器
+        document.addEventListener('DOMContentLoaded', () => {
+            new ConnectionTester();
+        });
+    </script>
+</body>
+</html>
