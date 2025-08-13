@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>联锦LED管理系统 - 登录</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        .login-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            width: 400px;
+            max-width: 90%;
+        }
+        .login-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .login-logo i {
+            font-size: 48px;
+            color: #764ba2;
+        }
+        .login-title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        .form-control {
+            border-radius: 5px;
+            padding: 12px;
+            margin-bottom: 20px;
+        }
+        .login-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            padding: 12px;
+            width: 100%;
+            font-weight: bold;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .login-btn:hover {
+            opacity: 0.9;
+        }
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+        .debug-info {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-logo">
+            <i class="fas fa-tv"></i>
+        </div>
+        <h2 class="login-title">联锦LED管理系统</h2>
+        <div id="loginForm">
+            <div class="mb-3">
+                <label for="username" class="form-label">用户名</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                    <input type="text" class="form-control" id="username" placeholder="请输入用户名" value="admin">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">密码</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                    <input type="password" class="form-control" id="password" placeholder="请输入密码" value="admin123">
+                </div>
+            </div>
+            <button type="button" class="login-btn" id="loginButton">登录</button>
+        </div>
+        <div class="login-footer">
+            <p>默认账号: admin / admin123</p>
+            <p>© 2025 联锦LED显示屏 版权所有</p>
+        </div>
+        <div class="debug-info">
+            <div id="debugInfo">系统就绪</div>
+        </div>
+    </div>
+
+    <script>
+        console.log('🚀 管理员登录系统已加载');
+        
+        // 调试信息显示函数
+        function showDebug(message) {
+            const debugInfo = document.getElementById('debugInfo');
+            if (debugInfo) {
+                debugInfo.innerHTML = new Date().toLocaleTimeString() + ': ' + message;
+            }
+            console.log('DEBUG:', message);
+        }
+        
+        // 登录处理函数
+        function handleLogin() {
+            showDebug('开始处理登录...');
+            
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const loginBtn = document.getElementById('loginButton');
+            
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            showDebug('用户名: ' + username + ', 密码长度: ' + password.length);
+            
+            if (!username || !password) {
+                alert('请输入用户名和密码');
+                showDebug('验证失败：用户名或密码为空');
+                return;
+            }
+            
+            // 显示加载状态
+            if (loginBtn) {
+                loginBtn.textContent = '登录中...';
+                loginBtn.disabled = true;
+                showDebug('按钮状态已更新');
+            }
+            
+            try {
+                // 本地验证
+                if (username === 'admin' && password === 'admin123') {
+                    showDebug('验证成功！');
+                    
+                    // 存储登录信息
+                    const adminUser = {
+                        username: username,
+                        loginTime: new Date().toISOString(),
+                        role: 'admin'
+                    };
+                    
+                    localStorage.setItem('admin_user', JSON.stringify(adminUser));
+                    showDebug('登录信息已保存到localStorage');
+                    
+                    // 提示登录成功
+                    alert('登录成功！正在跳转到管理后台...');
+                    
+                    // 延迟跳转，确保数据保存
+                    setTimeout(() => {
+                        showDebug('准备跳转到管理页面');
+                        
+                        // 尝试多种管理页面
+                        const adminPages = [
+                            'admin-complete-system.html',
+                            'admin-complete-supabase.html',
+                            'admin-system.html',
+                            'admin-complete.html'
+                        ];
+                        
+                        let targetPage = adminPages[0]; // 默认使用第一个
+                        
+                        // 简单检查哪个文件存在（这在本地文件系统中可能不工作）
+                        showDebug('跳转到: ' + targetPage);
+                        window.location.href = targetPage;
+                    }, 1000);
+                } else {
+                    throw new Error('用户名或密码错误！请使用: admin / admin123');
+                }
+            } catch (error) {
+                showDebug('登录失败: ' + error.message);
+                alert(error.message);
+                
+                // 恢复按钮状态
+                if (loginBtn) {
+                    loginBtn.textContent = '登录';
+                    loginBtn.disabled = false;
+                }
+            }
+        }
+        
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            showDebug('页面加载完成');
+            
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const loginBtn = document.getElementById('loginButton');
+            
+            // 检查元素是否存在
+            if (usernameInput && passwordInput && loginBtn) {
+                showDebug('所有元素已找到');
+                
+                // 添加回车键提交功能
+                passwordInput.addEventListener('keypress', function(event) {
+                    if (event.key === 'Enter') {
+                        handleLogin();
+                    }
+                });
+                
+                // 添加登录按钮点击事件
+                loginBtn.addEventListener('click', handleLogin);
+                
+                // 检查是否已有登录信息
+                const existingUser = localStorage.getItem('admin_user');
+                if (existingUser) {
+                    showDebug('发现已存在的登录信息');
+                    try {
+                        const userData = JSON.parse(existingUser);
+                        showDebug('上次登录: ' + userData.loginTime);
+                    } catch (e) {
+                        showDebug('清理无效的登录数据');
+                        localStorage.removeItem('admin_user');
+                    }
+                }
+            } else {
+                showDebug('错误：找不到必要的页面元素');
+            }
+        });
+        
+        // 全局错误处理
+        window.addEventListener('error', function(event) {
+            showDebug('页面错误: ' + event.message);
+            console.error('页面错误:', event.error);
+        });
+        
+        showDebug('脚本初始化完成');
+    </script>
+</body>
+</html>
