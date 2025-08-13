@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "codebuddy-led-website",
   "builds": [
     {
       "src": "*.html",
@@ -27,50 +26,42 @@
       "use": "@vercel/node"
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/",
-      "dest": "/homepage.html"
+      "source": "/",
+      "destination": "/homepage.html"
     },
     {
-      "src": "/products",
-      "dest": "/products.html"
+      "source": "/products",
+      "destination": "/products.html"
     },
     {
-      "src": "/contact",
-      "dest": "/contact.html"
+      "source": "/contact",
+      "destination": "/contact.html"
     },
     {
-      "src": "/admin-system",
-      "dest": "/admin-system.html"
+      "source": "/admin-system",
+      "destination": "/admin-system.html"
     },
     {
-      "src": "/admin",
-      "dest": "/admin-login.html"
+      "source": "/admin",
+      "destination": "/admin-login.html"
     },
     {
-      "src": "/api/health",
-      "dest": "/api/health.js"
+      "source": "/api/health",
+      "destination": "/api/health.js"
     },
     {
-      "src": "/api/products",
-      "dest": "/api/products.js"
+      "source": "/api/products",
+      "destination": "/api/products.js"
     },
     {
-      "src": "/api/contact",
-      "dest": "/api/contact.js"
+      "source": "/api/contact",
+      "destination": "/api/contact.js"
     },
     {
-      "src": "/api/admin/(.*)",
-      "dest": "/api/admin.py"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
+      "source": "/api/admin/(.*)",
+      "destination": "/api/admin.py"
     }
   ],
   "headers": [
