@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LED显示屏管理系统 - 完整版</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { font-family: 'Microsoft YaHei', sans-serif; background: #f5f5f5; }
+        
+        /* 登录界面样式 */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 400px;
+            overflow: hidden;
+        }
+        
+        .login-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        /* 管理界面样式 */
+        .admin-dashboard { display: none; }
+        
+        .sidebar {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            color: white;
+            position: fixed;
+            width: 250px;
+            top: 0;
+            left: 0;
+            z-index: 100;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 15px 20px;
+            border: none;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .stats-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .badge-new { background: #ffc107; color: #000; }
+        .badge-processed { background: #28a745; color: #fff; }
+        
+        @media (max-width: 768px) {
+            .sidebar { width: 200px; }
+            .main-content { margin-left: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 登录界面 -->
+    <div id="login-section" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h3><i class="fas fa-tv me-2"></i>LED管理系统</h3>
+                <p class="mb-0">专业的LED显示屏管理平台</p>
+            </div>
+            <div class="p-4">
+                <form id="login-form">
+                    <div class="mb-3">
+                        <label class="form-label">用户名</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            <input type="text" class="form-control" id="username" value="admin" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">密码</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                            <input type="password" class="form-control" id="password" value="admin123" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="fas fa-sign-in-alt me-2"></i>登录系统
+                    </button>
+                </form>
+                <div id="login-message" class="mt-3"></div>
+                <div class="text-center mt-3">
+                    <small class="text-muted">测试账号: admin / admin123</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 管理后台界面 -->
+    <div id="admin-dashboard" class="admin-dashboard">
+        <div class="row g-0">
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <div class="p-3 text-center border-bottom border-light border-opacity-25">
+                    <h5><i class="fas fa-tv me-2"></i>LED管理系统</h5>
+                    <small id="admin-user">管理员</small>
+                </div>
+                <nav class="nav flex-column">
+                    <a class="nav-link active" href="#" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt me-2"></i>仪表盘
+                    </a>
+                    <a class="nav-link" href="#" data-section="products">
+                        <i class="fas fa-cube me-2"></i>产品管理
+                    </a>
+                    <a class="nav-link" href="#" data-section="inquiries">
+                        <i class="fas fa-envelope me-2"></i>询盘管理
+                    </a>
+                    <a class="nav-link" href="#" data-section="news">
+                        <i class="fas fa-newspaper me-2"></i>新闻管理
+                    </a>
+                    <a class="nav-link" href="#" data-section="settings">
+                        <i class="fas fa-cog me-2"></i>系统设置
+                    </a>
+                    <hr class="my-3 border-light">
+                    <a class="nav-link" href="#" onclick="logout()">
+                        <i class="fas fa-sign-out-alt me-2"></i>退出登录
+                    </a>
+                </nav>
+            </div>
+
+            <!-- 主内容区 -->
+            <div class="main-content">
+                <!-- 仪表盘 -->
+                <div id="dashboard-section" class="content-section active">
+                    <h2 class="mb-4"><i class="fas fa-tachometer-alt me-2"></i>数据概览</h2>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="stats-card text-center">
+                                <i class="fas fa-cube fa-3x text-primary mb-3"></i>
+                                <h3 id="total-products">0</h3>
+                                <p class="text-muted mb-0">产品总数</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stats-card text-center">
+                                <i class="fas fa-envelope fa-3x text-success mb-3"></i>
+                                <h3 id="total-inquiries">0</h3>
+                                <p class="text-muted mb-0">询盘数量</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stats-card text-center">
+                                <i class="fas fa-newspaper fa-3x text-info mb-3"></i>
+                                <h3 id="total-news">0</h3>
+                                <p class="text-muted mb-0">新闻文章</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="stats-card text-center">
+                                <i class="fas fa-chart-line fa-3x text-warning mb-3"></i>
+                                <h3 id="today-visits">128</h3>
+                                <p class="text-muted mb-0">今日访问</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 最新询盘 -->
+                    <div class="mt-4">
+                        <h4 class="mb-3">最新询盘</h4>
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>姓名</th>
+                                        <th>邮箱</th>
+                                        <th>公司</th>
+                                        <th>状态</th>
+                                        <th>时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-inquiries">
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">暂无数据</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 产品管理 -->
+                <div id="products-section" class="content-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2><i class="fas fa-cube me-2"></i>产品管理</h2>
+                        <button class="btn btn-primary" onclick="addProduct()">
+                            <i class="fas fa-plus me-2"></i>添加产品
+                        </button>
+                    </div>
+                    <div id="products-list">
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">加载中...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 询盘管理 -->
+                <div id="inquiries-section" class="content-section">
+                    <h2 class="mb-4"><i class="fas fa-envelope me-2"></i>询盘管理</h2>
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>姓名</th>
+                                    <th>邮箱</th>
+                                    <th>公司</th>
+                                    <th>状态</th>
+                                    <th>时间</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inquiries-list">
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted">加载中...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 新闻管理 -->
+                <div id="news-section" class="content-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2><i class="fas fa-newspaper me-2"></i>新闻管理</h2>
+                        <button class="btn btn-primary" onclick="addNews()">
+                            <i class="fas fa-plus me-2"></i>发布新闻
+                        </button>
+                    </div>
+                    <div id="news-list">
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">加载中...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 系统设置 -->
+                <div id="settings-section" class="content-section">
+                    <h2 class="mb-4"><i class="fas fa-cog me-2"></i>系统设置</h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="stats-card">
+                                <h5><i class="fas fa-database me-2"></i>数据库状态</h5>
+                                <p class="mb-2">Supabase连接: <span class="badge bg-success">正常</span></p>
+                                <p class="mb-0">项目URL: jirudzbqcxviytcmxegf.supabase.co</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="stats-card">
+                                <h5><i class="fas fa-server me-2"></i>部署状态</h5>
+                                <p class="mb-2">Vercel部署: <span class="badge bg-success">已部署</span></p>
+                                <p class="mb-0">最后更新: 2025-08-13</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 stats-card">
+                        <h5><i class="fas fa-info-circle me-2"></i>系统信息</h5>
+                        <p>版本: v2.0.0</p>
+                        <p>技术栈: HTML5 + Bootstrap 5 + Supabase</p>
+                        <p>开发者: CodeBuddy LED Website</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入必要的库 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- 引入增强功能脚本 -->
+    <script src="admin/js/admin-enhanced.js"></script>
+    
+    <script>
+        // Supabase初始化
+        const SUPABASE_URL = 'https://jirudzbqcxviytcmxegf.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppcnVkemJxY3h2aXl0Y218ZWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0NTExOTUsImV4cCI6MjA3MDAyNzE5NX0.qi0YhrxQmbRa6YsbVA13IpddImIjJKJyd1fgz5jIlt4';
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // 登录功能
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const messageDiv = document.getElementById('login-message');
+            
+            if (username === 'admin' && password === 'admin123') {
+                messageDiv.innerHTML = '<div class="alert alert-success">登录成功！正在跳转...</div>';
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('username', username);
+                
+                setTimeout(() => {
+                    document.getElementById('login-section').style.display = 'none';
+                    document.getElementById('admin-dashboard').style.display = 'block';
+                    document.getElementById('admin-user').textContent = username;
+                    loadDashboardData();
+                }, 1000);
+            } else {
+                messageDiv.innerHTML = '<div class="alert alert-danger">用户名或密码错误！</div>';
+            }
+        });
+
+        // 导航切换
+        document.querySelectorAll('.nav-link[data-section]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const section = this.getAttribute('data-section');
+                
+                // 更新导航状态
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                
+                // 切换内容区域
+                document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+                document.getElementById(section + '-section').classList.add('active');
+                
+                // 加载相应数据
+                switch(section) {
+                    case 'dashboard':
+                        loadDashboardData();
+                        break;
+                    case 'products':
+                        loadProducts();
+                        break;
+                    case 'inquiries':
+                        loadInquiries();
+                        break;
+                    case 'news':
+                        loadNews();
+                        break;
+                }
+            });
+        });
+
+        // 加载仪表盘数据
+        async function loadDashboardData() {
+            try {
+                // 加载产品数量
+                const { data: products, error: pError } = await supabaseClient
+                    .from('products')
+                    .select('id');
+                document.getElementById('total-products').textContent = products ? products.length : 0;
+                
+                // 加载询盘数量
+                const { data: inquiries, error: iError } = await supabaseClient
+                    .from('inquiries')
+                    .select('id');
+                document.getElementById('total-inquiries').textContent = inquiries ? inquiries.length : 0;
+                
+                // 加载新闻数量
+                const { data: news, error: nError } = await supabaseClient
+                    .from('news')
+                    .select('id');
+                document.getElementById('total-news').textContent = news ? news.length : 0;
+                
+                // 加载最新询盘
+                loadRecentInquiries();
+                
+            } catch (error) {
+                console.error('加载数据失败:', error);
+            }
+        }
+
+        // 加载最新询盘
+        async function loadRecentInquiries() {
+            try {
+                const { data: inquiries, error } = await supabaseClient
+                    .from('inquiries')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+                
+                const tbody = document.getElementById('recent-inquiries');
+                if (!inquiries || inquiries.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">暂无询盘</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = inquiries.map(inquiry => `
+                    <tr>
+                        <td>${inquiry.name}</td>
+                        <td>${inquiry.email}</td>
+                        <td>${inquiry.company || '-'}</td>
+                        <td>
+                            <span class="badge ${inquiry.status === 'new' ? 'badge-new' : 'badge-processed'}">
+                                ${inquiry.status === 'new' ? '新询盘' : '已处理'}
+                            </span>
+                        </td>
+                        <td>${new Date(inquiry.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="viewInquiry(${inquiry.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('加载询盘失败:', error);
+            }
+        }
+
+        // 加载产品列表
+        async function loadProducts() {
+            const container = document.getElementById('products-list');
+            container.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary"></div></div>';
+            
+            try {
+                const { data: products, error } = await supabaseClient
+                    .from('products')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (!products || products.length === 0) {
+                    container.innerHTML = '<div class="alert alert-info">暂无产品，请点击添加产品按钮创建新产品</div>';
+                    return;
+                }
+                
+                container.innerHTML = products.map(product => `
+                    <div class="product-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5>${product.name}</h5>
+                                <p class="text-muted mb-2">${product.description || '暂无描述'}</p>
+                                <span class="badge bg-primary">${product.category}</span>
+                                ${product.price ? `<span class="ms-2 text-danger">¥${product.price}</span>` : ''}
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary me-1" onclick="editProduct(${product.id})">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct(${product.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                container.innerHTML = '<div class="alert alert-danger">加载失败: ' + error.message + '</div>';
+            }
+        }
+
+        // 加载询盘列表
+        async function loadInquiries() {
+            const tbody = document.getElementById('inquiries-list');
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center">加载中...</td></tr>';
+            
+            try {
+                const { data: inquiries, error } = await supabaseClient
+                    .from('inquiries')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (!inquiries || inquiries.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">暂无询盘</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = inquiries.map(inquiry => `
+                    <tr>
+                        <td>${inquiry.id}</td>
+                        <td>${inquiry.name}</td>
+                        <td>${inquiry.email}</td>
+                        <td>${inquiry.company || '-'}</td>
+                        <td>
+                            <span class="badge ${inquiry.status === 'new' ? 'badge-new' : 'badge-processed'}">
+                                ${inquiry.status === 'new' ? '新询盘' : '已处理'}
+                            </span>
+                        </td>
+                        <td>${new Date(inquiry.created_at).toLocaleDateString()}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary" onclick="viewInquiry(${inquiry.id})">
+                                <i class="fas fa-eye"></i> 查看
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-danger">加载失败</td></tr>';
+            }
+        }
+
+        // 加载新闻列表
+        async function loadNews() {
+            const container = document.getElementById('news-list');
+            container.innerHTML = '<div class="text-center py-4"><div class="spinner-border text-primary"></div></div>';
+            
+            try {
+                const { data: newsList, error } = await supabaseClient
+                    .from('news')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (!newsList || newsList.length === 0) {
+                    container.innerHTML = '<div class="alert alert-info">暂无新闻，请点击发布新闻按钮创建</div>';
+                    return;
+                }
+                
+                container.innerHTML = newsList.map(news => `
+                    <div class="product-card">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5>${news.title}</h5>
+                                <p class="text-muted mb-2">${news.content ? news.content.substring(0, 100) + '...' : ''}</p>
+                                <small class="text-muted">
+                                    <i class="fas fa-user me-1"></i>${news.author || 'Admin'} | 
+                                    <i class="fas fa-calendar me-1"></i>${new Date(news.created_at).toLocaleDateString()}
+                                </small>
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteNews(${news.id})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                container.innerHTML = '<div class="alert alert-danger">加载失败: ' + error.message + '</div>';
+            }
+        }
+
+        // 退出登录
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('username');
+                location.reload();
+            }
+        }
+
+        // 页面加载时检查登录状态
+        window.addEventListener('DOMContentLoaded', function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true') {
+                const username = localStorage.getItem('username') || 'admin';
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('admin-dashboard').style.display = 'block';
+                document.getElementById('admin-user').textContent = username;
+                loadDashboardData();
+            }
+        });
+
+        // 使增强功能可用
+        window.loadProducts = loadProducts;
+        window.loadInquiries = loadInquiries;
+        window.loadNews = loadNews;
+    </script>
+</body>
+</html>

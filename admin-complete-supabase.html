@@ -1,0 +1,2446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>联锦LED显示屏 - 管理系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #6c757d;
+            --success-color: #198754;
+            --info-color: #0dcaf0;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        
+        .sidebar {
+            background-color: var(--dark-color);
+            color: white;
+            height: 100vh;
+            position: fixed;
+            padding-top: 20px;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            margin: 5px 0;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .sidebar .nav-link i {
+            margin-right: 10px;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .table {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .table th {
+            background-color: rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .login-logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .login-logo img {
+            max-width: 150px;
+        }
+        
+        .form-control {
+            border-radius: 5px;
+            padding: 10px 15px;
+        }
+        
+        .btn {
+            border-radius: 5px;
+            padding: 10px 20px;
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+        
+        .toggle-sidebar {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                margin-left: -250px;
+            }
+            
+            .sidebar.active {
+                margin-left: 0;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .main-content.active {
+                margin-left: 250px;
+            }
+            
+            .toggle-sidebar {
+                display: block;
+            }
+        }
+        
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .status-active, .status-published {
+            background-color: #d1e7dd;
+            color: #0f5132;
+        }
+        
+        .status-inactive, .status-draft {
+            background-color: #f8d7da;
+            color: #842029;
+        }
+        
+        .status-pending {
+            background-color: #fff3cd;
+            color: #664d03;
+        }
+        
+        .preview-image {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .ck-editor__editable {
+            min-height: 300px;
+        }
+        
+        .tox-tinymce {
+            border-radius: 5px !important;
+        }
+        
+        .modal-content {
+            border-radius: 10px;
+            border: none;
+        }
+        
+        .modal-header {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            background-color: var(--primary-color);
+            color: white;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载中遮罩 -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">加载中...</span>
+        </div>
+    </div>
+
+    <!-- 登录部分 -->
+    <div id="loginSection" class="container">
+        <div class="login-container">
+            <div class="login-logo">
+                <h2>联锦LED显示屏</h2>
+                <p class="text-muted">管理系统</p>
+            </div>
+            <div class="mb-4">
+                <label for="username" class="form-label">用户名</label>
+                <input type="text" class="form-control" id="username" placeholder="请输入用户名" value="admin">
+            </div>
+            <div class="mb-4">
+                <label for="password" class="form-label">密码</label>
+                <input type="password" class="form-control" id="password" placeholder="请输入密码" value="admin123">
+            </div>
+            <button class="btn btn-primary w-100" onclick="login()">登录</button>
+            <p class="text-center mt-3 text-muted">默认账号: admin / admin123</p>
+        </div>
+    </div>
+
+    <!-- 管理面板部分 -->
+    <div id="adminPanel" style="display: none;">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <div class="px-3 mb-4">
+                <h4 class="text-light">联锦LED管理系统</h4>
+            </div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" onclick="showSection('dashboard')">
+                        <i class="bi bi-speedometer2"></i> 仪表盘
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('pages')">
+                        <i class="bi bi-file-earmark-text"></i> 页面管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('products')">
+                        <i class="bi bi-box-seam"></i> 产品管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('inquiries')">
+                        <i class="bi bi-chat-dots"></i> 询盘管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('news')">
+                        <i class="bi bi-newspaper"></i> 新闻管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('statistics')">
+                        <i class="bi bi-bar-chart"></i> 统计分析
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('users')">
+                        <i class="bi bi-people"></i> 用户管理
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" onclick="showSection('settings')">
+                        <i class="bi bi-gear"></i> 系统设置
+                    </a>
+                </li>
+                <li class="nav-item mt-5">
+                    <a class="nav-link text-danger" href="#" onclick="logout()">
+                        <i class="bi bi-box-arrow-right"></i> 退出登录
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="main-content">
+            <!-- 顶部导航栏 -->
+            <nav class="navbar navbar-expand-lg navbar-light mb-4">
+                <div class="container-fluid">
+                    <button class="btn btn-outline-secondary toggle-sidebar me-2">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <span class="navbar-brand">管理系统</span>
+                    <div class="ms-auto d-flex align-items-center">
+                        <span class="me-3">欢迎，管理员</span>
+                        <a href="#" class="btn btn-sm btn-outline-primary me-2" onclick="window.open('index.html', '_blank')">
+                            <i class="bi bi-eye"></i> 查看网站
+                        </a>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-circle"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#" onclick="showSection('settings')">设置</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="#" onclick="logout()">退出登录</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- 仪表盘 -->
+            <div id="dashboard" class="content-section" style="display: block;">
+                <h2 class="mb-4">仪表盘</h2>
+                <div class="row">
+                    <div class="col-md-3 mb-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h3 class="text-primary" id="productCount">0</h3>
+                                <p class="mb-0">产品数量</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h3 class="text-success" id="inquiryCount">0</h3>
+                                <p class="mb-0">询盘数量</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h3 class="text-info" id="newsCount">0</h3>
+                                <p class="mb-0">新闻数量</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h3 class="text-warning" id="pageCount">0</h3>
+                                <p class="mb-0">页面数量</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span>最新询盘</span>
+                                <a href="#" class="btn btn-sm btn-outline-primary" onclick="showSection('inquiries')">查看全部</a>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>姓名</th>
+                                                <th>公司</th>
+                                                <th>状态</th>
+                                                <th>时间</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="latestInquiriesTable">
+                                            <tr>
+                                                <td colspan="4" class="text-center">加载中...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">访问统计</div>
+                            <div class="card-body">
+                                <canvas id="visitsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12 mb-4">
+                        <div class="card">
+                            <div class="card-header">系统信息</div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>系统版本：</strong> v1.0.0</p>
+                                        <p><strong>上次更新：</strong> 2025-08-08</p>
+                                        <p><strong>数据库状态：</strong> <span class="text-success">正常</span></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>总用户数：</strong> <span id="totalUsers">0</span></p>
+                                        <p><strong>服务器状态：</strong> <span class="text-success">运行中</span></p>
+                                        <p><strong>存储空间：</strong> 使用 2.1GB / 10GB</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 页面管理 -->
+            <div id="pages" class="content-section">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>页面管理</h2>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>页面名称</th>
+                                        <th>标题</th>
+                                        <th>最后更新</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pagesTable">
+                                    <tr>
+                                        <td>首页</td>
+                                        <td>联锦LED显示屏</td>
+                                        <td>2025-08-01</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary" onclick="editPage('home')">编辑</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>关于我们</td>
+                                        <td>关于我们 - 联锦LED</td>
+                                        <td>2025-08-01</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary" onclick="editPage('about')">编辑</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>产品中心</td>
+                                        <td>产品中心 - 联锦LED</td>
+                                        <td>2025-08-01</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary" onclick="editPage('products')">编辑</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>解决方案</td>
+                                        <td>解决方案 - 联锦LED</td>
+                                        <td>2025-08-01</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary" onclick="editPage('solutions')">编辑</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>成功案例</td>
+                                        <td>成功案例 - 联锦LED</td>
+                                        <td>2025-08-01</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary" onclick="editPage('cases')">编辑</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>新闻资讯</td>
+                                        <td>新闻资讯 - 联锦LED</td>
+                                        <td>2025-08-01</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary" onclick="editPage('news')">编辑</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>技术支持</td>
+                                        <td>技术支持 - 联锦LED</td>
+                                        <td>2025-08-01</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary" onclick="editPage('support')">编辑</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>联系我们</td>
+                                        <td>联系我们 - 联锦LED</td>
+                                        <td>2025-08-01</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary" onclick="editPage('contact')">编辑</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 产品管理 -->
+            <div id="products" class="content-section">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>产品管理</h2>
+                    <button class="btn btn-primary" onclick="showProductModal()">
+                        <i class="bi bi-plus"></i> 添加产品
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="搜索产品..." id="productSearchInput">
+                                <button class="btn btn-outline-secondary" type="button" onclick="searchProducts()">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>产品名称</th>
+                                        <th>分类</th>
+                                        <th>价格</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="productsTable">
+                                    <tr>
+                                        <td colspan="5" class="text-center">加载中...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>
+                                显示 <span id="productStartRange">1</span>-<span id="productEndRange">10</span> 共 <span id="productTotalCount">0</span> 条
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary me-2" id="productPrevBtn" onclick="prevProductPage()">上一页</button>
+                                <button class="btn btn-sm btn-outline-primary" id="productNextBtn" onclick="nextProductPage()">下一页</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 询盘管理 -->
+            <div id="inquiries" class="content-section">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>询盘管理</h2>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="搜索询盘..." id="inquirySearchInput">
+                                <button class="btn btn-outline-secondary" type="button" onclick="searchInquiries()">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-secondary active" onclick="filterInquiries('all')">全部</button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="filterInquiries('pending')">待处理</button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="filterInquiries('handled')">已处理</button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>姓名</th>
+                                        <th>公司</th>
+                                        <th>电话</th>
+                                        <th>邮箱</th>
+                                        <th>状态</th>
+                                        <th>时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inquiriesTable">
+                                    <tr>
+                                        <td colspan="7" class="text-center">加载中...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>
+                                显示 <span id="inquiryStartRange">1</span>-<span id="inquiryEndRange">10</span> 共 <span id="inquiryTotalCount">0</span> 条
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary me-2" id="inquiryPrevBtn" onclick="prevInquiryPage()">上一页</button>
+                                <button class="btn btn-sm btn-outline-primary" id="inquiryNextBtn" onclick="nextInquiryPage()">下一页</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 新闻管理 -->
+            <div id="news" class="content-section">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>新闻管理</h2>
+                    <button class="btn btn-primary" onclick="showNewsModal()">
+                        <i class="bi bi-plus"></i> 添加新闻
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="搜索新闻..." id="newsSearchInput">
+                                <button class="btn btn-outline-secondary" type="button" onclick="searchNews()">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-outline-secondary active" onclick="filterNews('all')">全部</button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="filterNews('published')">已发布</button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="filterNews('draft')">草稿</button>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>标题</th>
+                                        <th>分类</th>
+                                        <th>作者</th>
+                                        <th>状态</th>
+                                        <th>发布时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="newsTable">
+                                    <tr>
+                                        <td colspan="6" class="text-center">加载中...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div>
+                                显示 <span id="newsStartRange">1</span>-<span id="newsEndRange">10</span> 共 <span id="newsTotalCount">0</span> 条
+                            </div>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary me-2" id="newsPrevBtn" onclick="prevNewsPage()">上一页</button>
+                                <button class="btn btn-sm btn-outline-primary" id="newsNextBtn" onclick="nextNewsPage()">下一页</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 统计分析 -->
+            <div id="statistics" class="content-section">
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h3 class="text-primary" id="totalInquiries">0</h3>
+                                <p class="mb-0">总询盘数</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h3 class="text-success" id="totalProducts">0</h3>
+                                <p class="mb-0">总产品数</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h3 class="text-info" id="totalNews">0</h3>
+                                <p class="mb-0">总新闻数</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h3 class="text-warning" id="totalUsers">0</h3>
+                                <p class="mb-0">总用户数</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">询盘趋势</div>
+                            <div class="card-body">
+                                <canvas id="inquiryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">产品分类统计</div>
+                            <div class="card-body">
+                                <canvas id="productCategoryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 用户管理 -->
+            <div id="users" class="content-section">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>用户管理</h2>
+                    <button class="btn btn-primary" onclick="showUserModal()">
+                        <i class="bi bi-plus"></i> 添加用户
+                    </button>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>用户名</th>
+                                        <th>邮箱</th>
+                                        <th>角色</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTable">
+                                    <tr>
+                                        <td colspan="5" class="text-center">加载中...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 系统设置 -->
+            <div id="settings" class="content-section">
+                <h2 class="mb-4">系统设置</h2>
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">网站基本设置</div>
+                            <div class="card-body">
+                                <form id="siteSettingsForm">
+                                    <div class="mb-3">
+                                        <label class="form-label">网站名称</label>
+                                        <input type="text" class="form-control" id="siteName" value="联锦LED显示屏">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">网站描述</label>
+                                        <textarea class="form-control" id="siteDescription" rows="3">专业LED显示屏制造商，提供高质量的室内外LED显示屏产品和解决方案。</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">联系电话</label>
+                                        <input type="text" class="form-control" id="sitePhone" value="+86-755-12345678">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">联系邮箱</label>
+                                        <input type="email" class="form-control" id="siteEmail" value="info@lianjinled.com">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">公司地址</label>
+                                        <input type="text" class="form-control" id="siteAddress" value="深圳市南山区科技园">
+                                    </div>
+                                    <button type="button" class="btn btn-primary" onclick="saveSiteSettings()">保存设置</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card">
+                            <div class="card-header">系统维护</div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label">数据库备份</label>
+                                    <div class="d-flex">
+                                        <button class="btn btn-outline-primary me-2" onclick="backupDatabase()">创建备份</button>
+                                        <button class="btn btn-outline-secondary" onclick="showBackups()">查看备份</button>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">缓存管理</label>
+                                    <button class="btn btn-outline-warning" onclick="clearCache()">清除缓存</button>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">系统日志</label>
+                                    <button class="btn btn-outline-info" onclick="viewSystemLogs()">查看日志</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</div>
+    </div>
+
+    <!-- 页面编辑模态框 -->
+    <div class="modal fade" id="pageModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">编辑页面</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="pageForm">
+                        <input type="hidden" id="pageName">
+                        <div class="mb-3">
+                            <label class="form-label">页面标题</label>
+                            <input type="text" class="form-control" id="pageTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">副标题</label>
+                            <input type="text" class="form-control" id="pageSubtitle">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">页面描述</label>
+                            <textarea class="form-control" id="pageDescription" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">页面内容</label>
+                            <textarea class="form-control" id="pageContent" rows="6"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">背景图片</label>
+                            <input type="text" class="form-control" id="pageImage" placeholder="图片路径，例如：/images/about-bg.jpg">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="savePage()">保存页面</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 产品编辑模态框 -->
+    <div class="modal fade" id="productModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">产品管理</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="productForm">
+                        <input type="hidden" id="productId">
+                        <div class="mb-3">
+                            <label class="form-label">产品名称</label>
+                            <input type="text" class="form-control" id="productName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">产品分类</label>
+                            <select class="form-control" id="productCategory">
+                                <option value="室内显示屏">室内显示屏</option>
+                                <option value="户外显示屏">户外显示屏</option>
+                                <option value="租赁显示屏">租赁显示屏</option>
+                                <option value="创意显示屏">创意显示屏</option>
+                                <option value="透明显示屏">透明显示屏</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">产品描述</label>
+                            <textarea class="form-control" id="productDescription" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">产品规格</label>
+                            <textarea class="form-control" id="productSpecifications" rows="3" placeholder="每行一个规格，例如：像素间距：2.5mm"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">产品价格</label>
+                            <div class="input-group">
+                                <span class="input-group-text">¥</span>
+                                <input type="number" class="form-control" id="productPrice" min="0" step="0.01">
+                                <span class="input-group-text">/㎡</span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">产品状态</label>
+                            <select class="form-control" id="productStatus">
+                                <option value="上架">上架</option>
+                                <option value="下架">下架</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">产品图片</label>
+                            <input type="text" class="form-control" id="productImage" placeholder="图片路径，例如：/images/products/p2.5.jpg">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="saveProduct()">保存产品</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新闻编辑模态框 -->
+    <div class="modal fade" id="newsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">新闻管理</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="newsForm">
+                        <input type="hidden" id="newsId">
+                        <div class="mb-3">
+                            <label class="form-label">新闻标题</label>
+                            <input type="text" class="form-control" id="newsTitle" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">新闻分类</label>
+                            <select class="form-control" id="newsCategory">
+                                <option value="公司新闻">公司新闻</option>
+                                <option value="行业资讯">行业资讯</option>
+                                <option value="技术文章">技术文章</option>
+                                <option value="展会信息">展会信息</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">新闻内容</label>
+                            <textarea class="form-control" id="newsContent" rows="6"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">作者</label>
+                            <input type="text" class="form-control" id="newsAuthor" value="admin">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">状态</label>
+                            <select class="form-control" id="newsStatus">
+                                <option value="已发布">已发布</option>
+                                <option value="草稿">草稿</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="saveNews()">保存新闻</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 用户编辑模态框 -->
+    <div class="modal fade" id="userModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">用户管理</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="userForm">
+                        <input type="hidden" id="userId">
+                        <div class="mb-3">
+                            <label class="form-label">用户名</label>
+                            <input type="text" class="form-control" id="userName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">邮箱</label>
+                            <input type="email" class="form-control" id="userEmail">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">密码</label>
+                            <input type="password" class="form-control" id="userPassword" placeholder="不修改请留空">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">角色</label>
+                            <select class="form-control" id="userRole">
+                                <option value="超级管理员">超级管理员</option>
+                                <option value="管理员">管理员</option>
+                                <option value="编辑">编辑</option>
+                                <option value="查看者">查看者</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">状态</label>
+                            <select class="form-control" id="userStatus">
+                                <option value="活跃">活跃</option>
+                                <option value="禁用">禁用</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="saveUser()">保存用户</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 询盘详情模态框 -->
+    <div class="modal fade" id="inquiryModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">询盘详情</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="inquiryDetails">
+                        <!-- 询盘详情内容 -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-success" onclick="markAsHandled()">标记为已处理</button>
+                    <button type="button" class="btn btn-primary" onclick="replyInquiry()">回复询盘</button>
+                </div>
+            </div>
+        </div>
+    </div><script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Supabase配置
+        const SUPABASE_URL = 'https://jirudzbqcxviytcmxegf.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppcnVkemJxY3h2aXl0Y218ZWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0NTExOTUsImV4cCI6MjA3MDAyNzE5NX0.qi0YhrxQmbRa6YsbVA13IpddImIjJKJyd1fgz5jIlt4';
+        let supabase;
+
+        // 初始化Supabase
+        async function initSupabase() {
+            try {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                console.log('Supabase初始化成功');
+            } catch (error) {
+                console.error('Supabase初始化失败:', error);
+                alert('数据库连接失败，请检查网络连接或刷新页面重试');
+            }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化Supabase
+            initSupabase();
+
+            // 允许回车键登录
+            document.getElementById('password').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    login();
+                }
+            });
+        });
+        
+        // 全局变量
+        let currentEditingPage = null;
+        let currentEditingProduct = null;
+        let currentEditingNews = null;
+        let currentEditingUser = null;
+        let currentEditingInquiry = null;
+        
+        // 页面数据存储
+        const pageData = {
+            home: {
+                title: '联锦LED显示屏',
+                subtitle: '专业LED显示解决方案提供商',
+                description: '我们是专业的LED显示屏制造商，提供高质量的室内外LED显示屏产品和解决方案。',
+                content: '联锦LED显示屏公司成立于2010年，专注于LED显示技术的研发和生产。我们的产品广泛应用于商业广告、体育场馆、会议室、舞台演出等各个领域。',
+                image: '/images/hero-bg.jpg'
+            },
+            about: {
+                title: '关于我们',
+                subtitle: '专业团队，品质保证',
+                description: '联锦LED拥有专业的研发团队和先进的生产设备，致力于为客户提供最优质的LED显示产品。',
+                content: '公司拥有现代化的生产基地和专业的技术团队，通过ISO9001质量管理体系认证，产品远销海内外。',
+                image: '/images/about-bg.jpg'
+            },
+            products: {
+                title: '产品中心',
+                subtitle: '丰富的产品线，满足不同需求',
+                description: '我们提供室内外LED显示屏、租赁屏、创意屏等多种产品，满足客户的不同应用需求。',
+                content: '产品包括小间距LED显示屏、户外全彩LED显示屏、租赁LED显示屏、透明LED显示屏等。',
+                image: '/images/products-bg.jpg'
+            },
+            solutions: {
+                title: '解决方案',
+                subtitle: '定制化解决方案',
+                description: '针对不同行业和应用场景，我们提供专业的LED显示解决方案。',
+                content: '涵盖商业显示、体育场馆、交通指示、舞台租赁等多个应用领域的解决方案。',
+                image: '/images/solutions-bg.jpg'
+            },
+            cases: {
+                title: '成功案例',
+                subtitle: '丰富的项目经验',
+                description: '我们已成功完成数千个LED显示项目，积累了丰富的行业经验。',
+                content: '项目案例包括大型体育场馆、商业广场、政府机构、企业总部等。',
+                image: '/images/cases-bg.jpg'
+            },
+            news: {
+                title: '新闻资讯',
+                subtitle: '行业动态，技术前沿',
+                description: '了解LED显示行业最新动态和技术发展趋势。',
+                content: '发布公司新闻、行业资讯、技术文章等内容。',
+                image: '/images/news-bg.jpg'
+            },
+            support: {
+                title: '技术支持',
+                subtitle: '专业的技术服务团队',
+                description: '我们提供全方位的技术支持和售后服务。',
+                content: '包括产品咨询、技术指导、安装调试、维护保养等服务。',
+                image: '/images/support-bg.jpg'
+            },
+            contact: {
+                title: '联系我们',
+                subtitle: '随时为您服务',
+                description: '欢迎联系我们，获取更多产品信息和技术支持。',
+                content: '联系电话：+86-755-12345678\n邮箱：info@lianjinled.com\n地址：深圳市南山区科技园',
+                image: '/images/contact-bg.jpg'
+            }
+        };
+
+        // 显示加载中遮罩
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        // 隐藏加载中遮罩
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        // 登录功能
+        async function login() {
+            showLoading();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                // 检查用户表中是否有匹配的用户
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('username', username)
+                    .single();
+                
+                if (error) {
+                    throw error;
+                }
+                
+                if (data && password === 'admin123') { // 简化验证，实际应使用密码哈希
+                    document.getElementById('loginSection').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'block';
+                    showSection('dashboard');
+                    loadDashboardData();
+                } else {
+                    alert('用户名或密码错误！请使用 admin / admin123');
+                }
+            } catch (error) {
+                console.error('登录错误:', error);
+                
+                // 如果用户表不存在或其他错误，使用默认账号
+                if (username === 'admin' && password === 'admin123') {
+                    document.getElementById('loginSection').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'block';
+                    showSection('dashboard');
+                    loadDashboardData();
+                    
+                    // 创建默认用户表和用户
+                    try {
+                        await createDefaultTables();
+                    } catch (e) {
+                        console.error('创建默认表错误:', e);
+                    }
+                } else {
+                    alert('用户名或密码错误！请使用 admin / admin123');
+                }
+            } finally {
+                hideLoading();
+            }
+        }
+    </script><script>
+        // 创建默认表和数据
+        async function createDefaultTables() {
+            try {
+                // 创建用户表
+                await supabase.rpc('create_users_table_if_not_exists');
+                
+                // 创建产品表
+                await supabase.rpc('create_products_table_if_not_exists');
+                
+                // 创建询盘表
+                await supabase.rpc('create_inquiries_table_if_not_exists');
+                
+                // 创建新闻表
+                await supabase.rpc('create_news_table_if_not_exists');
+                
+                // 添加默认管理员用户
+                const { error: userError } = await supabase
+                    .from('users')
+                    .upsert([
+                        {
+                            username: 'admin',
+                            password: 'admin123', // 实际应使用密码哈希
+                            email: 'admin@lianjinled.com',
+                            role: '超级管理员',
+                            status: '活跃',
+                            created_at: new Date().toISOString()
+                        }
+                    ]);
+                
+                if (userError) throw userError;
+                
+                // 添加一些示例产品
+                const { error: productError } = await supabase
+                    .from('products')
+                    .upsert([
+                        {
+                            name: 'P2.5室内全彩LED显示屏',
+                            category: '室内显示屏',
+                            description: '高清小间距LED显示屏，适用于会议室、控制室等场所',
+                            specifications: '像素间距：2.5mm\n亮度：800cd/㎡\n刷新率：3840Hz',
+                            price: 1200,
+                            status: '上架',
+                            image: '/images/products/indoor-p2.5.jpg',
+                            created_at: new Date().toISOString()
+                        },
+                        {
+                            name: 'P4户外全彩LED显示屏',
+                            category: '户外显示屏',
+                            description: '高亮度户外LED显示屏，适用于广告牌、体育场馆等',
+                            specifications: '像素间距：4mm\n亮度：5500cd/㎡\n防护等级：IP65',
+                            price: 980,
+                            status: '上架',
+                            image: '/images/products/outdoor-p4.jpg',
+                            created_at: new Date().toISOString()
+                        },
+                        {
+                            name: 'P3.91租赁LED显示屏',
+                            category: '租赁显示屏',
+                            description: '轻便易安装的租赁LED显示屏，适用于演唱会、展览等临时活动',
+                            specifications: '像素间距：3.91mm\n亮度：4500cd/㎡\n箱体尺寸：500x500mm',
+                            price: 1500,
+                            status: '上架',
+                            image: '/images/products/rental-p3.91.jpg',
+                            created_at: new Date().toISOString()
+                        }
+                    ]);
+                
+                if (productError) throw productError;
+                
+                // 添加一些示例询盘
+                const { error: inquiryError } = await supabase
+                    .from('inquiries')
+                    .upsert([
+                        {
+                            name: '张先生',
+                            company: '深圳市科技有限公司',
+                            phone: '13812345678',
+                            email: 'zhang@example.com',
+                            message: '我们需要一批P2.5的室内LED显示屏，请提供详细报价和规格参数。',
+                            status: '待处理',
+                            created_at: new Date().toISOString()
+                        },
+                        {
+                            name: '李女士',
+                            company: '广州展览中心',
+                            phone: '13987654321',
+                            email: 'li@example.com',
+                            message: '我们计划在展览中心安装一块大型户外LED显示屏，请联系我们详谈。',
+                            status: '已处理',
+                            created_at: new Date(Date.now() - 86400000).toISOString() // 昨天
+                        }
+                    ]);
+                
+                if (inquiryError) throw inquiryError;
+                
+                // 添加一些示例新闻
+                const { error: newsError } = await supabase
+                    .from('news')
+                    .upsert([
+                        {
+                            title: '联锦LED参加2025广州国际LED展',
+                            category: '公司新闻',
+                            content: '我司将于2025年9月参加广州国际LED展览会，展位号A123，欢迎新老客户前来参观洽谈。',
+                            author: 'admin',
+                            status: '已发布',
+                            created_at: new Date().toISOString()
+                        },
+                        {
+                            title: 'Mini LED技术发展趋势分析',
+                            category: '技术文章',
+                            content: 'Mini LED作为新一代显示技术，具有高对比度、高亮度、低功耗等优势，正逐渐成为LED显示领域的新宠。',
+                            author: 'admin',
+                            status: '已发布',
+                            created_at: new Date(Date.now() - 172800000).toISOString() // 前天
+                        }
+                    ]);
+                
+                if (newsError) throw newsError;
+                
+                console.log('默认表和数据创建成功');
+            } catch (error) {
+                console.error('创建默认表和数据失败:', error);
+                throw error;
+            }
+        }
+
+        // 退出登录
+        function logout() {
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        // 显示指定的内容区域
+        function showSection(sectionId) {
+            // 隐藏所有内容区域
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // 移除所有导航项的活跃状态
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // 显示指定的内容区域
+            document.getElementById(sectionId).style.display = 'block';
+            
+            // 设置对应导航项为活跃状态
+            document.querySelector(`.sidebar .nav-link[onclick="showSection('${sectionId}')"]`).classList.add('active');
+            
+            // 根据不同的区域加载相应的数据
+            switch (sectionId) {
+                case 'dashboard':
+                    loadDashboardData();
+                    break;
+                case 'products':
+                    loadProducts();
+                    break;
+                case 'inquiries':
+                    loadInquiries();
+                    break;
+                case 'news':
+                    loadNews();
+                    break;
+                case 'users':
+                    loadUsers();
+                    break;
+                case 'statistics':
+                    loadStatistics();
+                    break;
+            }
+        }
+
+        // 加载仪表盘数据
+        async function loadDashboardData() {
+            showLoading();
+            
+            try {
+                // 获取产品数量
+                const { count: productCount, error: productError } = await supabase
+                    .from('products')
+                    .select('*', { count: 'exact', head: true });
+                
+                if (productError) throw productError;
+                document.getElementById('productCount').textContent = productCount || 0;
+                
+                // 获取询盘数量
+                const { count: inquiryCount, error: inquiryError } = await supabase
+                    .from('inquiries')
+                    .select('*', { count: 'exact', head: true });
+                
+                if (inquiryError) throw inquiryError;
+                document.getElementById('inquiryCount').textContent = inquiryCount || 0;
+                
+                // 获取新闻数量
+                const { count: newsCount, error: newsError } = await supabase
+                    .from('news')
+                    .select('*', { count: 'exact', head: true });
+                
+                if (newsError) throw newsError;
+                document.getElementById('newsCount').textContent = newsCount || 0;
+                
+                // 页面数量（固定值）
+                document.getElementById('pageCount').textContent = Object.keys(pageData).length;
+                
+                // 获取最新询盘
+                const { data: latestInquiries, error: latestInquiryError } = await supabase
+                    .from('inquiries')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+                
+                if (latestInquiryError) throw latestInquiryError;
+                
+                // 更新最新询盘表格
+                const latestInquiriesTable = document.getElementById('latestInquiriesTable');
+                latestInquiriesTable.innerHTML = '';
+                
+                if (latestInquiries && latestInquiries.length > 0) {
+                    latestInquiries.forEach(inquiry => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${inquiry.name}</td>
+                            <td>${inquiry.company}</td>
+                            <td><span class="status-badge ${inquiry.status === '待处理' ? 'status-pending' : 'status-active'}">${inquiry.status}</span></td>
+                            <td>${new Date(inquiry.created_at).toLocaleDateString()}</td>
+                        `;
+                        latestInquiriesTable.appendChild(row);
+                    });
+                } else {
+                    latestInquiriesTable.innerHTML = '<tr><td colspan="4" class="text-center">暂无询盘数据</td></tr>';
+                }
+                
+                // 获取用户数量
+                const { count: userCount, error: userError } = await supabase
+                    .from('users')
+                    .select('*', { count: 'exact', head: true });
+                
+                if (userError) throw userError;
+                document.getElementById('totalUsers').textContent = userCount || 0;
+                
+                // 创建访问统计图表
+                createVisitsChart();
+                
+            } catch (error) {
+                console.error('加载仪表盘数据失败:', error);
+                alert('加载数据失败，请刷新页面重试');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // 创建访问统计图表
+        function createVisitsChart() {
+            const ctx = document.getElementById('visitsChart').getContext('2d');
+            
+            // 模拟数据
+            const labels = ['1月', '2月', '3月', '4月', '5月', '6月', '7月'];
+            const data = {
+                labels: labels,
+                datasets: [
+                    {
+                        label: '网站访问量',
+                        data: [1200, 1900, 1500, 2500, 2200, 3000, 3500],
+                        backgroundColor: 'rgba(13, 110, 253, 0.2)',
+                        borderColor: 'rgba(13, 110, 253, 1)',
+                        borderWidth: 2,
+                        tension: 0.3
+                    },
+                    {
+                        label: '询盘数量',
+                        data: [25, 40, 30, 45, 35, 55, 70],
+                        backgroundColor: 'rgba(25, 135, 84, 0.2)',
+                        borderColor: 'rgba(25, 135, 84, 1)',
+                        borderWidth: 2,
+                        tension: 0.3
+                    }
+                ]
+            };
+            
+            // 销毁旧图表（如果存在）
+            if (window.visitsChart) {
+                window.visitsChart.destroy();
+            }
+            
+            // 创建新图表
+            window.visitsChart = new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    </script><script>
+        // 产品管理相关功能
+        let productPage = 1;
+        const productPageSize = 10;
+        let totalProducts = 0;
+        
+        // 加载产品列表
+        async function loadProducts() {
+            showLoading();
+            
+            try {
+                // 获取产品总数
+                const { count, error: countError } = await supabase
+                    .from('products')
+                    .select('*', { count: 'exact', head: true });
+                
+                if (countError) throw countError;
+                totalProducts = count || 0;
+                
+                // 获取分页产品数据
+                const from = (productPage - 1) * productPageSize;
+                const to = from + productPageSize - 1;
+                
+                const { data, error } = await supabase
+                    .from('products')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .range(from, to);
+                
+                if (error) throw error;
+                
+                // 更新产品表格
+                const productsTable = document.getElementById('productsTable');
+                productsTable.innerHTML = '';
+                
+                if (data && data.length > 0) {
+                    data.forEach(product => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${product.name}</td>
+                            <td>${product.category}</td>
+                            <td>¥${product.price}/㎡</td>
+                            <td><span class="status-badge ${product.status === '上架' ? 'status-active' : 'status-inactive'}">${product.status}</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1" onclick="editProduct(${product.id})">编辑</button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct(${product.id})">删除</button>
+                            </td>
+                        `;
+                        productsTable.appendChild(row);
+                    });
+                } else {
+                    productsTable.innerHTML = '<tr><td colspan="5" class="text-center">暂无产品数据</td></tr>';
+                }
+                
+                // 更新分页信息
+                document.getElementById('productTotalCount').textContent = totalProducts;
+                document.getElementById('productStartRange').textContent = totalProducts === 0 ? 0 : from + 1;
+                document.getElementById('productEndRange').textContent = Math.min(to + 1, totalProducts);
+                
+                // 更新分页按钮状态
+                document.getElementById('productPrevBtn').disabled = productPage === 1;
+                document.getElementById('productNextBtn').disabled = (productPage * productPageSize) >= totalProducts;
+                
+            } catch (error) {
+                console.error('加载产品数据失败:', error);
+                alert('加载产品数据失败，请刷新页面重试');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // 上一页产品
+        function prevProductPage() {
+            if (productPage > 1) {
+                productPage--;
+                loadProducts();
+            }
+        }
+        
+        // 下一页产品
+        function nextProductPage() {
+            if ((productPage * productPageSize) < totalProducts) {
+                productPage++;
+                loadProducts();
+            }
+        }
+        
+        // 搜索产品
+        function searchProducts() {
+            const searchTerm = document.getElementById('productSearchInput').value.trim();
+            if (searchTerm) {
+                searchProductsByTerm(searchTerm);
+            } else {
+                productPage = 1;
+                loadProducts();
+            }
+        }
+        
+        // 根据关键词搜索产品
+        async function searchProductsByTerm(term) {
+            showLoading();
+            
+            try {
+                const { data, error } = await supabase
+                    .from('products')
+                    .select('*')
+                    .or(`name.ilike.%${term}%,category.ilike.%${term}%,description.ilike.%${term}%`)
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                // 更新产品表格
+                const productsTable = document.getElementById('productsTable');
+                productsTable.innerHTML = '';
+                
+                if (data && data.length > 0) {
+                    data.forEach(product => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${product.name}</td>
+                            <td>${product.category}</td>
+                            <td>¥${product.price}/㎡</td>
+                            <td><span class="status-badge ${product.status === '上架' ? 'status-active' : 'status-inactive'}">${product.status}</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1" onclick="editProduct(${product.id})">编辑</button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteProduct(${product.id})">删除</button>
+                            </td>
+                        `;
+                        productsTable.appendChild(row);
+                    });
+                } else {
+                    productsTable.innerHTML = '<tr><td colspan="5" class="text-center">未找到匹配的产品</td></tr>';
+                }
+                
+                // 更新分页信息
+                document.getElementById('productTotalCount').textContent = data ? data.length : 0;
+                document.getElementById('productStartRange').textContent = data && data.length > 0 ? 1 : 0;
+                document.getElementById('productEndRange').textContent = data ? data.length : 0;
+                
+                // 禁用分页按钮
+                document.getElementById('productPrevBtn').disabled = true;
+                document.getElementById('productNextBtn').disabled = true;
+                
+            } catch (error) {
+                console.error('搜索产品失败:', error);
+                alert('搜索产品失败，请重试');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // 显示产品模态框
+        function showProductModal() {
+            // 重置表单
+            document.getElementById('productForm').reset();
+            document.getElementById('productId').value = '';
+            
+            // 显示模态框
+            const productModal = new bootstrap.Modal(document.getElementById('productModal'));
+            productModal.show();
+        }
+        
+        // 编辑产品
+        async function editProduct(id) {
+            showLoading();
+            
+            try {
+                const { data, error } = await supabase
+                    .from('products')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+                
+                if (error) throw error;
+                
+                if (data) {
+                    // 填充表单
+                    document.getElementById('productId').value = data.id;
+                    document.getElementById('productName').value = data.name;
+                    document.getElementById('productCategory').value = data.category;
+                    document.getElementById('productDescription').value = data.description;
+                    document.getElementById('productSpecifications').value = data.specifications;
+                    document.getElementById('productPrice').value = data.price;
+                    document.getElementById('productStatus').value = data.status;
+                    document.getElementById('productImage').value = data.image;
+                    
+                    // 显示模态框
+                    const productModal = new bootstrap.Modal(document.getElementById('productModal'));
+                    productModal.show();
+                }
+            } catch (error) {
+                console.error('获取产品详情失败:', error);
+                alert('获取产品详情失败，请重试');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // 保存产品
+        async function saveProduct() {
+            showLoading();
+            
+            try {
+                const productId = document.getElementById('productId').value;
+                const productData = {
+                    name: document.getElementById('productName').value,
+                    category: document.getElementById('productCategory').value,
+                    description: document.getElementById('productDescription').value,
+                    specifications: document.getElementById('productSpecifications').value,
+                    price: parseFloat(document.getElementById('productPrice').value) || 0,
+                    status: document.getElementById('productStatus').value,
+                    image: document.getElementById('productImage').value
+                };
+                
+                let result;
+                
+                if (productId) {
+                    // 更新产品
+                    result = await supabase
+                        .from('products')
+                        .update(productData)
+                        .eq('id', productId);
+                } else {
+                    // 添加产品
+                    productData.created_at = new Date().toISOString();
+                    result = await supabase
+                        .from('products')
+                        .insert([productData]);
+                }
+                
+                if (result.error) throw result.error;
+                
+                // 关闭模态框
+                const productModal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
+                productModal.hide();
+                
+                // 重新加载产品列表
+                loadProducts();
+                
+                // 更新仪表盘数据
+                if (!productId) {
+                    const productCount = document.getElementById('productCount');
+                    productCount.textContent = (parseInt(productCount.textContent) + 1).toString();
+                }
+                
+            } catch (error) {
+                console.error('保存产品失败:', error);
+                alert('保存产品失败，请重试');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // 删除产品
+        async function deleteProduct(id) {
+            if (confirm('确定要删除这个产品吗？此操作不可恢复。')) {
+                showLoading();
+                
+                try {
+                    const { error } = await supabase
+                        .from('products')
+                        .delete()
+                        .eq('id', id);
+                    
+                    if (error) throw error;
+                    
+                    // 重新加载产品列表
+                    loadProducts();
+                    
+                    // 更新仪表盘数据
+                    const productCount = document.getElementById('productCount');
+                    productCount.textContent = (parseInt(productCount.textContent) - 1).toString();
+                    
+                } catch (error) {
+                    console.error('删除产品失败:', error);
+                    alert('删除产品失败，请重试');
+                } finally {
+                    hideLoading();
+                }
+            }
+        }
+    </script><script>
+        // 询盘管理相关功能
+        let inquiryPage = 1;
+        const inquiryPageSize = 10;
+        let totalInquiries = 0;
+        let currentInquiryFilter = 'all';
+        
+        // 加载询盘列表
+        async function loadInquiries() {
+            showLoading();
+            
+            try {
+                let query = supabase.from('inquiries');
+                
+                // 应用过滤器
+                if (currentInquiryFilter !== 'all') {
+                    query = query.eq('status', currentInquiryFilter === 'pending' ? '待处理' : '已处理');
+                }
+                
+                // 获取询盘总数
+                const { count, error: countError } = await query.select('*', { count: 'exact', head: true });
+                
+                if (countError) throw countError;
+                totalInquiries = count || 0;
+                
+                // 获取分页询盘数据
+                const from = (inquiryPage - 1) * inquiryPageSize;
+                const to = from + inquiryPageSize - 1;
+                
+                const { data, error } = await query
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .range(from, to);
+                
+                if (error) throw error;
+                
+                // 更新询盘表格
+                const inquiriesTable = document.getElementById('inquiriesTable');
+                inquiriesTable.innerHTML = '';
+                
+                if (data && data.length > 0) {
+                    data.forEach(inquiry => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${inquiry.name}</td>
+                            <td>${inquiry.company}</td>
+                            <td>${inquiry.phone}</td>
+                            <td>${inquiry.email}</td>
+                            <td><span class="status-badge ${inquiry.status === '待处理' ? 'status-pending' : 'status-active'}">${inquiry.status}</span></td>
+                            <td>${new Date(inquiry.created_at).toLocaleString()}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1" onclick="viewInquiry(${inquiry.id})">查看</button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteInquiry(${inquiry.id})">删除</button>
+                            </td>
+                        `;
+                        inquiriesTable.appendChild(row);
+                    });
+                } else {
+                    inquiriesTable.innerHTML = '<tr><td colspan="7" class="text-center">暂无询盘数据</td></tr>';
+                }
+                
+                // 更新分页信息
+                document.getElementById('inquiryTotalCount').textContent = totalInquiries;
+                document.getElementById('inquiryStartRange').textContent = totalInquiries === 0 ? 0 : from + 1;
+                document.getElementById('inquiryEndRange').textContent = Math.min(to + 1, totalInquiries);
+                
+                // 更新分页按钮状态
+                document.getElementById('inquiryPrevBtn').disabled = inquiryPage === 1;
+                document.getElementById('inquiryNextBtn').disabled = (inquiryPage * inquiryPageSize) >= totalInquiries;
+                
+            } catch (error) {
+                console.error('加载询盘数据失败:', error);
+                alert('加载询盘数据失败，请刷新页面重试');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // 上一页询盘
+        function prevInquiryPage() {
+            if (inquiryPage > 1) {
+                inquiryPage--;
+                loadInquiries();
+            }
+        }
+        
+        // 下一页询盘
+        function nextInquiryPage() {
+            if ((inquiryPage * inquiryPageSize) < totalInquiries) {
+                inquiryPage++;
+                loadInquiries();
+            }
+        }
+        
+        // 搜索询盘
+        function searchInquiries() {
+            const searchTerm = document.getElementById('inquirySearchInput').value.trim();
+            if (searchTerm) {
+                searchInquiriesByTerm(searchTerm);
+            } else {
+                inquiryPage = 1;
+                loadInquiries();
+            }
+        }
+        
+        // 根据关键词搜索询盘
+        async function searchInquiriesByTerm(term) {
+            showLoading();
+            
+            try {
+                let query = supabase.from('inquiries').select('*');
+                
+                // 应用过滤器
+                if (currentInquiryFilter !== 'all') {
+                    query = query.eq('status', currentInquiryFilter === 'pending' ? '待处理' : '已处理');
+                }
+                
+                // 应用搜索条件
+                const { data, error } = await query
+                    .or(`name.ilike.%${term}%,company.ilike.%${term}%,email.ilike.%${term}%,message.ilike.%${term}%`)
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                // 更新询盘表格
+                const inquiriesTable = document.getElementById('inquiriesTable');
+                inquiriesTable.innerHTML = '';
+                
+                if (data && data.length > 0) {
+                    data.forEach(inquiry => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${inquiry.name}</td>
+                            <td>${inquiry.company}</td>
+                            <td>${inquiry.phone}</td>
+                            <td>${inquiry.email}</td>
+                            <td><span class="status-badge ${inquiry.status === '待处理' ? 'status-pending' : 'status-active'}">${inquiry.status}</span></td>
+                            <td>${new Date(inquiry.created_at).toLocaleString()}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1" onclick="viewInquiry(${inquiry.id})">查看</button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteInquiry(${inquiry.id})">删除</button>
+                            </td>
+                        `;
+                        inquiriesTable.appendChild(row);
+                    });
+                } else {
+                    inquiriesTable.innerHTML = '<tr><td colspan="7" class="text-center">未找到匹配的询盘</td></tr>';
+                }
+                
+                // 更新分页信息
+                document.getElementById('inquiryTotalCount').textContent = data ? data.length : 0;
+                document.getElementById('inquiryStartRange').textContent = data && data.length > 0 ? 1 : 0;
+                document.getElementById('inquiryEndRange').textContent = data ? data.length : 0;
+                
+                // 禁用分页按钮
+                document.getElementById('inquiryPrevBtn').disabled = true;
+                document.getElementById('inquiryNextBtn').disabled = true;
+                
+            } catch (error) {
+                console.error('搜索询盘失败:', error);
+                alert('搜索询盘失败，请重试');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // 过滤询盘
+        function filterInquiries(filter) {
+            currentInquiryFilter = filter;
+            inquiryPage = 1;
+            
+            // 更新按钮状态
+            document.querySelectorAll('.btn-group[role="group"] .btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.btn-group[role="group"] .btn[onclick="filterInquiries('${filter}')"]`).classList.add('active');
+            
+            // 重新加载询盘
+            loadInquiries();
+        }
+        
+        // 查看询盘详情
+        async function viewInquiry(id) {
+            showLoading();
+            
+            try {
+                const { data, error } = await supabase
+                    .from('inquiries')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+                
+                if (error) throw error;
+                
+                if (data) {
+                    // 保存当前询盘ID
+                    currentEditingInquiry = data.id;
+                    
+                    // 填充详情
+                    const inquiryDetails = document.getElementById('inquiryDetails');
+                    inquiryDetails.innerHTML = `
+                        <div class="mb-3">
+                            <h5>基本信息</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>姓名：</strong> ${data.name}</p>
+                                    <p><strong>公司：</strong> ${data.company}</p>
+                                    <p><strong>电话：</strong> ${data.phone}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>邮箱：</strong> ${data.email}</p>
+                                    <p><strong>状态：</strong> <span class="status-badge ${data.status === '待处理' ? 'status-pending' : 'status-active'}">${data.status}</span></p>
+                                    <p><strong>时间：</strong> ${new Date(data.created_at).toLocaleString()}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <h5>询盘内容</h5>
+                            <div class="card">
+                                <div class="card-body">
+                                    ${data.message.replace(/\n/g, '<br>')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // 更新按钮状态
+                    const markAsHandledBtn = document.querySelector('.modal-footer .btn-success');
+                    if (data.status === '已处理') {
+                        markAsHandledBtn.disabled = true;
+                        markAsHandledBtn.textContent = '已处理';
+                    } else {
+                        markAsHandledBtn.disabled = false;
+                        markAsHandledBtn.textContent = '标记为已处理';
+                    }
+                    
+                    // 显示模态框
+                    const inquiryModal = new bootstrap.Modal(document.getElementById('inquiryModal'));
+                    inquiryModal.show();
+                }
+            } catch (error) {
+                console.error('获取询盘详情失败:', error);
+                alert('获取询盘详情失败，请重试');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // 标记询盘为已处理
+        async function markAsHandled() {
+            if (!currentEditingInquiry) return;
+            
+            showLoading();
+            
+            try {
+                const { error } = await supabase
+                    .from('inquiries')
+                    .update({ status: '已处理' })
+                    .eq('id', currentEditingInquiry);
+                
+                if (error) throw error;
+                
+                // 关闭模态框
+                const inquiryModal = bootstrap.Modal.getInstance(document.getElementById('inquiryModal'));
+                inquiryModal.hide();
+                
+                // 重新加载询盘列表
+                loadInquiries();
+                
+            } catch (error) {
+                console.error('更新询盘状态失败:', error);
+                alert('更新询盘状态失败，请重试');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // 回复询盘
+        function replyInquiry() {
+            if (!currentEditingInquiry) return;
+            
+            // 获取询盘详情中的邮箱
+            const emailElement = document.querySelector('#inquiryDetails p strong:contains("邮箱：")').nextSibling;
+            const email = emailElement ? emailElement.textContent.trim() : '';
+            
+            // 打开默认邮件客户端
+            if (email) {
+                window.location.href = `mailto:${email}?subject=回复：联锦LED显示屏询盘&body=尊敬的客户，您好！\n\n感谢您对联锦LED显示屏的关注。我们已收到您的询盘，现回复如下：\n\n`;
+            } else {
+                alert('未找到有效的邮箱地址');
+            }
+        }
+        
+        // 删除询盘
+        async function deleteInquiry(id) {
+            if (confirm('确定要删除这条询盘吗？此操作不可恢复。')) {
+                showLoading();
+                
+                try {
+                    const { error } = await supabase
+                        .from('inquiries')
+                        .delete()
+                        .eq('id', id);
+                    
+                    if (error) throw error;
+                    
+                    // 重新加载询盘列表
+                    loadInquiries();
+                    
+                    // 更新仪表盘数据
+                    const inquiryCount = document.getElementById('inquiryCount');
+                    inquiryCount.textContent = (parseInt(inquiryCount.textContent) - 1).toString();
+                    
+                } catch (error) {
+                    console.error('删除询盘失败:', error);
+                    alert('删除询盘失败，请重试');
+                } finally {
+                    hideLoading();
+                }
+            }
+        }
+    </script><script>
+        // 新闻管理相关功能
+        let newsPage = 1;
+        const newsPageSize = 10;
+        let totalNews = 0;
+        let currentNewsFilter = 'all';
+        
+        // 加载新闻列表
+        async function loadNews() {
+            showLoading();
+            
+            try {
+                let query = supabase.from('news');
+                
+                // 应用过滤器
+                if (currentNewsFilter !== 'all') {
+                    query = query.eq('status', currentNewsFilter === 'published' ? '已发布' : '草稿');
+                }
+                
+                // 获取新闻总数
+                const { count, error: countError } = await query.select('*', { count: 'exact', head: true });
+                
+                if (countError) throw countError;
+                totalNews = count || 0;
+                
+                // 获取分页新闻数据
+                const from = (newsPage - 1) * newsPageSize;
+                const to = from + newsPageSize - 1;
+                
+                const { data, error } = await query
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .range(from, to);
+                
+                if (error) throw error;
+                
+                // 更新新闻表格
+                const newsTable = document.getElementById('newsTable');
+                newsTable.innerHTML = '';
+                
+                if (data && data.length > 0) {
+                    data.forEach(news => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${news.title}</td>
+                            <td>${news.category}</td>
+                            <td>${news.author}</td>
+                            <td><span class="status-badge ${news.status === '已发布' ? 'status-published' : 'status-draft'}">${news.status}</span></td>
+                            <td>${new Date(news.created_at).toLocaleDateString()}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1" onclick="editNews(${news.id})">编辑</button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteNews(${news.id})">删除</button>
+                            </td>
+                        `;
+                        newsTable.appendChild(row);
+                    });
+                } else {
+                    newsTable.innerHTML = '<tr><td colspan="6" class="text-center">暂无新闻数据</td></tr>';
+                }
+                
+                // 更新分页信息
+                document.getElementById('newsTotalCount').textContent = totalNews;
+                document.getElementById('newsStartRange').textContent = totalNews === 0 ? 0 : from + 1;
+                document.getElementById('newsEndRange').textContent = Math.min(to + 1, totalNews);
+                
+                // 更新分页按钮状态
+                document.getElementById('newsPrevBtn').disabled = newsPage === 1;
+                document.getElementById('newsNextBtn').disabled = (newsPage * newsPageSize) >= totalNews;
+                
+            } catch (error) {
+                console.error('加载新闻数据失败:', error);
+                alert('加载新闻数据失败，请刷新页面重试');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // 上一页新闻
+        function prevNewsPage() {
+            if (newsPage > 1) {
+                newsPage--;
+                loadNews();
+            }
+        }
+        
+        // 下一页新闻
+        function nextNewsPage() {
+            if ((newsPage * newsPageSize) < totalNews) {
+                newsPage++;
+                loadNews();
+            }
+        }
+        
+        // 搜索新闻
+        function searchNews() {
+            const searchTerm = document.getElementById('newsSearchInput').value.trim();
+            if (searchTerm) {
+                searchNewsByTerm(searchTerm);
+            } else {
+                newsPage = 1;
+                loadNews();
+            }
+        }
+        
+        // 根据关键词搜索新闻
+        async function searchNewsByTerm(term) {
+            showLoading();
+            
+            try {
+                let query = supabase.from('news').select('*');
+                
+                // 应用过滤器
+                if (currentNewsFilter !== 'all') {
+                    query = query.eq('status', currentNewsFilter === 'published' ? '已发布' : '草稿');
+                }
+                
+                // 应用搜索条件
+                const { data, error } = await query
+                    .or(`title.ilike.%${term}%,category.ilike.%${term}%,content.ilike.%${term}%,author.ilike.%${term}%`)
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                // 更新新闻表格
+                const newsTable = document.getElementById('newsTable');
+                newsTable.innerHTML = '';
+                
+                if (data && data.length > 0) {
+                    data.forEach(news => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${news.title}</td>
+                            <td>${news.category}</td>
+                            <td>${news.author}</td>
+                            <td><span class="status-badge ${news.status === '已发布' ? 'status-published' : 'status-draft'}">${news.status}</span></td>
+                            <td>${new Date(news.created_at).toLocaleDateString()}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1" onclick="editNews(${news.id})">编辑</button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteNews(${news.id})">删除</button>
+                            </td>
+                        `;
+                        newsTable.appendChild(row);
+                    });
+                } else {
+                    newsTable.innerHTML = '<tr><td colspan="6" class="text-center">未找到匹配的新闻</td></tr>';
+                }
+                
+                // 更新分页信息
+                document.getElementById('newsTotalCount').textContent = data ? data.length : 0;
+                document.getElementById('newsStartRange').textContent = data && data.length > 0 ? 1 : 0;
+                document.getElementById('newsEndRange').textContent = data ? data.length : 0;
+                
+                // 禁用分页按钮
+                document.getElementById('newsPrevBtn').disabled = true;
+                document.getElementById('newsNextBtn').disabled = true;
+                
+            } catch (error) {
+                console.error('搜索新闻失败:', error);
+                alert('搜索新闻失败，请重试');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // 过滤新闻
+        function filterNews(filter) {
+            currentNewsFilter = filter;
+            newsPage = 1;
+            
+            // 更新按钮状态
+            document.querySelectorAll('.btn-group[role="group"] .btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.btn-group[role="group"] .btn[onclick="filterNews('${filter}')"]`).classList.add('active');
+            
+            // 重新加载新闻
+            loadNews();
+        }
+        
+        // 显示新闻模态框
+        function showNewsModal() {
+            // 重置表单
+            document.getElementById('newsForm').reset();
+            document.getElementById('newsId').value = '';
+            
+            // 显示模态框
+            const newsModal = new bootstrap.Modal(document.getElementById('newsModal'));
+            newsModal.show();
+        }
+        
+        // 编辑新闻
+        async function editNews(id) {
+            showLoading();
+            
+            try {
+                const { data, error } = await supabase
+                    .from('news')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+                
+                if (error) throw error;
+                
+                if (data) {
+                    // 填充表单
+                    document.getElementById('newsId').value = data.id;
+                    document.getElementById('newsTitle').value = data.title;
+                    document.getElementById('newsCategory').value = data.category;
+                    document.getElementById('newsContent').value = data.content;
+                    document.getElementById('newsAuthor').value = data.author;
+                    document.getElementById('newsStatus').value = data.status;
+                    
+                    // 显示模态框
+                    const newsModal = new bootstrap.Modal(document.getElementById('newsModal'));
+                    newsModal.show();
+                }
+            } catch (error) {
+                console.error('获取新闻详情失败:', error);
+                alert('获取新闻详情失败，请重试');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // 保存新闻
+        async function saveNews() {
+            showLoading();
+            
+            try {
+                const newsId = document.getElementById('newsId').value;
+                const newsData = {
+                    title: document.getElementById('newsTitle').value,
+                    category: document.getElementById('newsCategory').value,
+                    content: document.getElementById('newsContent').value,
+                    author: document.getElementById('newsAuthor').value,
+                    status: document.getElementById('newsStatus').value
+                };
+                
+                let result;
+                
+                if (newsId) {
+                    // 更新新闻
+                    result = await supabase
+                        .from('news')
+                        .update(newsData)
+                        .eq('id', newsId);
+                } else {
+                    // 添加新闻
+                    newsData.created_at = new Date().toISOString();
+                    result = await supabase
+                        .from('news')
+                        .insert([newsData]);
+                }
+                
+                if (result.error) throw result.error;
+                
+                // 关闭模态框
+                const newsModal = bootstrap.Modal.getInstance(document.getElementById('newsModal'));
+                newsModal.hide();
+                
+                // 重新加载新闻列表
+                loadNews();
+                
+                // 更新仪表盘数据
+                if (!newsId) {
+                    const newsCount = document.getElementById('newsCount');
+                    newsCount.textContent = (parseInt(newsCount.textContent) + 1).toString();
+                }
+                
+            } catch (error) {
+                console.error('保存新闻失败:', error);
+                alert('保存新闻失败，请重试');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // 删除新闻
+        async function deleteNews(id) {
+            if (confirm('确定要删除这条新闻吗？此操作不可恢复。')) {
+                showLoading();
+                
+                try {
+                    const { error } = await supabase
+                        .from('news')
+                        .delete()
+                        .eq('id', id);
+                    
+                    if (error) throw error;
+                    
+                    // 重新加载新闻列表
+                    loadNews();
+                    
+                    // 更新仪表盘数据
+                    const newsCount = document.getElementById('newsCount');
+                    newsCount.textContent = (parseInt(newsCount.textContent) - 1).toString();
+                    
+                } catch (error) {
+                    console.error('删除新闻失败:', error);
+                    alert('删除新闻失败，请重试');
+                } finally {
+                    hideLoading();
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Supabase配置
+        const SUPABASE_URL = 'https://jirudzbqcxviytcmxegf.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppcnVkemJxY3h2aXl0Y218ZWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0NTExOTUsImV4cCI6MjA3MDAyNzE5NX0.qi0YhrxQmbRa6YsbVA13IpddImIjJKJyd1fgz5jIlt4';
+        let supabase;
+
+        // 初始化Supabase
+        async function initSupabase() {
+            try {
+                supabase = supabaseClient.createClient(SUPABASE_URL, SUPABASE_KEY);
+                console.log('Supabase初始化成功');
+            } catch (error) {
+                console.error('Supabase初始化失败:', error);
+                alert('数据库连接失败，请检查网络连接或刷新页面重试');
+            }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化Supabase
+            initSupabase();
+
+            // 允许回车键登录
+            document.getElementById('password').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    login();
+                }
+            });
+        });
+        
+        // 全局变量
+        let currentEditingPage = null;
+        let currentEditingProduct = null;
+        let currentEditingNews = null;
+        let currentEditingUser = null;
+        let currentEditingInquiry = null;
+        
+        // 页面数据存储
+        const pageData = {
+            home: {
+                title: '联锦LED显示屏',
+                subtitle: '专业LED显示解决方案提供商',
+                description: '我们是专业的LED显示屏制造商，提供高质量的室内外LED显示屏产品和解决方案。',
+                content: '联锦LED显示屏公司成立于2010年，专注于LED显示技术的研发和生产。我们的产品广泛应用于商业广告、体育场馆、会议室、舞台演出等各个领域。',
+                image: '/images/hero-bg.jpg'
+            },
+            about: {
+                title: '关于我们',
+                subtitle: '专业团队，品质保证',
+                description: '联锦LED拥有专业的研发团队和先进的生产设备，致力于为客户提供最优质的LED显示产品。',
+                content: '公司拥有现代化的生产基地和专业的技术团队，通过ISO9001质量管理体系认证，产品远销海内外。',
+                image: '/images/about-bg.jpg'
+            },
+            products: {
+                title: '产品中心',
+                subtitle: '丰富的产品线，满足不同需求',
+                description: '我们提供室内外LED显示屏、租赁屏、创意屏等多种产品，满足客户的不同应用需求。',
+                content: '产品包括小间距LED显示屏、户外全彩LED显示屏、租赁LED显示屏、透明LED显示屏等。',
+                image: '/images/products-bg.jpg'
+            },
+            solutions: {
+                title: '解决方案',
+                subtitle: '定制化解决方案',
+                description: '针对不同行业和应用场景，我们提供专业的LED显示解决方案。',
+                content: '涵盖商业显示、体育场馆、交通指示、舞台租赁等多个应用领域的解决方案。',
+                image: '/images/solutions-bg.jpg'
+            },
+            cases: {
+                title: '成功案例',
+                subtitle: '丰富的项目经验',
+                description: '我们已成功完成数千个LED显示项目，积累了丰富的行业经验。',
+                content: '项目案例包括大型体育场馆、商业广场、政府机构、企业总部等。',
+                image: '/images/cases-bg.jpg'
+            },
+            news: {
+                title: '新闻资讯',
+                subtitle: '行业动态，技术前沿',
+                description: '了解LED显示行业最新动态和技术发展趋势。',
+                content: '发布公司新闻、行业资讯、技术文章等内容。',
+                image: '/images/news-bg.jpg'
+            },
+            support: {
+                title: '技术支持',
+                subtitle: '专业的技术服务团队',
+                description: '我们提供全方位的技术支持和售后服务。',
+                content: '包括产品咨询、技术指导、安装调试、维护保养等服务。',
+                image: '/images/support-bg.jpg'
+            },
+            contact: {
+                title: '联系我们',
+                subtitle: '随时为您服务',
+                description: '欢迎联系我们，获取更多产品信息和技术支持。',
+                content: '联系电话：+86-755-12345678\n邮箱：info@lianjinled.com\n地址：深圳市南山区科技园',
+                image: '/images/contact-bg.jpg'
+            }
+        };
+
+        // 显示加载中遮罩
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        // 隐藏加载中遮罩
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        // 登录功能
+        async function login() {
+            showLoading();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                // 检查用户表中是否有匹配的用户
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('username', username)
+                    .single();
+                
+                if (error) {
+                    throw error;
+                }
+                
+                if (data && password === 'admin123') { // 简化验证，实际应使用密码哈希
+                    document.getElementById('loginSection').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'block';
+                    showSection('dashboard');
+                    loadDashboardData();
+                } else {
+                    alert('用户名或密码错误！请使用 admin / admin123');
+                }
+            } catch (error) {
+                console.error('登录错误:', error);
+                
+                // 如果用户表不存在或其他错误，使用默认账号
+                if (username === 'admin' && password === 'admin123') {
+                    document.getElementById('loginSection').style.display = 'none';
+                    document.getElementById('adminPanel').style.display = 'block';
+                    showSection('dashboard');
+                    loadDashboardData();
+                    
+                    // 创建默认用户表和用户
+                    try {
+                        await createDefaultTables();
+                    } catch (e) {
+                        console.error('创建默认表错误:', e);
+                    }
+                } else {
+                    alert('用户名或密码错误！请使用 admin / admin123');
+                }
+            } finally {
+                hideLoading();
+            }
+        }
+    </script>

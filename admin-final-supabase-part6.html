@@ -1,0 +1,322 @@
+<script>
+        // 询盘管理相关功能
+        let inquiryPage = 1;
+        const inquiryPageSize = 10;
+        let totalInquiries = 0;
+        let currentInquiryFilter = 'all';
+        
+        // 加载询盘列表
+        async function loadInquiries() {
+            showLoading();
+            
+            try {
+                let query = supabase.from('inquiries');
+                
+                // 应用过滤器
+                if (currentInquiryFilter !== 'all') {
+                    query = query.eq('status', currentInquiryFilter === 'pending' ? '待处理' : '已处理');
+                }
+                
+                // 获取询盘总数
+                const { count, error: countError } = await query.select('*', { count: 'exact', head: true });
+                
+                if (countError) throw countError;
+                totalInquiries = count || 0;
+                
+                // 获取分页询盘数据
+                const from = (inquiryPage - 1) * inquiryPageSize;
+                const to = from + inquiryPageSize - 1;
+                
+                const { data, error } = await query
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .range(from, to);
+                
+                if (error) throw error;
+                
+                // 更新询盘表格
+                const inquiriesTable = document.getElementById('inquiriesTable');
+                inquiriesTable.innerHTML = '';
+                
+                if (data && data.length > 0) {
+                    data.forEach(inquiry => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${inquiry.name}</td>
+                            <td>${inquiry.company}</td>
+                            <td>${inquiry.phone}</td>
+                            <td>${inquiry.email}</td>
+                            <td><span class="status-badge ${inquiry.status === '待处理' ? 'status-pending' : 'status-active'}">${inquiry.status}</span></td>
+                            <td>${new Date(inquiry.created_at).toLocaleString()}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1" onclick="viewInquiry(${inquiry.id})">查看</button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteInquiry(${inquiry.id})">删除</button>
+                            </td>
+                        `;
+                        inquiriesTable.appendChild(row);
+                    });
+                } else {
+                    inquiriesTable.innerHTML = '<tr><td colspan="7" class="text-center">暂无询盘数据</td></tr>';
+                }
+                
+                // 更新分页信息
+                document.getElementById('inquiryTotalCount').textContent = totalInquiries;
+                document.getElementById('inquiryStartRange').textContent = totalInquiries === 0 ? 0 : from + 1;
+                document.getElementById('inquiryEndRange').textContent = Math.min(to + 1, totalInquiries);
+                
+                // 更新分页按钮状态
+                document.getElementById('inquiryPrevBtn').disabled = inquiryPage === 1;
+                document.getElementById('inquiryNextBtn').disabled = (inquiryPage * inquiryPageSize) >= totalInquiries;
+                
+            } catch (error) {
+                console.error('加载询盘数据失败:', error);
+                alert('加载询盘数据失败，请刷新页面重试');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // 上一页询盘
+        function prevInquiryPage() {
+            if (inquiryPage > 1) {
+                inquiryPage--;
+                loadInquiries();
+            }
+        }
+        
+        // 下一页询盘
+        function nextInquiryPage() {
+            if ((inquiryPage * inquiryPageSize) < totalInquiries) {
+                inquiryPage++;
+                loadInquiries();
+            }
+        }
+        
+        // 搜索询盘
+        function searchInquiries() {
+            const searchTerm = document.getElementById('inquirySearchInput').value.trim();
+            if (searchTerm) {
+                searchInquiriesByTerm(searchTerm);
+            } else {
+                inquiryPage = 1;
+                loadInquiries();
+            }
+        }
+        
+        // 根据关键词搜索询盘
+        async function searchInquiriesByTerm(term) {
+            showLoading();
+            
+            try {
+                let query = supabase.from('inquiries').select('*');
+                
+                // 应用过滤器
+                if (currentInquiryFilter !== 'all') {
+                    query = query.eq('status', currentInquiryFilter === 'pending' ? '待处理' : '已处理');
+                }
+                
+                // 应用搜索条件
+                const { data, error } = await query
+                    .or(`name.ilike.%${term}%,company.ilike.%${term}%,email.ilike.%${term}%,message.ilike.%${term}%`)
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                // 更新询盘表格
+                const inquiriesTable = document.getElementById('inquiriesTable');
+                inquiriesTable.innerHTML = '';
+                
+                if (data && data.length > 0) {
+                    data.forEach(inquiry => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${inquiry.name}</td>
+                            <td>${inquiry.company}</td>
+                            <td>${inquiry.phone}</td>
+                            <td>${inquiry.email}</td>
+                            <td><span class="status-badge ${inquiry.status === '待处理' ? 'status-pending' : 'status-active'}">${inquiry.status}</span></td>
+                            <td>${new Date(inquiry.created_at).toLocaleString()}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary me-1" onclick="viewInquiry(${inquiry.id})">查看</button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteInquiry(${inquiry.id})">删除</button>
+                            </td>
+                        `;
+                        inquiriesTable.appendChild(row);
+                    });
+                } else {
+                    inquiriesTable.innerHTML = '<tr><td colspan="7" class="text-center">未找到匹配的询盘</td></tr>';
+                }
+                
+                // 更新分页信息
+                document.getElementById('inquiryTotalCount').textContent = data ? data.length : 0;
+                document.getElementById('inquiryStartRange').textContent = data && data.length > 0 ? 1 : 0;
+                document.getElementById('inquiryEndRange').textContent = data ? data.length : 0;
+                
+                // 禁用分页按钮
+                document.getElementById('inquiryPrevBtn').disabled = true;
+                document.getElementById('inquiryNextBtn').disabled = true;
+                
+            } catch (error) {
+                console.error('搜索询盘失败:', error);
+                alert('搜索询盘失败，请重试');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // 过滤询盘
+        function filterInquiries(filter) {
+            currentInquiryFilter = filter;
+            inquiryPage = 1;
+            
+            // 更新按钮状态
+            document.querySelectorAll('.btn-group[role="group"] .btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.btn-group[role="group"] .btn[onclick="filterInquiries('${filter}')"]`).classList.add('active');
+            
+            // 重新加载询盘
+            loadInquiries();
+        }
+        
+        // 查看询盘详情
+        async function viewInquiry(id) {
+            showLoading();
+            
+            try {
+                const { data, error } = await supabase
+                    .from('inquiries')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+                
+                if (error) throw error;
+                
+                if (data) {
+                    // 保存当前询盘ID
+                    currentEditingInquiry = data.id;
+                    
+                    // 填充详情
+                    const inquiryDetails = document.getElementById('inquiryDetails');
+                    inquiryDetails.innerHTML = `
+                        <div class="mb-3">
+                            <h5>基本信息</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>姓名：</strong> ${data.name}</p>
+                                    <p><strong>公司：</strong> ${data.company}</p>
+                                    <p><strong>电话：</strong> ${data.phone}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>邮箱：</strong> ${data.email}</p>
+                                    <p><strong>状态：</strong> <span class="status-badge ${data.status === '待处理' ? 'status-pending' : 'status-active'}">${data.status}</span></p>
+                                    <p><strong>时间：</strong> ${new Date(data.created_at).toLocaleString()}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <h5>询盘内容</h5>
+                            <div class="card">
+                                <div class="card-body">
+                                    ${data.message.replace(/\n/g, '<br>')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // 更新按钮状态
+                    const markAsHandledBtn = document.querySelector('.modal-footer .btn-success');
+                    if (data.status === '已处理') {
+                        markAsHandledBtn.disabled = true;
+                        markAsHandledBtn.textContent = '已处理';
+                    } else {
+                        markAsHandledBtn.disabled = false;
+                        markAsHandledBtn.textContent = '标记为已处理';
+                    }
+                    
+                    // 显示模态框
+                    const inquiryModal = new bootstrap.Modal(document.getElementById('inquiryModal'));
+                    inquiryModal.show();
+                }
+            } catch (error) {
+                console.error('获取询盘详情失败:', error);
+                alert('获取询盘详情失败，请重试');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // 标记询盘为已处理
+        async function markAsHandled() {
+            if (!currentEditingInquiry) return;
+            
+            showLoading();
+            
+            try {
+                const { error } = await supabase
+                    .from('inquiries')
+                    .update({ status: '已处理' })
+                    .eq('id', currentEditingInquiry);
+                
+                if (error) throw error;
+                
+                // 关闭模态框
+                const inquiryModal = bootstrap.Modal.getInstance(document.getElementById('inquiryModal'));
+                inquiryModal.hide();
+                
+                // 重新加载询盘列表
+                loadInquiries();
+                
+            } catch (error) {
+                console.error('更新询盘状态失败:', error);
+                alert('更新询盘状态失败，请重试');
+            } finally {
+                hideLoading();
+            }
+        }
+        
+        // 回复询盘
+        function replyInquiry() {
+            if (!currentEditingInquiry) return;
+            
+            // 获取询盘详情中的邮箱
+            const emailElement = document.querySelector('#inquiryDetails p strong:contains("邮箱：")').nextSibling;
+            const email = emailElement ? emailElement.textContent.trim() : '';
+            
+            // 打开默认邮件客户端
+            if (email) {
+                window.location.href = `mailto:${email}?subject=回复：联锦LED显示屏询盘&body=尊敬的客户，您好！\n\n感谢您对联锦LED显示屏的关注。我们已收到您的询盘，现回复如下：\n\n`;
+            } else {
+                alert('未找到有效的邮箱地址');
+            }
+        }
+        
+        // 删除询盘
+        async function deleteInquiry(id) {
+            if (confirm('确定要删除这条询盘吗？此操作不可恢复。')) {
+                showLoading();
+                
+                try {
+                    const { error } = await supabase
+                        .from('inquiries')
+                        .delete()
+                        .eq('id', id);
+                    
+                    if (error) throw error;
+                    
+                    // 重新加载询盘列表
+                    loadInquiries();
+                    
+                    // 更新仪表盘数据
+                    const inquiryCount = document.getElementById('inquiryCount');
+                    inquiryCount.textContent = (parseInt(inquiryCount.textContent) - 1).toString();
+                    
+                } catch (error) {
+                    console.error('删除询盘失败:', error);
+                    alert('删除询盘失败，请重试');
+                } finally {
+                    hideLoading();
+                }
+            }
+        }
+    </script>

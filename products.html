@@ -44,6 +44,7 @@
 <link href="css/style.css" rel="stylesheet"/>
 <link href="css/hero-emergency-fix.css" rel="stylesheet"/>
 <link href="css/hero-fix.css" rel="stylesheet"/>
+<link href="css/hero-ultimate-fix.css" rel="stylesheet"/>
 </head>
 <body>
 <!-- Navigation -->
@@ -111,6 +112,13 @@
     display: flex !important;
     align-items: center !important;
 
+     
+     
+     
+    padding: 120px 0 80px !important;
+    display: flex !important;
+    align-items: center !important;
+
     min-height: 600px !important; 
     max-height: 600px !important; 
     height: 600px !important; 
@@ -119,6 +127,12 @@
     align-items: center !important;
 ">
 <div class="container" style="
+    position: relative !important;
+    z-index: 10 !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+
     position: relative !important;
     z-index: 10 !important;
     height: auto !important;
@@ -168,39 +182,14 @@
 <button class="btn btn-outline-primary category-filter" data-category="Fine Pitch">小间距显示屏</button>
 </div>
 </div>
-<div class="row g-4">
-<div class="col-lg-4 col-md-6" data-aos="fade-up">
-<div class="card product-card h-100">
-<div class="card-img-container">
-<div class="product-image bg-light d-flex align-items-center justify-content-center">
-<i class="fas fa-building display-4 text-primary"></i>
-</div>
-<div class="card-overlay">
-<a class="btn btn-primary" href="contact.html">
-<i class="fas fa-phone me-2"></i>Get Quote
-                                </a>
-</div>
-</div>
-<div class="card-body">
-<h5 class="card-title">Indoor LED Displays</h5>
-<p class="card-text">High-resolution indoor LED displays perfect for retail stores, corporate offices, conference rooms, and entertainment venues.</p>
-<div class="product-features mb-3">
-<span class="badge bg-primary me-1">P1.25-P2.5</span>
-<span class="badge bg-primary me-1">4K/8K</span>
-<span class="badge bg-primary me-1">Ultra-thin</span>
-</div>
-<ul class="list-unstyled small">
-<li><i class="fas fa-check text-success me-2"></i>Ultra-fine pixel pitch</li>
-<li><i class="fas fa-check text-success me-2"></i>Seamless splicing technology</li>
-<li><i class="fas fa-check text-success me-2"></i>Front and rear service access</li>
-<li><i class="fas fa-check text-success me-2"></i>High refresh rate</li>
-</ul>
-</div>
-<div class="card-footer">
-<small class="text-muted">Category: Indoor Display</small>
-</div>
-</div>
-</div>
+        <div class="row g-4" id="products-grid">
+            <!-- 产品将通过JavaScript动态加载 -->
+            <div class="col-12 text-center py-5" id="products-loading">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">加载中...</span>
+                </div>
+                <p class="mt-3 text-muted">正在加载产品数据...</p>
+            </div>
 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
 <div class="card product-card h-100">
 <div class="card-img-container">
@@ -484,6 +473,13 @@
     display: flex !important;
     align-items: center !important;
 
+     
+     
+     
+    padding: 120px 0 80px !important;
+    display: flex !important;
+    align-items: center !important;
+
     min-height: 600px !important; 
     max-height: 600px !important; 
     height: 600px !important; 
@@ -492,6 +488,12 @@
     align-items: center !important;
 ">
 <div class="container" style="
+    position: relative !important;
+    z-index: 10 !important;
+    height: auto !important;
+    display: flex !important;
+    align-items: center !important;
+
     position: relative !important;
     z-index: 10 !important;
     height: auto !important;
@@ -590,8 +592,9 @@
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/script.js"></script>
-<script src="js/product-loader.js" type="module"></script>
+<script src="js/frontend-backend-api.js"></script>
 <script>
         // Initialize AOS
         AOS.init({
@@ -624,6 +627,280 @@
             
             console.log('✅ Emergency hero fix applied via JavaScript');
         });
+        </script><script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Force hero sections to correct height
+            document.querySelectorAll('.hero-section, .product-hero-section, section[class*="hero"], .cta-section').forEach(function(el) {
+                el.style.minHeight = '600px';
+                el.style.maxHeight = '600px';
+                el.style.height = '600px';
+                el.style.padding = '120px 0 80px';
+                el.style.display = 'flex';
+                el.style.alignItems = 'center';
+            });
+            
+            // Force containers within hero sections
+            document.querySelectorAll('.hero-section .container, .product-hero-section .container, .cta-section .container').forEach(function(el) {
+                el.style.position = 'relative';
+                el.style.zIndex = '10';
+                el.style.height = 'auto';
+                el.style.display = 'flex';
+                el.style.alignItems = 'center';
+            });
+            
+            // 初始化产品页面
+            initializeProductsPage();
+            
+            console.log('✅ Emergency hero fix applied via JavaScript');
+        });
+        
+        // 产品页面初始化函数
+        async function initializeProductsPage() {
+            console.log('🚀 初始化产品页面...');
+            
+            // 设置分类筛选器
+            setupCategoryFilters();
+            
+            // 加载所有产品
+            await loadAndDisplayProducts();
+        }
+        
+        // 设置分类筛选器
+        function setupCategoryFilters() {
+            const filterButtons = document.querySelectorAll('.category-filter');
+            
+            filterButtons.forEach(button => {
+                button.addEventListener('click', async function() {
+                    // 更新激活状态
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 获取选中的分类
+                    const category = this.getAttribute('data-category');
+                    
+                    // 加载对应分类的产品
+                    await loadAndDisplayProducts(category === 'all' ? null : category);
+                });
+            });
+        }
+        
+        // 加载并显示产品
+        async function loadAndDisplayProducts(category = null) {
+            const productsGrid = document.getElementById('products-grid');
+            const loadingElement = document.getElementById('products-loading');
+            
+            try {
+                // 显示加载状态
+                if (loadingElement) {
+                    loadingElement.style.display = 'block';
+                }
+                
+                // 清空现有产品（保留加载元素）
+                const existingProducts = productsGrid.querySelectorAll('.col-lg-4.col-md-6');
+                existingProducts.forEach(product => {
+                    if (product.id !== 'products-loading') {
+                        product.remove();
+                    }
+                });
+                
+                console.log(`📦 正在加载${category ? category + '类别的' : '所有'}产品...`);
+                
+                // 获取产品数据
+                const products = await window.frontendBackendAPI.getProducts(category);
+                
+                console.log(`✅ 成功加载${products.length}个产品`);
+                
+                // 隐藏加载状态
+                if (loadingElement) {
+                    loadingElement.style.display = 'none';
+                }
+                
+                // 渲染产品
+                if (products.length === 0) {
+                    showNoProductsMessage(category);
+                } else {
+                    renderProducts(products);
+                }
+                
+            } catch (error) {
+                console.error('加载产品失败:', error);
+                
+                // 隐藏加载状态
+                if (loadingElement) {
+                    loadingElement.style.display = 'none';
+                }
+                
+                showErrorMessage();
+            }
+        }
+        
+        // 渲染产品列表
+        function renderProducts(products) {
+            const productsGrid = document.getElementById('products-grid');
+            
+            products.forEach((product, index) => {
+                const productCard = createProductCard(product, index);
+                productsGrid.appendChild(productCard);
+            });
+            
+            // 重新初始化AOS动画
+            if (window.AOS) {
+                window.AOS.refresh();
+            }
+        }
+        
+        // 创建产品卡片
+        function createProductCard(product, index) {
+            const delay = (index % 3) * 100;
+            const col = document.createElement('div');
+            col.className = 'col-lg-4 col-md-6';
+            col.setAttribute('data-aos', 'fade-up');
+            col.setAttribute('data-aos-delay', delay.toString());
+            
+            // 获取产品图标
+            const iconClass = getCategoryIcon(product.category);
+            const iconColor = getCategoryColor(product.category);
+            
+            col.innerHTML = `
+                <div class="card product-card h-100">
+                    <div class="card-img-container">
+                        <div class="product-image bg-light d-flex align-items-center justify-content-center">
+                            ${product.image_url ? 
+                                `<img src="${product.image_url}" alt="${product.name}" class="img-fluid" style="max-height: 150px;">` : 
+                                `<i class="${iconClass} display-4 ${iconColor}"></i>`
+                            }
+                        </div>
+                        <div class="card-overlay">
+                            <a class="btn btn-primary" href="contact.html?product=${product.id}">
+                                <i class="fas fa-phone me-2"></i>获取报价
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">${product.name}</h5>
+                        <p class="card-text">${product.description || '暂无描述'}</p>
+                        ${renderProductFeatures(product)}
+                        ${renderProductSpecifications(product)}
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">分类: ${getCategoryDisplayName(product.category)}</small>
+                        ${product.price ? `<div class="mt-2"><span class="badge bg-success">¥${product.price.toLocaleString()}</span></div>` : ''}
+                    </div>
+                </div>
+            `;
+            
+            return col;
+        }
+        
+        // 根据分类获取图标
+        function getCategoryIcon(category) {
+            const icons = {
+                'indoor': 'fas fa-tv',
+                'outdoor': 'fas fa-sun',
+                'rental': 'fas fa-magic',
+                'transparent': 'fas fa-eye',
+                'creative': 'fas fa-palette',
+                'fine-pitch': 'fas fa-microscope',
+                'industrial': 'fas fa-industry',
+                'broadcast': 'fas fa-video'
+            };
+            return icons[category] || 'fas fa-display';
+        }
+        
+        // 根据分类获取颜色
+        function getCategoryColor(category) {
+            const colors = {
+                'indoor': 'text-primary',
+                'outdoor': 'text-warning',
+                'rental': 'text-success',
+                'transparent': 'text-info',
+                'creative': 'text-danger',
+                'fine-pitch': 'text-dark',
+                'industrial': 'text-secondary',
+                'broadcast': 'text-success'
+            };
+            return colors[category] || 'text-primary';
+        }
+        
+        // 获取分类显示名称
+        function getCategoryDisplayName(category) {
+            const names = {
+                'indoor': '室内显示屏',
+                'outdoor': '户外显示屏',
+                'rental': '租赁显示屏',
+                'transparent': '透明显示屏',
+                'creative': '创意显示屏',
+                'fine-pitch': '小间距显示屏',
+                'industrial': '工业显示屏',
+                'broadcast': '广播显示屏'
+            };
+            return names[category] || category;
+        }
+        
+        // 渲染产品特性
+        function renderProductFeatures(product) {
+            if (!product.features || !Array.isArray(product.features)) {
+                return '';
+            }
+            
+            const features = product.features.slice(0, 3).map(feature => 
+                `<span class="badge bg-primary me-1">${feature}</span>`
+            ).join('');
+            
+            return `<div class="product-features mb-3">${features}</div>`;
+        }
+        
+        // 渲染产品规格
+        function renderProductSpecifications(product) {
+            if (!product.features || !Array.isArray(product.features)) {
+                return '';
+            }
+            
+            const specs = product.features.slice(0, 4).map(spec => 
+                `<li><i class="fas fa-check text-success me-2"></i>${spec}</li>`
+            ).join('');
+            
+            return `<ul class="list-unstyled small">${specs}</ul>`;
+        }
+        
+        // 显示无产品消息
+        function showNoProductsMessage(category) {
+            const productsGrid = document.getElementById('products-grid');
+            const messageCol = document.createElement('div');
+            messageCol.className = 'col-12 text-center py-5';
+            messageCol.innerHTML = `
+                <div class="text-muted">
+                    <i class="fas fa-box-open display-4 mb-3"></i>
+                    <h5>暂无${category ? getCategoryDisplayName(category) : ''}产品</h5>
+                    <p>请稍后再试或联系我们获取更多信息</p>
+                    <a href="contact.html" class="btn btn-primary">
+                        <i class="fas fa-envelope me-2"></i>联系我们
+                    </a>
+                </div>
+            `;
+            productsGrid.appendChild(messageCol);
+        }
+        
+        // 显示错误消息
+        function showErrorMessage() {
+            const productsGrid = document.getElementById('products-grid');
+            const errorCol = document.createElement('div');
+            errorCol.className = 'col-12 text-center py-5';
+            errorCol.innerHTML = `
+                <div class="text-danger">
+                    <i class="fas fa-exclamation-triangle display-4 mb-3"></i>
+                    <h5>加载产品时出现错误</h5>
+                    <p>请刷新页面重试或联系我们</p>
+                    <button class="btn btn-primary me-2" onclick="location.reload()">
+                        <i class="fas fa-refresh me-2"></i>刷新页面
+                    </button>
+                    <a href="contact.html" class="btn btn-outline-primary">
+                        <i class="fas fa-envelope me-2"></i>联系我们
+                    </a>
+                </div>
+            `;
+            productsGrid.appendChild(errorCol);
+        }
         </script><script>
         document.addEventListener('DOMContentLoaded', function() {
             // Force hero sections to correct height

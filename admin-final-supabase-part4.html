@@ -1,0 +1,311 @@
+<script>
+        // 创建默认表和数据
+        async function createDefaultTables() {
+            try {
+                // 创建用户表
+                await supabase.rpc('create_users_table_if_not_exists');
+                
+                // 创建产品表
+                await supabase.rpc('create_products_table_if_not_exists');
+                
+                // 创建询盘表
+                await supabase.rpc('create_inquiries_table_if_not_exists');
+                
+                // 创建新闻表
+                await supabase.rpc('create_news_table_if_not_exists');
+                
+                // 添加默认管理员用户
+                const { error: userError } = await supabase
+                    .from('users')
+                    .upsert([
+                        {
+                            username: 'admin',
+                            password: 'admin123', // 实际应使用密码哈希
+                            email: 'admin@lianjinled.com',
+                            role: '超级管理员',
+                            status: '活跃',
+                            created_at: new Date().toISOString()
+                        }
+                    ]);
+                
+                if (userError) throw userError;
+                
+                // 添加一些示例产品
+                const { error: productError } = await supabase
+                    .from('products')
+                    .upsert([
+                        {
+                            name: 'P2.5室内全彩LED显示屏',
+                            category: '室内显示屏',
+                            description: '高清小间距LED显示屏，适用于会议室、控制室等场所',
+                            specifications: '像素间距：2.5mm\n亮度：800cd/㎡\n刷新率：3840Hz',
+                            price: 1200,
+                            status: '上架',
+                            image: '/images/products/indoor-p2.5.jpg',
+                            created_at: new Date().toISOString()
+                        },
+                        {
+                            name: 'P4户外全彩LED显示屏',
+                            category: '户外显示屏',
+                            description: '高亮度户外LED显示屏，适用于广告牌、体育场馆等',
+                            specifications: '像素间距：4mm\n亮度：5500cd/㎡\n防护等级：IP65',
+                            price: 980,
+                            status: '上架',
+                            image: '/images/products/outdoor-p4.jpg',
+                            created_at: new Date().toISOString()
+                        },
+                        {
+                            name: 'P3.91租赁LED显示屏',
+                            category: '租赁显示屏',
+                            description: '轻便易安装的租赁LED显示屏，适用于演唱会、展览等临时活动',
+                            specifications: '像素间距：3.91mm\n亮度：4500cd/㎡\n箱体尺寸：500x500mm',
+                            price: 1500,
+                            status: '上架',
+                            image: '/images/products/rental-p3.91.jpg',
+                            created_at: new Date().toISOString()
+                        }
+                    ]);
+                
+                if (productError) throw productError;
+                
+                // 添加一些示例询盘
+                const { error: inquiryError } = await supabase
+                    .from('inquiries')
+                    .upsert([
+                        {
+                            name: '张先生',
+                            company: '深圳市科技有限公司',
+                            phone: '13812345678',
+                            email: 'zhang@example.com',
+                            message: '我们需要一批P2.5的室内LED显示屏，请提供详细报价和规格参数。',
+                            status: '待处理',
+                            created_at: new Date().toISOString()
+                        },
+                        {
+                            name: '李女士',
+                            company: '广州展览中心',
+                            phone: '13987654321',
+                            email: 'li@example.com',
+                            message: '我们计划在展览中心安装一块大型户外LED显示屏，请联系我们详谈。',
+                            status: '已处理',
+                            created_at: new Date(Date.now() - 86400000).toISOString() // 昨天
+                        }
+                    ]);
+                
+                if (inquiryError) throw inquiryError;
+                
+                // 添加一些示例新闻
+                const { error: newsError } = await supabase
+                    .from('news')
+                    .upsert([
+                        {
+                            title: '联锦LED参加2025广州国际LED展',
+                            category: '公司新闻',
+                            content: '我司将于2025年9月参加广州国际LED展览会，展位号A123，欢迎新老客户前来参观洽谈。',
+                            author: 'admin',
+                            status: '已发布',
+                            created_at: new Date().toISOString()
+                        },
+                        {
+                            title: 'Mini LED技术发展趋势分析',
+                            category: '技术文章',
+                            content: 'Mini LED作为新一代显示技术，具有高对比度、高亮度、低功耗等优势，正逐渐成为LED显示领域的新宠。',
+                            author: 'admin',
+                            status: '已发布',
+                            created_at: new Date(Date.now() - 172800000).toISOString() // 前天
+                        }
+                    ]);
+                
+                if (newsError) throw newsError;
+                
+                console.log('默认表和数据创建成功');
+            } catch (error) {
+                console.error('创建默认表和数据失败:', error);
+                throw error;
+            }
+        }
+
+        // 退出登录
+        function logout() {
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        // 显示指定的内容区域
+        function showSection(sectionId) {
+            // 隐藏所有内容区域
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // 移除所有导航项的活跃状态
+            document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // 显示指定的内容区域
+            document.getElementById(sectionId).style.display = 'block';
+            
+            // 设置对应导航项为活跃状态
+            document.querySelector(`.sidebar .nav-link[onclick="showSection('${sectionId}')"]`).classList.add('active');
+            
+            // 根据不同的区域加载相应的数据
+            switch (sectionId) {
+                case 'dashboard':
+                    loadDashboardData();
+                    break;
+                case 'products':
+                    loadProducts();
+                    break;
+                case 'inquiries':
+                    loadInquiries();
+                    break;
+                case 'news':
+                    loadNews();
+                    break;
+                case 'users':
+                    loadUsers();
+                    break;
+                case 'statistics':
+                    loadStatistics();
+                    break;
+            }
+        }
+
+        // 加载仪表盘数据
+        async function loadDashboardData() {
+            showLoading();
+            
+            try {
+                // 获取产品数量
+                const { count: productCount, error: productError } = await supabase
+                    .from('products')
+                    .select('*', { count: 'exact', head: true });
+                
+                if (productError) throw productError;
+                document.getElementById('productCount').textContent = productCount || 0;
+                
+                // 获取询盘数量
+                const { count: inquiryCount, error: inquiryError } = await supabase
+                    .from('inquiries')
+                    .select('*', { count: 'exact', head: true });
+                
+                if (inquiryError) throw inquiryError;
+                document.getElementById('inquiryCount').textContent = inquiryCount || 0;
+                
+                // 获取新闻数量
+                const { count: newsCount, error: newsError } = await supabase
+                    .from('news')
+                    .select('*', { count: 'exact', head: true });
+                
+                if (newsError) throw newsError;
+                document.getElementById('newsCount').textContent = newsCount || 0;
+                
+                // 页面数量（固定值）
+                document.getElementById('pageCount').textContent = Object.keys(pageData).length;
+                
+                // 获取最新询盘
+                const { data: latestInquiries, error: latestInquiryError } = await supabase
+                    .from('inquiries')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+                
+                if (latestInquiryError) throw latestInquiryError;
+                
+                // 更新最新询盘表格
+                const latestInquiriesTable = document.getElementById('latestInquiriesTable');
+                latestInquiriesTable.innerHTML = '';
+                
+                if (latestInquiries && latestInquiries.length > 0) {
+                    latestInquiries.forEach(inquiry => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${inquiry.name}</td>
+                            <td>${inquiry.company}</td>
+                            <td><span class="status-badge ${inquiry.status === '待处理' ? 'status-pending' : 'status-active'}">${inquiry.status}</span></td>
+                            <td>${new Date(inquiry.created_at).toLocaleDateString()}</td>
+                        `;
+                        latestInquiriesTable.appendChild(row);
+                    });
+                } else {
+                    latestInquiriesTable.innerHTML = '<tr><td colspan="4" class="text-center">暂无询盘数据</td></tr>';
+                }
+                
+                // 获取用户数量
+                const { count: userCount, error: userError } = await supabase
+                    .from('users')
+                    .select('*', { count: 'exact', head: true });
+                
+                if (userError) throw userError;
+                document.getElementById('totalUsers').textContent = userCount || 0;
+                
+                // 创建访问统计图表
+                createVisitsChart();
+                
+            } catch (error) {
+                console.error('加载仪表盘数据失败:', error);
+                alert('加载数据失败，请刷新页面重试');
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // 创建访问统计图表
+        function createVisitsChart() {
+            const ctx = document.getElementById('visitsChart').getContext('2d');
+            
+            // 模拟数据
+            const labels = ['1月', '2月', '3月', '4月', '5月', '6月', '7月'];
+            const data = {
+                labels: labels,
+                datasets: [
+                    {
+                        label: '网站访问量',
+                        data: [1200, 1900, 1500, 2500, 2200, 3000, 3500],
+                        backgroundColor: 'rgba(13, 110, 253, 0.2)',
+                        borderColor: 'rgba(13, 110, 253, 1)',
+                        borderWidth: 2,
+                        tension: 0.3
+                    },
+                    {
+                        label: '询盘数量',
+                        data: [25, 40, 30, 45, 35, 55, 70],
+                        backgroundColor: 'rgba(25, 135, 84, 0.2)',
+                        borderColor: 'rgba(25, 135, 84, 1)',
+                        borderWidth: 2,
+                        tension: 0.3
+                    }
+                ]
+            };
+            
+            // 销毁旧图表（如果存在）
+            if (window.visitsChart) {
+                window.visitsChart.destroy();
+            }
+            
+            // 创建新图表
+            window.visitsChart = new Chart(ctx, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+    </script>
