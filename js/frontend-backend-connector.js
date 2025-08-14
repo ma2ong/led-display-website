@@ -5,8 +5,9 @@
 
 class FrontendBackendConnector {
     constructor() {
-        this.flaskURL = 'http://localhost:5003';
-        this.isFlaskAvailable = false;
+        // 使用相对路径，自动适配部署环境
+        this.apiURL = window.location.origin;
+        this.isBackendAvailable = false;
         this.checkInterval = 30000; // 30秒检查一次
         this.init();
     }
@@ -15,32 +16,32 @@ class FrontendBackendConnector {
      * 初始化连接器
      */
     async init() {
-        await this.checkFlaskConnection();
+        await this.checkBackendConnection();
         this.startPeriodicCheck();
         this.setupPageContentLoader();
     }
 
     /**
-     * 检查Flask连接
+     * 检查后端连接
      */
-    async checkFlaskConnection() {
+    async checkBackendConnection() {
         try {
-            const response = await fetch(`${this.flaskURL}/api/settings`, {
+            const response = await fetch(`${this.apiURL}/api/health`, {
                 method: 'GET',
                 headers: { 'Accept': 'application/json' }
             });
-            this.isFlaskAvailable = response.ok;
+            this.isBackendAvailable = response.ok;
             
-            if (this.isFlaskAvailable) {
-                console.log('✅ Flask后端连接成功');
+            if (this.isBackendAvailable) {
+                console.log('✅ 后端连接成功');
                 this.showConnectionStatus('connected');
             } else {
-                console.log('❌ Flask后端连接失败');
+                console.log('❌ 后端连接失败');
                 this.showConnectionStatus('disconnected');
             }
         } catch (error) {
-            this.isFlaskAvailable = false;
-            console.log('❌ Flask后端不可用:', error.message);
+            this.isBackendAvailable = false;
+            console.log('❌ 后端不可用:', error.message);
             this.showConnectionStatus('disconnected');
         }
     }
@@ -86,7 +87,7 @@ class FrontendBackendConnector {
      */
     startPeriodicCheck() {
         setInterval(() => {
-            this.checkFlaskConnection();
+            this.checkBackendConnection();
         }, this.checkInterval);
     }
 
@@ -117,12 +118,12 @@ class FrontendBackendConnector {
      * 加载页面内容
      */
     async loadPageContent() {
-        if (!this.isFlaskAvailable) return;
+        if (!this.isBackendAvailable) return;
 
         const pageName = this.getCurrentPageName();
         
         try {
-            const response = await fetch(`${this.flaskURL}/api/frontend/${pageName}`);
+            const response = await fetch(`${this.apiURL}/api/frontend/${pageName}`);
             const data = await response.json();
             
             if (data.status === 'success' && data.contents) {
@@ -181,10 +182,10 @@ class FrontendBackendConnector {
      * 设置产品加载器
      */
     async setupProductLoader() {
-        if (!this.isFlaskAvailable) return;
+        if (!this.isBackendAvailable) return;
 
         try {
-            const response = await fetch(`${this.flaskURL}/api/products`);
+            const response = await fetch(`${this.apiURL}/api/products`);
             const data = await response.json();
             
             if (data.status === 'success' && data.products) {
@@ -241,10 +242,10 @@ class FrontendBackendConnector {
      * 设置新闻加载器
      */
     async setupNewsLoader() {
-        if (!this.isFlaskAvailable) return;
+        if (!this.isBackendAvailable) return;
 
         try {
-            const response = await fetch(`${this.flaskURL}/api/news`);
+            const response = await fetch(`${this.apiURL}/api/news`);
             const data = await response.json();
             
             if (data.status === 'success' && data.news) {
@@ -293,7 +294,7 @@ class FrontendBackendConnector {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            if (!this.isFlaskAvailable) {
+            if (!this.isBackendAvailable) {
                 alert('后端服务不可用，请稍后再试');
                 return;
             }
@@ -302,7 +303,7 @@ class FrontendBackendConnector {
             const data = Object.fromEntries(formData.entries());
 
             try {
-                const response = await fetch(`${this.flaskURL}/api/contact`, {
+                const response = await fetch(`${this.apiURL}/api/contact`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -348,8 +349,8 @@ class FrontendBackendConnector {
      * 手动刷新内容
      */
     async refreshContent() {
-        await this.checkFlaskConnection();
-        if (this.isFlaskAvailable) {
+        await this.checkBackendConnection();
+        if (this.isBackendAvailable) {
             await this.loadPageContent();
             console.log('✅ 内容已刷新');
         }
@@ -385,6 +386,3 @@ document.addEventListener('DOMContentLoaded', () => {
     
     document.body.appendChild(refreshBtn);
 });
-
-// 导出连接器类
-export default FrontendBackendConnector;
