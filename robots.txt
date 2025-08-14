@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://your-domain.com/sitemap.xml
+
+# Crawl-delay
+Crawl-delay: 1
+
+# Disallow admin areas
+Disallow: /admin/
+Disallow: /api/
+Disallow: /.git/
+Disallow: /.vercel/
+Disallow: /node_modules/
+
+# Allow important resources
+Allow: /css/
+Allow: /js/
+Allow: /assets/
+Allow: /lib/
