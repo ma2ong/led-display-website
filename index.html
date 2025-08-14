@@ -37,12 +37,46 @@
 <title>LED Display Solutions - Professional LED Displays | Lianjin LED</title>
 <meta content="Leading provider of professional LED display solutions for indoor, outdoor, and rental applications worldwide. High-quality displays with expert support." name="description"/>
 <meta content="LED display, LED screen, outdoor LED, indoor LED, rental LED, transparent LED, creative LED" name="keywords"/>
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+<link rel="manifest" href="/assets/site.webmanifest">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://lianjin-led.vercel.app/">
+<meta property="og:title" content="Professional LED Display Solutions | Lianjin LED">
+<meta property="og:description" content="Leading provider of professional LED display solutions for indoor, outdoor, and rental applications worldwide. High-quality displays with expert support.">
+<meta property="og:image" content="https://lianjin-led.vercel.app/assets/og-image.jpg">
+<meta property="og:site_name" content="Lianjin LED Display Technology">
+<meta property="og:locale" content="en_US">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://lianjin-led.vercel.app/">
+<meta property="twitter:title" content="Professional LED Display Solutions | Lianjin LED">
+<meta property="twitter:description" content="Leading provider of professional LED display solutions for indoor, outdoor, and rental applications worldwide. High-quality displays with expert support.">
+<meta property="twitter:image" content="https://lianjin-led.vercel.app/assets/og-image.jpg">
+
+<!-- Additional SEO Meta Tags -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Lianjin LED Display Technology Co., Ltd">
+<meta name="language" content="English">
+<meta name="revisit-after" content="7 days">
+<meta name="theme-color" content="#667eea">
+<meta name="msapplication-TileColor" content="#667eea">
+<meta name="msapplication-config" content="/assets/browserconfig.xml">
+
+<!-- Canonical URL -->
+<link rel="canonical" href="https://lianjin-led.vercel.app/">
 <!-- CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
 <link href="css/style.css" rel="stylesheet"/>
-<link href="css/hero-final-fix.css" rel="stylesheet"/>
 </head>
 <body>
 <!-- Navigation -->
@@ -518,7 +552,6 @@
 <!-- Supabase Integration -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="js/supabase-client.js"></script>
-<script src="js/hero-ultimate-fix.js"></script>
 <script>
         // Initialize AOS
         AOS.init({
@@ -596,6 +629,74 @@
             console.log('✅ Emergency hero fix applied via JavaScript');
         });
         </script>
+<!-- Structured Data (JSON-LD) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Lianjin LED Display Technology Co., Ltd",
+  "description": "Leading provider of professional LED display solutions for indoor, outdoor, and rental applications worldwide. High-quality displays with expert support.",
+  "url": "https://lianjin-led.vercel.app/",
+  "logo": "https://lianjin-led.vercel.app/assets/logos/lianjin-led-logo.png",
+  "foundingDate": "2007",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "China",
+    "addressRegion": "Guangdong",
+    "addressLocality": "Shenzhen"
+  },
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+86-755-1234-5678",
+    "contactType": "Sales",
+    "availableLanguage": ["English", "Chinese"]
+  },
+  "sameAs": [
+    "https://linkedin.com/company/lianjin-led",
+    "https://youtube.com/lianjinled",
+    "https://twitter.com/lianjinled",
+    "https://facebook.com/lianjinled"
+  ],
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "LED Display Products",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Product",
+          "name": "Indoor LED Displays",
+          "description": "High-resolution indoor LED displays for retail, corporate, and entertainment venues"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Product",
+          "name": "Outdoor LED Displays",
+          "description": "Weather-resistant outdoor LED displays for advertising and public information"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Product",
+          "name": "Rental LED Displays",
+          "description": "Portable rental LED displays for events and temporary installations"
+        }
+      }
+    ]
+  },
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "reviewCount": "1250",
+    "bestRating": "5",
+    "worstRating": "1"
+  }
+}
+</script>
+
 <!-- Frontend-Backend Connector -->
 <script src="js/frontend-backend-connector.js"></script>
 <script>

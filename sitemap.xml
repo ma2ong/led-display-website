@@ -1,81 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://your-domain.com/</loc>
-    <lastmod>2024-01-14</lastmod>
+    <loc>https://lianjin-led.vercel.app/</loc>
+    <lastmod>2024-08-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://your-domain.com/about.html</loc>
-    <lastmod>2024-01-14</lastmod>
+    <loc>https://lianjin-led.vercel.app/about.html</loc>
+    <lastmod>2024-08-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://your-domain.com/products.html</loc>
-    <lastmod>2024-01-14</lastmod>
+    <loc>https://lianjin-led.vercel.app/products.html</loc>
+    <lastmod>2024-08-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://your-domain.com/fine-pitch.html</loc>
-    <lastmod>2024-01-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://your-domain.com/outdoor.html</loc>
-    <lastmod>2024-01-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://your-domain.com/rental.html</loc>
-    <lastmod>2024-01-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://your-domain.com/creative.html</loc>
-    <lastmod>2024-01-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://your-domain.com/transparent.html</loc>
-    <lastmod>2024-01-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://your-domain.com/solutions.html</loc>
-    <lastmod>2024-01-14</lastmod>
+    <loc>https://lianjin-led.vercel.app/fine-pitch.html</loc>
+    <lastmod>2024-08-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://your-domain.com/cases.html</loc>
-    <lastmod>2024-01-14</lastmod>
+    <loc>https://lianjin-led.vercel.app/outdoor.html</loc>
+    <lastmod>2024-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lianjin-led.vercel.app/rental.html</loc>
+    <lastmod>2024-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lianjin-led.vercel.app/creative.html</loc>
+    <lastmod>2024-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lianjin-led.vercel.app/transparent.html</loc>
+    <lastmod>2024-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://lianjin-led.vercel.app/solutions.html</loc>
+    <lastmod>2024-08-14</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://your-domain.com/news.html</loc>
-    <lastmod>2024-01-14</lastmod>
+    <loc>https://lianjin-led.vercel.app/cases.html</loc>
+    <lastmod>2024-08-14</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://your-domain.com/support.html</loc>
-    <lastmod>2024-01-14</lastmod>
-    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://your-domain.com/contact.html</loc>
-    <lastmod>2024-01-14</lastmod>
+    <loc>https://lianjin-led.vercel.app/news.html</loc>
+    <lastmod>2024-08-14</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://lianjin-led.vercel.app/support.html</loc>
+    <lastmod>2024-08-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://lianjin-led.vercel.app/contact.html</loc>
+    <lastmod>2024-08-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://lianjin-led.vercel.app/admin.html</loc>
+    <lastmod>2024-08-14</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.1</priority>
   </url>
 </urlset>
