@@ -293,6 +293,9 @@
                 <a class="nav-link" href="#" data-section="statistics">
                     <i class="fas fa-chart-bar"></i>统计分析
                 </a>
+                <a class="nav-link" href="index.html" target="_blank">
+                    <i class="fas fa-external-link-alt"></i>查看前端网站
+                </a>
             </nav>
             
             <div class="logout-btn">
@@ -646,47 +649,153 @@
 
                 <!-- 统计分析 -->
                 <div id="statistics-content" class="content-section">
+                    <!-- 数据概览 -->
                     <div class="row mb-4">
                         <div class="col-md-3">
                             <div class="card text-center">
                                 <div class="card-body">
+                                    <i class="fas fa-envelope fa-2x text-primary mb-2"></i>
                                     <h3 class="text-primary" id="total-inquiries">0</h3>
                                     <p class="mb-0">总询盘数</p>
+                                    <small class="text-muted">本月新增: <span id="month-inquiries">0</span></small>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="card text-center">
                                 <div class="card-body">
+                                    <i class="fas fa-cube fa-2x text-success mb-2"></i>
                                     <h3 class="text-success" id="total-products">0</h3>
                                     <p class="mb-0">总产品数</p>
+                                    <small class="text-muted">已发布: <span id="active-products">0</span></small>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="card text-center">
                                 <div class="card-body">
+                                    <i class="fas fa-newspaper fa-2x text-info mb-2"></i>
                                     <h3 class="text-info" id="total-news">0</h3>
                                     <p class="mb-0">总新闻数</p>
+                                    <small class="text-muted">本周更新: <span id="week-news">0</span></small>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="card text-center">
                                 <div class="card-body">
+                                    <i class="fas fa-users fa-2x text-warning mb-2"></i>
                                     <h3 class="text-warning" id="total-users">1</h3>
                                     <p class="mb-0">总用户数</p>
+                                    <small class="text-muted">活跃用户: <span id="active-users">1</span></small>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="card">
-                        <div class="card-header">
-                            <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>数据趋势</h5>
+                    <!-- 询盘趋势图表 -->
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>询盘趋势（最近7天）</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="inquiryChart" height="100"></canvas>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <p class="text-muted">统计图表功能开发中...</p>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>产品分类分布</h5>
+                                </div>
+                                <div class="card-body">
+                                    <canvas id="productChart" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 详细数据表格 -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-clock me-2"></i>最近活动记录</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>时间</th>
+                                                    <th>类型</th>
+                                                    <th>描述</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="activity-log">
+                                                <tr>
+                                                    <td>2024-01-14 10:30</td>
+                                                    <td><span class="badge bg-primary">询盘</span></td>
+                                                    <td>新询盘来自客户张先生</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2024-01-14 09:15</td>
+                                                    <td><span class="badge bg-success">产品</span></td>
+                                                    <td>添加新产品 P2.5室内屏</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2024-01-13 16:20</td>
+                                                    <td><span class="badge bg-info">新闻</span></td>
+                                                    <td>发布新闻《LED显示技术创新》</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fas fa-trophy me-2"></i>热门产品排行</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>排名</th>
+                                                    <th>产品名称</th>
+                                                    <th>浏览量</th>
+                                                    <th>询盘数</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="hot-products">
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>P2.5室内高清屏</td>
+                                                    <td>1,258</td>
+                                                    <td>23</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td>P4户外全彩屏</td>
+                                                    <td>986</td>
+                                                    <td>18</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>3</td>
+                                                    <td>透明LED显示屏</td>
+                                                    <td>752</td>
+                                                    <td>15</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -731,7 +840,85 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script src="js/frontend-backend-api.js"></script>
     <script src="js/admin-system-complete.js"></script>
+    <script>
+        // Initialize charts when statistics page is shown
+        function initCharts() {
+            // Inquiry trend chart
+            const inquiryCtx = document.getElementById('inquiryChart');
+            if (inquiryCtx) {
+                new Chart(inquiryCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['1月8日', '1月9日', '1月10日', '1月11日', '1月12日', '1月13日', '1月14日'],
+                        datasets: [{
+                            label: '询盘数量',
+                            data: [12, 19, 15, 25, 22, 30, 28],
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Product category chart
+            const productCtx = document.getElementById('productChart');
+            if (productCtx) {
+                new Chart(productCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['室内屏', '户外屏', '透明屏', '创意屏', '租赁屏'],
+                        datasets: [{
+                            data: [35, 30, 15, 12, 8],
+                            backgroundColor: [
+                                '#667eea',
+                                '#764ba2',
+                                '#f093fb',
+                                '#4facfe',
+                                '#43e97b'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        // Call initCharts when statistics section is shown
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (this.getAttribute('data-section') === 'statistics') {
+                        setTimeout(initCharts, 100);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
