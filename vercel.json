@@ -33,7 +33,7 @@
       ]
     },
     {
-      "source": "/((?!api/).*)\.(html|htm)$",
+      "source": "/((?!api/).*)\\.(html|htm)$",
       "headers": [
         {
           "key": "Cache-Control",
