@@ -42,15 +42,13 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
 <link href="css/style.css" rel="stylesheet"/>
-<link href="css/hero-emergency-fix.css" rel="stylesheet"/>
-<link href="css/hero-fix.css" rel="stylesheet"/>
-<link href="css/hero-ultimate-fix.css" rel="stylesheet"/>
+<link href="css/hero-final-fix.css" rel="stylesheet"/>
 </head>
 <body>
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
 <div class="container">
-<a class="navbar-brand" href="homepage.html">
+<a class="navbar-brand" href="index.html">
 <i class="fas fa-tv me-2"></i>
 <span class="fw-bold">Lianjin LED</span>
 </a>
@@ -60,7 +58,7 @@
 <div class="collapse navbar-collapse" id="navbarNav">
 <ul class="navbar-nav ms-auto">
 <li class="nav-item">
-<a class="nav-link" href="homepage.html">Home</a>
+<a class="nav-link" href="index.html">Home</a>
 </li>
 <li class="nav-item">
 <a class="nav-link" href="about.html">About Us</a>
@@ -645,9 +643,77 @@
             });
         }
         
+        // 静态产品数据
+        const staticProducts = [
+            {
+                id: 1,
+                name_en: "Fine Pitch LED Display P1.25",
+                name: "Fine Pitch LED Display P1.25",
+                category: "fine-pitch",
+                description_en: "Ultra-high resolution displays with pixel pitch P1.25, perfect for control rooms, broadcast studios, and corporate environments.",
+                features: ["4K/8K Resolution", "Seamless Splicing", "High Refresh Rate", "Wide Color Gamut"]
+            },
+            {
+                id: 2,
+                name_en: "Outdoor LED Display P4",
+                name: "Outdoor LED Display P4",
+                category: "outdoor",
+                description_en: "Weather-resistant displays for outdoor advertising with high brightness and energy efficiency.",
+                features: ["IP65 Waterproof", "10,000 nits Brightness", "Anti-UV Protection", "Energy Efficient"]
+            },
+            {
+                id: 3,
+                name_en: "Rental LED Display P2.6",
+                name: "Rental LED Display P2.6",
+                category: "rental",
+                description_en: "Portable and quick-setup displays for events and temporary installations with lightweight design.",
+                features: ["Quick Setup", "Lightweight Design", "Tool-free Assembly", "Flight Case Available"]
+            },
+            {
+                id: 4,
+                name_en: "Transparent LED Display",
+                name: "Transparent LED Display",
+                category: "transparent",
+                description_en: "Innovative transparent displays that blend seamlessly with architecture while delivering stunning visuals.",
+                features: ["90% Transparency", "Lightweight 12kg/m²", "Creative Applications", "Energy Efficient"]
+            },
+            {
+                id: 5,
+                name_en: "Creative Curved LED Display",
+                name: "Creative Curved LED Display",
+                category: "creative",
+                description_en: "Custom-shaped displays for unique architectural and artistic applications with flexible design.",
+                features: ["Custom Shapes", "Flexible Design", "360° Display", "Artistic Integration"]
+            },
+            {
+                id: 6,
+                name_en: "Indoor LED Display P2.5",
+                name: "Indoor LED Display P2.5",
+                category: "indoor",
+                description_en: "High-resolution indoor displays ideal for retail stores, conference rooms, and entertainment venues.",
+                features: ["High Resolution", "Wide Viewing Angle", "Low Power Consumption", "Silent Operation"]
+            },
+            {
+                id: 7,
+                name_en: "Stadium LED Display",
+                name: "Stadium LED Display",
+                category: "outdoor",
+                description_en: "Large-scale outdoor displays designed specifically for sports stadiums and arenas.",
+                features: ["High Brightness", "Wide Viewing Angle", "Weather Resistant", "Real-time Display"]
+            },
+            {
+                id: 8,
+                name_en: "Fine Pitch LED Display P0.9",
+                name: "Fine Pitch LED Display P0.9",
+                category: "fine-pitch",
+                description_en: "Ultra-fine pitch displays with exceptional clarity for broadcast and control room applications.",
+                features: ["Ultra HD Resolution", "Broadcast Quality", "HDR Support", "24/7 Operation"]
+            }
+        ];
+
         // 加载并显示产品
         async function loadAndDisplayProducts(category = null) {
-            const productsGrid = document.getElementById('products-grid');
+            const productsContainer = document.getElementById('products-container');
             const loadingElement = document.getElementById('products-loading');
             
             try {
@@ -657,19 +723,48 @@
                 }
                 
                 // 清空现有产品（保留加载元素）
-                const existingProducts = productsGrid.querySelectorAll('.col-lg-4.col-md-6');
+                const existingProducts = productsContainer.querySelectorAll('.col-lg-4.col-md-6');
                 existingProducts.forEach(product => {
                     if (product.id !== 'products-loading') {
                         product.remove();
                     }
                 });
                 
-                console.log(`📦 正在加载${category ? category + '类别的' : '所有'}产品...`);
+                console.log(`📦 Loading ${category ? category + ' category' : 'all'} products...`);
                 
-                // 获取产品数据
-                const products = await window.frontendBackendAPI.getProducts(category);
+                let products = [];
                 
-                console.log(`✅ 成功加载${products.length}个产品`);
+                // 尝试从API获取产品
+                if (window.frontendBackendAPI && typeof window.frontendBackendAPI.getProducts === 'function') {
+                    try {
+                        products = await window.frontendBackendAPI.getProducts(category);
+                    } catch (apiError) {
+                        console.warn('API failed, using static products:', apiError);
+                        products = [];
+                    }
+                }
+                
+                // 如果API失败或没有产品，使用静态数据
+                if (!products || products.length === 0) {
+                    console.log('Using static product data');
+                    if (category && category !== 'all') {
+                        // 根据分类过滤
+                        const categoryMap = {
+                            'Indoor': 'indoor',
+                            'Outdoor': 'outdoor',
+                            'Rental': 'rental',
+                            'Transparent': 'transparent',
+                            'Creative': 'creative',
+                            'Fine Pitch': 'fine-pitch'
+                        };
+                        const mappedCategory = categoryMap[category] || category.toLowerCase();
+                        products = staticProducts.filter(p => p.category === mappedCategory);
+                    } else {
+                        products = staticProducts;
+                    }
+                }
+                
+                console.log(`✅ Successfully loaded ${products.length} products`);
                 
                 // 隐藏加载状态
                 if (loadingElement) {
@@ -684,24 +779,34 @@
                 }
                 
             } catch (error) {
-                console.error('加载产品失败:', error);
+                console.error('Error loading products:', error);
                 
                 // 隐藏加载状态
                 if (loadingElement) {
                     loadingElement.style.display = 'none';
                 }
                 
-                showErrorMessage();
+                // 尝试使用静态数据作为后备
+                console.log('Using static products as fallback');
+                const products = category && category !== 'all' ? 
+                    staticProducts.filter(p => p.category === category.toLowerCase()) : 
+                    staticProducts;
+                    
+                if (products.length > 0) {
+                    renderProducts(products);
+                } else {
+                    showErrorMessage();
+                }
             }
         }
         
         // 渲染产品列表
         function renderProducts(products) {
-            const productsGrid = document.getElementById('products-grid');
+            const productsContainer = document.getElementById('products-container');
             
             products.forEach((product, index) => {
                 const productCard = createProductCard(product, index);
-                productsGrid.appendChild(productCard);
+                productsContainer.appendChild(productCard);
             });
             
             // 重新初始化AOS动画
@@ -733,18 +838,18 @@
                         </div>
                         <div class="card-overlay">
                             <a class="btn btn-primary" href="contact.html?product=${product.id}">
-                                <i class="fas fa-phone me-2"></i>获取报价
+                                <i class="fas fa-phone me-2"></i>Get Quote
                             </a>
                         </div>
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">${product.name}</h5>
-                        <p class="card-text">${product.description || '暂无描述'}</p>
+                        <h5 class="card-title">${product.name_en || product.name}</h5>
+                        <p class="card-text">${product.description_en || product.description || 'No description available'}</p>
                         ${renderProductFeatures(product)}
                         ${renderProductSpecifications(product)}
                     </div>
                     <div class="card-footer">
-                        <small class="text-muted">分类: ${getCategoryDisplayName(product.category)}</small>
+                        <small class="text-muted">Category: ${getCategoryDisplayNameEn(product.category)}</small>
                         ${product.price ? `<div class="mt-2"><span class="badge bg-success">¥${product.price.toLocaleString()}</span></div>` : ''}
                     </div>
                 </div>
@@ -783,7 +888,7 @@
             return colors[category] || 'text-primary';
         }
         
-        // 获取分类显示名称
+        // 获取分类显示名称（中文）
         function getCategoryDisplayName(category) {
             const names = {
                 'indoor': '室内显示屏',
@@ -794,6 +899,27 @@
                 'fine-pitch': '小间距显示屏',
                 'industrial': '工业显示屏',
                 'broadcast': '广播显示屏'
+            };
+            return names[category] || category;
+        }
+        
+        // 获取分类显示名称（英文）
+        function getCategoryDisplayNameEn(category) {
+            const names = {
+                'indoor': 'Indoor Display',
+                'outdoor': 'Outdoor Display',
+                'rental': 'Rental Display',
+                'transparent': 'Transparent Display',
+                'creative': 'Creative Display',
+                'fine-pitch': 'Fine Pitch Display',
+                'industrial': 'Industrial Display',
+                'broadcast': 'Broadcast Display',
+                'Indoor': 'Indoor Display',
+                'Outdoor': 'Outdoor Display',
+                'Rental': 'Rental Display',
+                'Transparent': 'Transparent Display',
+                'Creative': 'Creative Display',
+                'Fine Pitch': 'Fine Pitch Display'
             };
             return names[category] || category;
         }
@@ -826,41 +952,41 @@
         
         // 显示无产品消息
         function showNoProductsMessage(category) {
-            const productsGrid = document.getElementById('products-grid');
+            const productsContainer = document.getElementById('products-container');
             const messageCol = document.createElement('div');
             messageCol.className = 'col-12 text-center py-5';
             messageCol.innerHTML = `
                 <div class="text-muted">
                     <i class="fas fa-box-open display-4 mb-3"></i>
-                    <h5>暂无${category ? getCategoryDisplayName(category) : ''}产品</h5>
-                    <p>请稍后再试或联系我们获取更多信息</p>
+                    <h5>No ${category ? getCategoryDisplayNameEn(category) : ''} Products Available</h5>
+                    <p>Please check back later or contact us for more information</p>
                     <a href="contact.html" class="btn btn-primary">
-                        <i class="fas fa-envelope me-2"></i>联系我们
+                        <i class="fas fa-envelope me-2"></i>Contact Us
                     </a>
                 </div>
             `;
-            productsGrid.appendChild(messageCol);
+            productsContainer.appendChild(messageCol);
         }
         
         // 显示错误消息
         function showErrorMessage() {
-            const productsGrid = document.getElementById('products-grid');
+            const productsContainer = document.getElementById('products-container');
             const errorCol = document.createElement('div');
             errorCol.className = 'col-12 text-center py-5';
             errorCol.innerHTML = `
                 <div class="text-danger">
                     <i class="fas fa-exclamation-triangle display-4 mb-3"></i>
-                    <h5>加载产品时出现错误</h5>
-                    <p>请刷新页面重试或联系我们</p>
+                    <h5>Error Loading Products</h5>
+                    <p>Please refresh the page or contact us</p>
                     <button class="btn btn-primary me-2" onclick="location.reload()">
-                        <i class="fas fa-refresh me-2"></i>刷新页面
+                        <i class="fas fa-refresh me-2"></i>Refresh Page
                     </button>
                     <a href="contact.html" class="btn btn-outline-primary">
-                        <i class="fas fa-envelope me-2"></i>联系我们
+                        <i class="fas fa-envelope me-2"></i>Contact Us
                     </a>
                 </div>
             `;
-            productsGrid.appendChild(errorCol);
+            productsContainer.appendChild(errorCol);
         }
         </script><script>
         document.addEventListener('DOMContentLoaded', function() {
