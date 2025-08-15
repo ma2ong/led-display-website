@@ -436,23 +436,59 @@ document.addEventListener('DOMContentLoaded', function() {
         
         currentEditingPage = pageName;
         
-        // 设置模态框标题
-        const modalTitle = document.querySelector('#editPageModal .modal-title');
-        if (modalTitle) {
-            modalTitle.textContent = `编辑${getPageDisplayName(pageName)}内容`;
+        // 创建高级页面内容编辑界面
+        showAdvancedPageEditor(pageName);
+    };
+
+    // 显示高级页面编辑器
+    function showAdvancedPageEditor(pageName) {
+        // 获取页面默认内容模板
+        const contentTemplate = getPageContentTemplate(pageName);
+        
+        // 创建编辑器HTML
+        const editorHTML = `
+            <div class="modal fade" id="advancedPageModal" tabindex="-1">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">页面内容管理 - ${getPageDisplayName(pageName)}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                此功能允许你修改页面中的所有静态文字内容，修改后将实时更新到前端页面。
+                            </div>
+                            <form id="advancedPageForm">
+                                ${generateContentFields(contentTemplate)}
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-warning" onclick="resetPageContent()">重置默认</button>
+                            <button type="button" class="btn btn-primary" onclick="saveAdvancedPageContent()">保存并同步</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // 移除已存在的模态框
+        const existingModal = document.getElementById('advancedPageModal');
+        if (existingModal) {
+            existingModal.remove();
         }
         
-        // 预填充表单数据
-        const pageData = getPageData(pageName);
-        document.getElementById('page-title-input').value = pageData.title;
-        document.getElementById('page-subtitle-input').value = pageData.subtitle;
-        document.getElementById('page-content-input').value = pageData.content;
-        document.getElementById('page-image-input').value = pageData.image;
+        // 添加新模态框
+        document.body.insertAdjacentHTML('beforeend', editorHTML);
+        
+        // 加载现有内容
+        loadExistingPageContent(pageName);
         
         // 显示模态框
-        const editPageModal = new bootstrap.Modal(document.getElementById('editPageModal'));
-        editPageModal.show();
-    };
+        const modal = new bootstrap.Modal(document.getElementById('advancedPageModal'));
+        modal.show();
+    }
     
     // 获取页面数据
     function getPageData(pageName) {
@@ -501,7 +537,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // 保存页面内容
-    window.savePageContent = function() {
+    window.savePageContent = async function() {
         if (!currentEditingPage) return;
         
         const data = {
@@ -509,17 +545,26 @@ document.addEventListener('DOMContentLoaded', function() {
             title: document.getElementById('page-title-input').value,
             subtitle: document.getElementById('page-subtitle-input').value,
             content: document.getElementById('page-content-input').value,
-            image: document.getElementById('page-image-input').value,
-            updated_at: new Date().toISOString()
+            image: document.getElementById('page-image-input').value
         };
         
-        // 保存到localStorage (模拟数据库)
-        const savedPages = JSON.parse(localStorage.getItem('page_contents') || '{}');
-        savedPages[currentEditingPage] = data;
-        localStorage.setItem('page_contents', JSON.stringify(savedPages));
-        
-        console.log('✅ 页面内容保存成功:', data);
-        alert(`${getPageDisplayName(currentEditingPage)}内容保存成功！`);
+        // 使用统一API保存
+        if (window.unifiedDataAPI) {
+            const success = await window.unifiedDataAPI.savePageContent(currentEditingPage, data);
+            if (success) {
+                console.log('✅ 页面内容保存成功:', data);
+                alert(`${getPageDisplayName(currentEditingPage)}内容保存成功！`);
+            } else {
+                alert('保存失败，请重试！');
+                return;
+            }
+        } else {
+            // 降级到原来的方式
+            const savedPages = JSON.parse(localStorage.getItem('page_contents') || '{}');
+            savedPages[currentEditingPage] = { ...data, updated_at: new Date().toISOString() };
+            localStorage.setItem('page_contents', JSON.stringify(savedPages));
+            alert(`${getPageDisplayName(currentEditingPage)}内容保存成功！`);
+        }
         
         const editPageModal = bootstrap.Modal.getInstance(document.getElementById('editPageModal'));
         if (editPageModal) {
@@ -857,6 +902,191 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
     
+    // 获取页面内容模板
+    function getPageContentTemplate(pageName) {
+        const templates = {
+            'home': {
+                hero_title: { label: '首页主标题', default: 'Professional LED Display Solutions' },
+                hero_subtitle: { label: '首页副标题', default: 'Leading provider of high-quality LED displays for indoor, outdoor, and rental applications worldwide.' },
+                section_title: { label: '产品区域标题', default: 'Our LED Display Solutions' },
+                section_subtitle: { label: '产品区域副标题', default: 'Comprehensive range of professional LED displays for every application' },
+                brand_name: { label: '品牌名称', default: 'Lianjin LED' }
+            },
+            'about': {
+                hero_title: { label: '关于我们标题', default: 'About Lianjin LED Display Technology' },
+                hero_subtitle: { label: '关于我们副标题', default: '17 Years of Excellence in LED Display Innovation' },
+                company_description: { label: '公司介绍', default: 'Leading manufacturer of professional LED display solutions' }
+            },
+            'products': {
+                hero_title: { label: '产品页标题', default: 'Professional LED Display Products' },
+                hero_subtitle: { label: '产品页副标题', default: 'Complete Range of High-Quality LED Display Solutions' },
+                section_title: { label: '产品列表标题', default: 'All Products' }
+            },
+            'contact': {
+                hero_title: { label: '联系我们标题', default: 'Contact Us' },
+                hero_subtitle: { label: '联系我们副标题', default: 'Get in Touch for Professional LED Display Solutions' }
+            }
+        };
+        
+        return templates[pageName] || {
+            hero_title: { label: '页面主标题', default: `${pageName} Page Title` },
+            hero_subtitle: { label: '页面副标题', default: `${pageName} Page Subtitle` }
+        };
+    }
+
+    // 生成内容编辑字段
+    function generateContentFields(template) {
+        let html = '';
+        Object.entries(template).forEach(([key, config]) => {
+            html += `
+                <div class="mb-4">
+                    <label for="content-${key}" class="form-label fw-bold">
+                        ${config.label}
+                        <span class="text-muted">(语义标识: ${key})</span>
+                    </label>
+                    <textarea 
+                        class="form-control" 
+                        id="content-${key}" 
+                        name="${key}"
+                        rows="2" 
+                        placeholder="默认值: ${config.default}"
+                    ></textarea>
+                    <small class="text-muted">默认内容: ${config.default}</small>
+                </div>
+            `;
+        });
+        return html;
+    }
+
+    // 加载现有页面内容
+    async function loadExistingPageContent(pageName) {
+        try {
+            let savedContent = {};
+            
+            // 从统一API获取
+            if (window.unifiedDataAPI) {
+                const content = await window.unifiedDataAPI.getPageContent(pageName);
+                if (content && content.elements) {
+                    savedContent = content.elements;
+                }
+            } else {
+                // 从 localStorage 获取
+                const allContent = JSON.parse(localStorage.getItem('cms_content') || '{}');
+                savedContent = allContent[pageName] || {};
+            }
+            
+            // 填充表单字段
+            Object.entries(savedContent).forEach(([key, value]) => {
+                const field = document.getElementById(`content-${key}`);
+                if (field && value) {
+                    field.value = value;
+                    field.style.backgroundColor = '#e8f5e8'; // 标记已修改
+                }
+            });
+            
+            console.log(`📄 加载了${pageName}页面的已保存内容`);
+        } catch (error) {
+            console.error('加载现有内容失败:', error);
+        }
+    }
+
+    // 保存高级页面内容
+    window.saveAdvancedPageContent = async function() {
+        if (!currentEditingPage) return;
+        
+        const form = document.getElementById('advancedPageForm');
+        const formData = new FormData(form);
+        const contentData = {};
+        
+        // 收集表单数据
+        for (let [key, value] of formData.entries()) {
+            if (value.trim()) {
+                contentData[key] = value.trim();
+            }
+        }
+        
+        try {
+            let success = false;
+            
+            // 使用统一API保存
+            if (window.unifiedDataAPI) {
+                success = await window.unifiedDataAPI.savePageContent(currentEditingPage, {
+                    elements: contentData,
+                    updated_at: new Date().toISOString()
+                });
+            } else {
+                // 使用localStorage保存
+                const allContent = JSON.parse(localStorage.getItem('cms_content') || '{}');
+                allContent[currentEditingPage] = contentData;
+                localStorage.setItem('cms_content', JSON.stringify(allContent));
+                success = true;
+            }
+            
+            if (success) {
+                // 触发同步事件
+                const syncEvent = new CustomEvent('dataUpdated', {
+                    detail: { type: 'page_content', version: Date.now() }
+                });
+                window.dispatchEvent(syncEvent);
+                
+                alert(`✅ ${getPageDisplayName(currentEditingPage)}页面内容保存成功！\n\n修改将在几秒内同步到前端页面。`);
+                
+                // 关闭模态框
+                const modal = bootstrap.Modal.getInstance(document.getElementById('advancedPageModal'));
+                if (modal) {
+                    modal.hide();
+                }
+            } else {
+                throw new Error('保存失败');
+            }
+        } catch (error) {
+            console.error('保存高级页面内容失败:', error);
+            alert('❗ 保存失败，请重试！');
+        }
+    };
+
+    // 重置页面内容
+    window.resetPageContent = function() {
+        if (!currentEditingPage) return;
+        
+        if (confirm(`确定要重置 ${getPageDisplayName(currentEditingPage)} 页面内容到默认值吗？`)) {
+            // 清除表单字段
+            const form = document.getElementById('advancedPageForm');
+            if (form) {
+                const textareas = form.querySelectorAll('textarea');
+                textareas.forEach(textarea => {
+                    textarea.value = '';
+                    textarea.style.backgroundColor = '';
+                });
+            }
+            
+            // 清除保存的数据
+            try {
+                if (window.unifiedDataAPI) {
+                    window.unifiedDataAPI.savePageContent(currentEditingPage, {
+                        elements: {},
+                        updated_at: new Date().toISOString()
+                    });
+                } else {
+                    const allContent = JSON.parse(localStorage.getItem('cms_content') || '{}');
+                    delete allContent[currentEditingPage];
+                    localStorage.setItem('cms_content', JSON.stringify(allContent));
+                }
+                
+                // 触发同步事件
+                const syncEvent = new CustomEvent('dataUpdated', {
+                    detail: { type: 'page_content', version: Date.now() }
+                });
+                window.dispatchEvent(syncEvent);
+                
+                alert('✅ 页面内容已重置到默认值！');
+            } catch (error) {
+                console.error('重置页面内容失败:', error);
+                alert('❗ 重置失败，请重试！');
+            }
+        }
+    };
+
     // 页面加载完成后的初始化
     console.log('🎉 联锦LED管理系统完整版已就绪');
     
