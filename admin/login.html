@@ -139,92 +139,95 @@
             <p>LED显示屏网站管理后台</p>
         </div>
         
+        <div id="messageContainer"></div>
+
         <form id="loginForm">
             <div class="form-group">
-                <label for="username">用户名</label>
-                <input type="text" id="username" name="username" required>
+                <label for="email">邮箱地址</label>
+                <input type="email" id="email" name="email" placeholder="admin@lianjinled.com" required>
             </div>
-            
+
             <div class="form-group">
                 <label for="password">密码</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" placeholder="请输入密码" required>
             </div>
-            
+
             <button type="submit" class="login-btn" id="loginBtn">登录</button>
-            
-            <div class="loading" id="loading"></div>
-            <div class="error-message" id="errorMessage"></div>
-            <div class="success-message" id="successMessage"></div>
         </form>
+
+        <div style="margin-top: 20px; text-align: center; color: #666; font-size: 12px;">
+            <p>请使用 Supabase 创建的管理员账号登录</p>
+        </div>
     </div>
 
-    <script src="../lib/supabase.js"></script>
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const loginBtn = document.getElementById('loginBtn');
-            const loading = document.getElementById('loading');
-            const errorMessage = document.getElementById('errorMessage');
-            const successMessage = document.getElementById('successMessage');
-            
-            // 重置消息
-            errorMessage.style.display = 'none';
-            successMessage.style.display = 'none';
-            
-            // 显示加载状态
-            loginBtn.disabled = true;
-            loading.style.display = 'block';
-            
-            try {
-                const supabase = getSupabaseClient();
-                
-                // 查询用户
-                const { data: users, error } = await supabase
-                    .from('users')
-                    .select('*')
-                    .eq('username', username)
-                    .eq('password', password) // 注意：实际项目中应该使用加密密码
-                    .single();
-                
-                if (error || !users) {
-                    throw new Error('用户名或密码错误');
-                }
-                
-                // 登录成功
-                successMessage.textContent = '登录成功，正在跳转...';
-                successMessage.style.display = 'block';
-                
-                // 保存登录状态
-                localStorage.setItem('adminUser', JSON.stringify({
-                    id: users.id,
-                    username: users.username,
-                    role: users.role,
-                    loginTime: new Date().toISOString()
-                }));
-                
-                // 跳转到管理页面
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
-                
-            } catch (error) {
-                console.error('登录错误:', error);
-                errorMessage.textContent = error.message || '登录失败，请重试';
-                errorMessage.style.display = 'block';
-            } finally {
-                loginBtn.disabled = false;
-                loading.style.display = 'none';
-            }
-        });
-        
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script type="module">
+        import {
+            handleLogin,
+            validateAdminSession,
+            showLoading,
+            hideLoading,
+            showError,
+            showSuccess
+        } from '../js/admin-auth.js'
+
         // 检查是否已经登录
-        const adminUser = localStorage.getItem('adminUser');
-        if (adminUser) {
-            window.location.href = 'dashboard.html';
+        const validation = await validateAdminSession()
+        if (validation.valid) {
+            window.location.href = '/admin.html'
         }
+
+        // 处理登录表单提交
+        const loginForm = document.getElementById('loginForm')
+        const loginBtn = document.getElementById('loginBtn')
+        const messageContainer = document.getElementById('messageContainer')
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault()
+
+            const email = document.getElementById('email').value.trim()
+            const password = document.getElementById('password').value
+
+            // 验证输入
+            if (!email || !password) {
+                showError('请输入邮箱和密码', messageContainer)
+                return
+            }
+
+            // 显示加载状态
+            showLoading(loginBtn, '登录中...')
+            messageContainer.innerHTML = ''
+
+            try {
+                // 调用登录函数
+                const result = await handleLogin(email, password)
+
+                if (result.success) {
+                    showSuccess('登录成功！正在跳转...', messageContainer)
+
+                    // 延迟跳转
+                    setTimeout(() => {
+                        window.location.href = '/admin.html'
+                    }, 1000)
+                } else {
+                    showError(result.message, messageContainer)
+                    hideLoading(loginBtn)
+                }
+            } catch (error) {
+                console.error('Login error:', error)
+                showError('登录失败，请稍后重试', messageContainer)
+                hideLoading(loginBtn)
+            }
+        })
+
+        // 支持回车键登录
+        document.getElementById('password').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                loginForm.dispatchEvent(new Event('submit'))
+            }
+        })
     </script>
 </body>
 </html>
