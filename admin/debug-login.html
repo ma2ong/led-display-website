@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录调试工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'Courier New', monospace;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #4ec9b0;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #569cd6;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #404040;
+            padding-bottom: 5px;
+        }
+
+        .section {
+            background: #252526;
+            border: 1px solid #404040;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #9cdcfe;
+        }
+
+        .form-group input {
+            width: 100%;
+            max-width: 400px;
+            padding: 8px 12px;
+            background: #3c3c3c;
+            border: 1px solid #555;
+            border-radius: 3px;
+            color: #d4d4d4;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #0e639c;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #1177bb;
+        }
+
+        button:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        .log-container {
+            background: #1e1e1e;
+            border: 1px solid #404040;
+            border-radius: 3px;
+            padding: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+            padding: 5px;
+            border-left: 3px solid transparent;
+        }
+
+        .log-entry.success {
+            color: #4ec9b0;
+            border-left-color: #4ec9b0;
+        }
+
+        .log-entry.error {
+            color: #f48771;
+            border-left-color: #f48771;
+        }
+
+        .log-entry.warning {
+            color: #dcdcaa;
+            border-left-color: #dcdcaa;
+        }
+
+        .log-entry.info {
+            color: #9cdcfe;
+            border-left-color: #9cdcfe;
+        }
+
+        .timestamp {
+            color: #858585;
+            font-size: 11px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .status-badge.success {
+            background: #107c10;
+            color: white;
+        }
+
+        .status-badge.error {
+            background: #e81123;
+            color: white;
+        }
+
+        .status-badge.unknown {
+            background: #8a8a8a;
+            color: white;
+        }
+
+        code {
+            background: #1e1e1e;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #ce9178;
+        }
+
+        pre {
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .json-viewer {
+            background: #1e1e1e;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 登录调试工具</h1>
+        <p style="color: #858585; margin-bottom: 20px;">
+            此工具帮助诊断 Supabase 认证问题，查看详细的错误信息和连接状态
+        </p>
+
+        <!-- 步骤 1: 连接测试 -->
+        <div class="section">
+            <h2>步骤 1: Supabase 连接测试</h2>
+            <button id="testConnection">测试连接</button>
+            <button id="clearLogs">清空日志</button>
+            <div id="connectionStatus" style="margin-top: 15px;"></div>
+            <div id="connectionLogs" class="log-container" style="margin-top: 15px;"></div>
+        </div>
+
+        <!-- 步骤 2: 登录测试 -->
+        <div class="section">
+            <h2>步骤 2: 登录测试</h2>
+            <div class="form-group">
+                <label for="debugEmail">邮箱地址</label>
+                <input type="email" id="debugEmail" placeholder="your-email@example.com">
+            </div>
+            <div class="form-group">
+                <label for="debugPassword">密码</label>
+                <input type="password" id="debugPassword" placeholder="输入密码">
+            </div>
+            <button id="testLogin">测试登录</button>
+            <button id="testSession">检查当前会话</button>
+            <button id="testLogout">登出</button>
+            <div id="loginLogs" class="log-container" style="margin-top: 15px;"></div>
+        </div>
+
+        <!-- 步骤 3: 数据库检查 -->
+        <div class="section">
+            <h2>步骤 3: 数据库检查</h2>
+            <p style="color: #858585; margin-bottom: 10px;">
+                检查当前用户在 admin_users 表中的状态
+            </p>
+            <button id="checkDatabase">检查数据库</button>
+            <div id="databaseLogs" class="log-container" style="margin-top: 15px;"></div>
+        </div>
+
+        <!-- 步骤 4: 环境信息 -->
+        <div class="section">
+            <h2>步骤 4: 环境信息</h2>
+            <button id="showEnv">显示环境配置</button>
+            <div id="envLogs" class="log-container" style="margin-top: 15px;"></div>
+        </div>
+    </div>
+
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script type="module">
+        // 导入所有必要的模块
+        import { supabase, auth } from '../lib/supabase-client.js'
+
+        // 日志函数
+        function log(message, type = 'info', containerId = 'connectionLogs') {
+            const container = document.getElementById(containerId)
+            const timestamp = new Date().toLocaleTimeString('zh-CN', { hour12: false })
+            const entry = document.createElement('div')
+            entry.className = `log-entry ${type}`
+            entry.innerHTML = `<span class="timestamp">[${timestamp}]</span> ${message}`
+            container.appendChild(entry)
+            container.scrollTop = container.scrollHeight
+        }
+
+        function logJSON(obj, containerId = 'connectionLogs') {
+            const container = document.getElementById(containerId)
+            const pre = document.createElement('pre')
+            pre.className = 'json-viewer'
+            pre.textContent = JSON.stringify(obj, null, 2)
+            container.appendChild(pre)
+            container.scrollTop = container.scrollHeight
+        }
+
+        function clearLog(containerId) {
+            document.getElementById(containerId).innerHTML = ''
+        }
+
+        // 步骤 1: 测试连接
+        document.getElementById('testConnection').addEventListener('click', async () => {
+            clearLog('connectionLogs')
+            log('🔄 开始测试 Supabase 连接...', 'info', 'connectionLogs')
+
+            try {
+                // 检查 Supabase 客户端
+                log('✅ Supabase 客户端已初始化', 'success', 'connectionLogs')
+
+                // 获取配置信息（隐藏敏感信息）
+                const config = {
+                    url: supabase.supabaseUrl || '(未设置)',
+                    keyPrefix: supabase.supabaseKey ? supabase.supabaseKey.substring(0, 20) + '...' : '(未设置)'
+                }
+                log(`📡 Supabase URL: <code>${config.url}</code>`, 'info', 'connectionLogs')
+                log(`🔑 API Key (前20字符): <code>${config.keyPrefix}</code>`, 'info', 'connectionLogs')
+
+                // 测试基本连接
+                log('🔄 测试数据库连接...', 'info', 'connectionLogs')
+                const { data, error } = await supabase.from('admin_users').select('count').limit(1)
+
+                if (error) {
+                    throw error
+                }
+
+                log('✅ 数据库连接成功！', 'success', 'connectionLogs')
+
+                // 显示状态
+                document.getElementById('connectionStatus').innerHTML =
+                    '<span class="status-badge success">连接正常</span>'
+
+            } catch (error) {
+                log(`❌ 连接失败: ${error.message}`, 'error', 'connectionLogs')
+                logJSON({ error: error }, 'connectionLogs')
+                document.getElementById('connectionStatus').innerHTML =
+                    '<span class="status-badge error">连接失败</span>'
+            }
+        })
+
+        // 清空日志
+        document.getElementById('clearLogs').addEventListener('click', () => {
+            clearLog('connectionLogs')
+            clearLog('loginLogs')
+            clearLog('databaseLogs')
+            clearLog('envLogs')
+        })
+
+        // 步骤 2: 测试登录
+        document.getElementById('testLogin').addEventListener('click', async () => {
+            clearLog('loginLogs')
+            const email = document.getElementById('debugEmail').value.trim()
+            const password = document.getElementById('debugPassword').value
+
+            if (!email || !password) {
+                log('⚠️ 请输入邮箱和密码', 'warning', 'loginLogs')
+                return
+            }
+
+            log(`🔄 尝试登录: ${email}`, 'info', 'loginLogs')
+
+            try {
+                // 第 1 步: Supabase Auth 登录
+                log('📍 步骤 1: 调用 Supabase Auth API...', 'info', 'loginLogs')
+                const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                })
+
+                if (authError) {
+                    throw authError
+                }
+
+                log('✅ 步骤 1 成功: Supabase Auth 认证通过', 'success', 'loginLogs')
+                log(`👤 用户 ID: <code>${authData.user.id}</code>`, 'info', 'loginLogs')
+                log(`📧 邮箱: <code>${authData.user.email}</code>`, 'info', 'loginLogs')
+
+                // 第 2 步: 检查 admin_users 表
+                log('📍 步骤 2: 检查 admin_users 表...', 'info', 'loginLogs')
+                const { data: adminData, error: adminError } = await supabase
+                    .from('admin_users')
+                    .select('*')
+                    .eq('user_id', authData.user.id)
+                    .single()
+
+                if (adminError) {
+                    if (adminError.code === 'PGRST116') {
+                        log('❌ 步骤 2 失败: 用户不在 admin_users 表中', 'error', 'loginLogs')
+                        log('💡 解决方案: 运行 database/fix_admin_login.sql 中的修复 1', 'warning', 'loginLogs')
+                        return
+                    }
+                    throw adminError
+                }
+
+                log('✅ 步骤 2 成功: 在 admin_users 表中找到用户', 'success', 'loginLogs')
+                logJSON(adminData, 'loginLogs')
+
+                // 第 3 步: 检查管理员状态
+                log('📍 步骤 3: 检查管理员状态...', 'info', 'loginLogs')
+
+                if (!adminData.is_active) {
+                    log('❌ 账号已被禁用', 'error', 'loginLogs')
+                    log('💡 解决方案: 运行 database/fix_admin_login.sql 中的修复 2', 'warning', 'loginLogs')
+                    return
+                }
+
+                if (!['super_admin', 'admin', 'editor'].includes(adminData.role)) {
+                    log(`❌ 角色权限不足: ${adminData.role}`, 'error', 'loginLogs')
+                    log('💡 解决方案: 角色必须是 super_admin, admin 或 editor', 'warning', 'loginLogs')
+                    return
+                }
+
+                log('✅ 步骤 3 成功: 管理员权限验证通过', 'success', 'loginLogs')
+                log(`🎭 角色: <code>${adminData.role}</code>`, 'success', 'loginLogs')
+                log('🎉 登录测试完全成功！所有步骤都通过了', 'success', 'loginLogs')
+
+            } catch (error) {
+                log(`❌ 登录失败: ${error.message}`, 'error', 'loginLogs')
+                logJSON({
+                    error: error.message,
+                    code: error.code,
+                    details: error.details,
+                    hint: error.hint
+                }, 'loginLogs')
+
+                // 提供具体的错误提示
+                if (error.message.includes('Invalid login credentials')) {
+                    log('💡 可能原因: 邮箱或密码错误', 'warning', 'loginLogs')
+                } else if (error.message.includes('Email not confirmed')) {
+                    log('💡 可能原因: 邮箱未确认', 'warning', 'loginLogs')
+                    log('💡 解决方案: 运行 database/fix_admin_login.sql 中的修复 4', 'warning', 'loginLogs')
+                }
+            }
+        })
+
+        // 检查当前会话
+        document.getElementById('testSession').addEventListener('click', async () => {
+            clearLog('loginLogs')
+            log('🔄 检查当前会话...', 'info', 'loginLogs')
+
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession()
+
+                if (error) throw error
+
+                if (!session) {
+                    log('ℹ️ 当前没有活动会话', 'info', 'loginLogs')
+                    return
+                }
+
+                log('✅ 找到活动会话', 'success', 'loginLogs')
+                logJSON({
+                    user: {
+                        id: session.user.id,
+                        email: session.user.email,
+                        created_at: session.user.created_at
+                    },
+                    expires_at: new Date(session.expires_at * 1000).toLocaleString('zh-CN')
+                }, 'loginLogs')
+
+            } catch (error) {
+                log(`❌ 检查会话失败: ${error.message}`, 'error', 'loginLogs')
+                logJSON({ error }, 'loginLogs')
+            }
+        })
+
+        // 登出
+        document.getElementById('testLogout').addEventListener('click', async () => {
+            clearLog('loginLogs')
+            log('🔄 正在登出...', 'info', 'loginLogs')
+
+            try {
+                await supabase.auth.signOut()
+                log('✅ 登出成功', 'success', 'loginLogs')
+            } catch (error) {
+                log(`❌ 登出失败: ${error.message}`, 'error', 'loginLogs')
+            }
+        })
+
+        // 步骤 3: 检查数据库
+        document.getElementById('checkDatabase').addEventListener('click', async () => {
+            clearLog('databaseLogs')
+            log('🔄 检查数据库状态...', 'info', 'databaseLogs')
+
+            try {
+                // 获取当前用户
+                const { data: { user } } = await supabase.auth.getUser()
+
+                if (!user) {
+                    log('ℹ️ 当前未登录，无法检查数据库', 'info', 'databaseLogs')
+                    return
+                }
+
+                log(`👤 当前用户: ${user.email}`, 'info', 'databaseLogs')
+
+                // 查询 admin_users 表
+                log('🔄 查询 admin_users 表...', 'info', 'databaseLogs')
+                const { data: adminData, error: adminError } = await supabase
+                    .from('admin_users')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .single()
+
+                if (adminError) {
+                    if (adminError.code === 'PGRST116') {
+                        log('❌ 用户不在 admin_users 表中', 'error', 'databaseLogs')
+                        log('💡 需要运行 SQL: database/fix_admin_login.sql', 'warning', 'databaseLogs')
+                    } else {
+                        throw adminError
+                    }
+                    return
+                }
+
+                log('✅ 在 admin_users 表中找到用户记录', 'success', 'databaseLogs')
+                logJSON(adminData, 'databaseLogs')
+
+                // 分析状态
+                if (adminData.is_active) {
+                    log('✅ 账号状态: 活跃', 'success', 'databaseLogs')
+                } else {
+                    log('❌ 账号状态: 已禁用', 'error', 'databaseLogs')
+                }
+
+                log(`🎭 角色: ${adminData.role}`, 'info', 'databaseLogs')
+
+            } catch (error) {
+                log(`❌ 检查失败: ${error.message}`, 'error', 'databaseLogs')
+                logJSON({ error }, 'databaseLogs')
+            }
+        })
+
+        // 步骤 4: 显示环境信息
+        document.getElementById('showEnv').addEventListener('click', () => {
+            clearLog('envLogs')
+            log('📊 环境配置信息', 'info', 'envLogs')
+
+            // 浏览器信息
+            log(`🌐 浏览器: ${navigator.userAgent}`, 'info', 'envLogs')
+            log(`📍 当前页面: ${window.location.href}`, 'info', 'envLogs')
+
+            // Supabase 配置 (脱敏)
+            const supabaseUrl = supabase.supabaseUrl || '(未设置)'
+            const keyPrefix = supabase.supabaseKey ?
+                supabase.supabaseKey.substring(0, 20) + '...' : '(未设置)'
+
+            log(`📡 Supabase URL: <code>${supabaseUrl}</code>`, 'info', 'envLogs')
+            log(`🔑 API Key (前20字符): <code>${keyPrefix}</code>`, 'info', 'envLogs')
+
+            // LocalStorage
+            log('💾 LocalStorage 内容:', 'info', 'envLogs')
+            const adminUser = localStorage.getItem('admin_user')
+            if (adminUser) {
+                try {
+                    logJSON(JSON.parse(adminUser), 'envLogs')
+                } catch {
+                    log('解析失败', 'error', 'envLogs')
+                }
+            } else {
+                log('  无 admin_user 数据', 'info', 'envLogs')
+            }
+        })
+
+        // 自动运行连接测试
+        log('🚀 调试工具已加载', 'success', 'connectionLogs')
+        log('💡 提示: 点击 "测试连接" 开始诊断', 'info', 'connectionLogs')
+    </script>
+</body>
+</html>
