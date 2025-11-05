@@ -17,7 +17,7 @@ SELECT
   'super_admin',  -- 可选: super_admin, admin, editor, viewer
   true
 FROM auth.users
-WHERE email = 'YOUR_EMAIL@example.com'  -- ⚠️ 替换为你的实际邮箱
+WHERE email = 'allenma2ong@gmail.com'  -- ⚠️ 替换为你的实际邮箱
 ON CONFLICT (user_id) DO UPDATE
 SET
   is_active = true,
@@ -32,7 +32,7 @@ UPDATE admin_users
 SET
   is_active = true,
   updated_at = NOW()
-WHERE email = 'YOUR_EMAIL@example.com';  -- ⚠️ 替换为你的实际邮箱
+WHERE email = 'allenma2ong@gmail.com';  -- ⚠️ 替换为你的实际邮箱
 */
 
 -- ============================================
@@ -43,7 +43,7 @@ UPDATE admin_users
 SET
   role = 'super_admin',  -- 可选: super_admin, admin, editor, viewer
   updated_at = NOW()
-WHERE email = 'YOUR_EMAIL@example.com';  -- ⚠️ 替换为你的实际邮箱
+WHERE email = 'allenma2ong@gmail.com';  -- ⚠️ 替换为你的实际邮箱
 */
 
 -- ============================================
@@ -96,7 +96,7 @@ SELECT
   END as login_status
 FROM admin_users au
 JOIN auth.users u ON u.id = au.user_id
-WHERE au.email = 'YOUR_EMAIL@example.com';  -- ⚠️ 替换为你的实际邮箱
+WHERE au.email = 'allenma2ong@gmail.com';  -- ⚠️ 替换为你的实际邮箱
 
 -- ============================================
 -- 完整的创建新管理员流程（推荐）
