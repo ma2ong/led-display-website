@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录问题诊断工具 - 独立版</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        h1 { color: #333; margin-bottom: 10px; }
+        h2 { color: #667eea; margin: 25px 0 15px 0; border-bottom: 2px solid #667eea; padding-bottom: 5px; }
+        .alert { padding: 15px; border-radius: 6px; margin: 15px 0; }
+        .alert-info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
+        .alert-success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .alert-warning { background: #fff3cd; border: 1px solid #ffc107; color: #856404; }
+        .alert-danger { background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: 500; color: #333; }
+        input { width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px; }
+        input:focus { outline: none; border-color: #667eea; }
+        button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        button:hover { opacity: 0.9; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .log-box {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .log-entry { margin: 5px 0; padding: 5px; }
+        .log-success { color: #28a745; }
+        .log-error { color: #dc3545; }
+        .log-warning { color: #ffc107; }
+        .log-info { color: #17a2b8; }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            color: #e83e8c;
+        }
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .sql-box {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+        }
+        .copy-btn {
+            padding: 5px 10px;
+            font-size: 12px;
+            margin-top: 5px;
+            background: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 登录问题诊断工具</h1>
+        <p style="color: #666; margin-bottom: 20px;">此工具可以独立运行，不需要服务器部署</p>
+
+        <div class="alert alert-info">
+            <strong>📌 使用说明:</strong>
+            <ol style="margin: 10px 0 0 20px;">
+                <li>输入 Supabase 配置信息（在 Supabase Dashboard 可以找到）</li>
+                <li>输入要测试的管理员账号邮箱和密码</li>
+                <li>点击 "开始诊断" 按钮</li>
+                <li>根据诊断结果，使用提供的 SQL 修复脚本</li>
+            </ol>
+        </div>
+
+        <h2>步骤 1: 配置信息</h2>
+        <div class="form-group">
+            <label for="supabaseUrl">Supabase URL</label>
+            <input type="text" id="supabaseUrl" placeholder="https://xxxxx.supabase.co" value="https://jirudzbqcxviytcmxegf.supabase.co">
+        </div>
+        <div class="form-group">
+            <label for="supabaseKey">Supabase Anon Key</label>
+            <input type="text" id="supabaseKey" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+        </div>
+
+        <h2>步骤 2: 管理员账号</h2>
+        <div class="form-group">
+            <label for="testEmail">邮箱地址</label>
+            <input type="email" id="testEmail" placeholder="admin@example.com">
+        </div>
+        <div class="form-group">
+            <label for="testPassword">密码</label>
+            <input type="password" id="testPassword" placeholder="输入密码">
+        </div>
+
+        <button id="startDiagnosis">🔍 开始诊断</button>
+        <button id="clearLog">🗑️ 清空日志</button>
+
+        <h2>诊断结果</h2>
+        <div id="logBox" class="log-box"></div>
+
+        <div id="solutionBox" style="display: none;">
+            <h2>🔧 修复方案</h2>
+            <div id="solutionContent"></div>
+        </div>
+    </div>
+
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        const logBox = document.getElementById('logBox')
+        const solutionBox = document.getElementById('solutionBox')
+        const solutionContent = document.getElementById('solutionContent')
+
+        let supabase = null
+        let diagnosisResults = {}
+
+        // 日志函数
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString('zh-CN')
+            const entry = document.createElement('div')
+            entry.className = `log-entry log-${type}`
+            entry.innerHTML = `[${timestamp}] ${message}`
+            logBox.appendChild(entry)
+            logBox.scrollTop = logBox.scrollHeight
+        }
+
+        function logJSON(obj) {
+            const pre = document.createElement('pre')
+            pre.textContent = JSON.stringify(obj, null, 2)
+            pre.style.fontSize = '12px'
+            logBox.appendChild(pre)
+            logBox.scrollTop = logBox.scrollHeight
+        }
+
+        function showSolution(title, content, sql = null) {
+            solutionBox.style.display = 'block'
+            let html = `<div class="alert alert-warning"><strong>${title}</strong><br>${content}</div>`
+
+            if (sql) {
+                html += `
+                    <div class="sql-box">${sql}</div>
+                    <button class="copy-btn" onclick="copySQL(\`${sql.replace(/`/g, '\\`')}\`)">📋 复制 SQL</button>
+                `
+            }
+
+            solutionContent.innerHTML += html
+        }
+
+        window.copySQL = function(sql) {
+            navigator.clipboard.writeText(sql).then(() => {
+                alert('✅ SQL 已复制到剪贴板！')
+            })
+        }
+
+        // 清空日志
+        document.getElementById('clearLog').addEventListener('click', () => {
+            logBox.innerHTML = ''
+            solutionContent.innerHTML = ''
+            solutionBox.style.display = 'none'
+            diagnosisResults = {}
+        })
+
+        // 开始诊断
+        document.getElementById('startDiagnosis').addEventListener('click', async () => {
+            logBox.innerHTML = ''
+            solutionContent.innerHTML = ''
+            solutionBox.style.display = 'none'
+            diagnosisResults = {}
+
+            const supabaseUrl = document.getElementById('supabaseUrl').value.trim()
+            const supabaseKey = document.getElementById('supabaseKey').value.trim()
+            const email = document.getElementById('testEmail').value.trim()
+            const password = document.getElementById('testPassword').value
+
+            // 验证输入
+            if (!supabaseUrl || !supabaseKey) {
+                log('❌ 请输入 Supabase URL 和 Anon Key', 'error')
+                return
+            }
+            if (!email || !password) {
+                log('❌ 请输入邮箱和密码', 'error')
+                return
+            }
+
+            log('🚀 开始诊断登录问题...', 'info')
+            log(`📧 测试账号: ${email}`, 'info')
+
+            try {
+                // 初始化 Supabase 客户端
+                log('⏳ 步骤 1/4: 初始化 Supabase 客户端...', 'info')
+                supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+                log('✅ Supabase 客户端初始化成功', 'success')
+
+                // 测试连接
+                log('⏳ 步骤 2/4: 测试数据库连接...', 'info')
+                const { data: testData, error: testError } = await supabase
+                    .from('admin_users')
+                    .select('count')
+                    .limit(1)
+
+                if (testError && testError.code === '42P01') {
+                    log('❌ admin_users 表不存在！', 'error')
+                    log('💡 需要先运行数据库迁移脚本', 'warning')
+                    showSolution(
+                        '问题: admin_users 表不存在',
+                        '请在 Supabase SQL Editor 中运行数据库迁移脚本',
+                        `-- 请访问 GitHub 仓库获取完整的迁移脚本\n-- database/migrations/001_create_admin_users.sql`
+                    )
+                    return
+                }
+
+                log('✅ 数据库连接成功', 'success')
+
+                // 尝试登录
+                log('⏳ 步骤 3/4: 尝试 Supabase Auth 登录...', 'info')
+                const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                })
+
+                if (authError) {
+                    log(`❌ Supabase Auth 登录失败: ${authError.message}`, 'error')
+                    logJSON({ error: authError })
+
+                    if (authError.message.includes('Invalid login credentials')) {
+                        log('💡 可能的原因:', 'warning')
+                        log('   1. 邮箱或密码输入错误', 'warning')
+                        log('   2. 用户不存在于 auth.users 表中', 'warning')
+                        log('   3. 邮箱未确认', 'warning')
+
+                        showSolution(
+                            '问题: 无效的登录凭证',
+                            '请检查:<br>1. 邮箱和密码是否正确<br>2. 用户是否已在 Supabase Dashboard 创建<br>3. 邮箱是否已确认',
+                            `-- 手动确认邮箱\nUPDATE auth.users\nSET confirmed_at = NOW(),\n    email_confirmed_at = NOW()\nWHERE email = '${email}';`
+                        )
+                    }
+                    return
+                }
+
+                log('✅ Supabase Auth 认证通过', 'success')
+                log(`👤 用户 ID: ${authData.user.id}`, 'info')
+                diagnosisResults.userId = authData.user.id
+
+                // 检查 admin_users 表
+                log('⏳ 步骤 4/4: 检查 admin_users 表...', 'info')
+                const { data: adminData, error: adminError } = await supabase
+                    .from('admin_users')
+                    .select('*')
+                    .eq('user_id', authData.user.id)
+                    .single()
+
+                if (adminError) {
+                    if (adminError.code === 'PGRST116') {
+                        log('❌ 用户不在 admin_users 表中！', 'error')
+                        log('💡 这是最常见的问题！', 'warning')
+
+                        showSolution(
+                            '问题: 用户不在 admin_users 表中',
+                            '用户已在 Supabase Auth 创建，但没有添加到 admin_users 管理员表中。<br>请在 Supabase SQL Editor 中运行以下 SQL:',
+                            `INSERT INTO admin_users (user_id, email, role, is_active)\nSELECT id, email, 'super_admin', true\nFROM auth.users\nWHERE email = '${email}'\nON CONFLICT (user_id) DO UPDATE\nSET is_active = true, role = 'super_admin', updated_at = NOW();`
+                        )
+                        return
+                    }
+
+                    log(`❌ 查询 admin_users 失败: ${adminError.message}`, 'error')
+                    logJSON({ error: adminError })
+                    return
+                }
+
+                log('✅ 在 admin_users 表中找到用户', 'success')
+                logJSON(adminData)
+
+                // 检查账号状态
+                if (!adminData.is_active) {
+                    log('❌ 账号已被禁用！', 'error')
+                    showSolution(
+                        '问题: 账号已被禁用',
+                        '账号的 is_active 字段为 false，需要激活账号。',
+                        `UPDATE admin_users\nSET is_active = true, updated_at = NOW()\nWHERE email = '${email}';`
+                    )
+                    return
+                }
+
+                log('✅ 账号状态: 活跃', 'success')
+
+                // 检查角色
+                const validRoles = ['super_admin', 'admin', 'editor']
+                if (!validRoles.includes(adminData.role)) {
+                    log(`❌ 角色权限不足: ${adminData.role}`, 'error')
+                    log('💡 可以登录后台的角色: super_admin, admin, editor', 'warning')
+
+                    showSolution(
+                        '问题: 角色权限不足',
+                        `当前角色是 "${adminData.role}"，需要是 super_admin, admin 或 editor 才能登录后台。`,
+                        `UPDATE admin_users\nSET role = 'super_admin', updated_at = NOW()\nWHERE email = '${email}';`
+                    )
+                    return
+                }
+
+                log(`✅ 角色: ${adminData.role}`, 'success')
+
+                // 所有检查通过
+                log('', 'info')
+                log('🎉 恭喜！所有检查都通过了！', 'success')
+                log('✅ 用户应该可以正常登录', 'success')
+                log('', 'info')
+                log('如果仍然无法登录，可能的原因:', 'warning')
+                log('1. 浏览器缓存问题 - 尝试清除缓存或使用无痕模式', 'warning')
+                log('2. 环境变量配置问题 - 检查 Vercel 环境变量是否正确', 'warning')
+                log('3. 代码未部署 - 确保最新代码已部署到 Vercel', 'warning')
+
+            } catch (error) {
+                log(`❌ 诊断过程出错: ${error.message}`, 'error')
+                logJSON({ error })
+            }
+        })
+
+        // 初始化提示
+        log('👋 欢迎使用登录问题诊断工具', 'info')
+        log('📖 请填写配置信息和测试账号，然后点击 "开始诊断"', 'info')
+    </script>
+</body>
+</html>
