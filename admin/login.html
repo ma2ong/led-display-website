@@ -160,24 +160,47 @@
         </div>
     </div>
 
-    <!-- Supabase Client -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Supabase Client - 必须先加载 -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onload="console.log('✅ Supabase CDN loaded')" onerror="console.error('❌ Failed to load Supabase CDN')"></script>
 
     <script type="module">
-        import {
-            handleLogin,
-            validateAdminSession,
-            showLoading,
-            hideLoading,
-            showError,
-            showSuccess
-        } from '../js/admin-auth.js'
+        // 动态导入确保在运行时执行
+        (async function() {
+            // 等待 Supabase CDN 加载
+            let retries = 0
+            while (!window.supabase && retries < 50) {
+                await new Promise(resolve => setTimeout(resolve, 100))
+                retries++
+            }
 
-        // 检查是否已经登录
-        const validation = await validateAdminSession()
-        if (validation.valid) {
-            window.location.href = '/admin.html'
-        }
+            if (!window.supabase) {
+                console.error('❌ Supabase CDN 未加载！请检查网络连接。')
+                document.getElementById('messageContainer').innerHTML = `
+                    <div style="background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 6px; padding: 15px; margin: 10px 0;">
+                        <h4 style="color: #721c24;">❌ 加载失败</h4>
+                        <p style="color: #721c24;">Supabase SDK 加载失败，请检查网络连接或刷新页面重试。</p>
+                    </div>
+                `
+                return
+            }
+
+            console.log('✅ Supabase CDN 已加载，开始初始化...')
+
+            const {
+                handleLogin,
+                validateAdminSession,
+                showLoading,
+                hideLoading,
+                showError,
+                showSuccess
+            } = await import('../js/admin-auth.js')
+
+            // 检查是否已经登录
+            const validation = await validateAdminSession()
+            if (validation.valid) {
+                window.location.href = '/admin.html'
+                return
+            }
 
         // 处理登录表单提交
         const loginForm = document.getElementById('loginForm')
@@ -274,12 +297,15 @@
             }
         })
 
-        // 支持回车键登录
-        document.getElementById('password').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                loginForm.dispatchEvent(new Event('submit'))
-            }
-        })
+            // 支持回车键登录
+            document.getElementById('password').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    loginForm.dispatchEvent(new Event('submit'))
+                }
+            })
+
+            console.log('✅ 登录页面初始化完成')
+        })() // 立即执行异步函数
     </script>
 </body>
 </html>
