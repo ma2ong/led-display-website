@@ -201,8 +201,12 @@
             messageContainer.innerHTML = ''
 
             try {
+                console.log('🔵 开始登录流程...', { email })
+
                 // 调用登录函数
                 const result = await handleLogin(email, password)
+
+                console.log('🔵 登录结果:', result)
 
                 if (result.success) {
                     showSuccess('登录成功！正在跳转...', messageContainer)
@@ -212,12 +216,60 @@
                         window.location.href = '/admin.html'
                     }, 1000)
                 } else {
-                    showError(result.message, messageContainer)
+                    console.error('🔴 登录失败:', result)
+
+                    // 显示详细错误信息
+                    let errorHtml = `
+                        <div style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 6px; padding: 15px; margin: 10px 0;">
+                            <h4 style="color: #856404; margin: 0 0 10px 0;">❌ 登录失败</h4>
+                            <p style="color: #856404; margin: 5px 0;"><strong>错误信息:</strong> ${result.message}</p>
+                            <hr style="border: none; border-top: 1px solid #ffc107; margin: 10px 0;">
+                            <p style="color: #856404; margin: 5px 0; font-size: 13px;"><strong>常见原因和解决方案:</strong></p>
+                            <ol style="color: #856404; font-size: 13px; margin: 5px 0; padding-left: 20px;">
+                                <li><strong>邮箱或密码错误</strong> - 请确认输入正确</li>
+                                <li><strong>用户不在管理员表中</strong> - 需要在 Supabase 运行 SQL 添加到 admin_users 表</li>
+                                <li><strong>账号被禁用</strong> - 需要在数据库中激活账号</li>
+                                <li><strong>邮箱未确认</strong> - 需要在 Supabase Dashboard 确认邮箱</li>
+                            </ol>
+                            <hr style="border: none; border-top: 1px solid #ffc107; margin: 10px 0;">
+                            <p style="color: #856404; margin: 5px 0; font-size: 13px;">
+                                <strong>📖 查看完整排查指南:</strong>
+                                <a href="https://github.com/ma2ong/led-display-website/blob/claude/analyze-project-optimization-011CUoyUJmjwcDiZpCXg5guX/LOGIN_TROUBLESHOOTING.md" target="_blank" style="color: #0066cc;">LOGIN_TROUBLESHOOTING.md</a>
+                            </p>
+                            <p style="color: #856404; margin: 5px 0; font-size: 13px;">
+                                <strong>🔧 快速修复 SQL:</strong> 在 Supabase SQL Editor 运行
+                                <a href="https://github.com/ma2ong/led-display-website/blob/claude/analyze-project-optimization-011CUoyUJmjwcDiZpCXg5guX/database/fix_admin_login.sql" target="_blank" style="color: #0066cc;">fix_admin_login.sql</a>
+                            </p>
+                            <button onclick="window.open('https://supabase.com/dashboard', '_blank')" style="margin-top: 10px; padding: 8px 15px; background: #0066cc; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                打开 Supabase Dashboard
+                            </button>
+                        </div>
+                    `
+                    messageContainer.innerHTML = errorHtml
                     hideLoading(loginBtn)
                 }
             } catch (error) {
-                console.error('Login error:', error)
-                showError('登录失败，请稍后重试', messageContainer)
+                console.error('🔴 登录异常:', error)
+
+                // 显示详细的异常信息
+                let errorDetails = ''
+                if (error.message) errorDetails += `<p><strong>错误:</strong> ${error.message}</p>`
+                if (error.code) errorDetails += `<p><strong>错误码:</strong> ${error.code}</p>`
+                if (error.details) errorDetails += `<p><strong>详情:</strong> ${error.details}</p>`
+
+                let errorHtml = `
+                    <div style="background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 6px; padding: 15px; margin: 10px 0;">
+                        <h4 style="color: #721c24; margin: 0 0 10px 0;">❌ 系统错误</h4>
+                        <div style="color: #721c24; font-size: 14px;">
+                            ${errorDetails}
+                        </div>
+                        <hr style="border: none; border-top: 1px solid #f5c6cb; margin: 10px 0;">
+                        <p style="color: #721c24; margin: 5px 0; font-size: 13px;">
+                            <strong>💡 提示:</strong> 请按 F12 打开浏览器控制台查看详细错误信息
+                        </p>
+                    </div>
+                `
+                messageContainer.innerHTML = errorHtml
                 hideLoading(loginBtn)
             }
         })
