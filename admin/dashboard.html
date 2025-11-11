@@ -333,11 +333,32 @@
         </div>
     </div>
 
-    <!-- Supabase Client (如果需要) -->
+    <!-- Supabase Client -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <script src="../lib/supabase.js"></script>
+
+    <!-- 初始化 Supabase 客户端 -->
+    <script>
+        // 创建 Supabase 客户端
+        const { createClient } = supabase
+        const supabaseUrl = 'https://jirudzbqcxviytcmxegf.supabase.co'
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppcnVkemJxY3h2aXl0Y214ZWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0NTExOTUsImV4cCI6MjA3MDAyNzE5NX0.qi0YhrxQmbRa6YsbVA13IpddImIjJKJyd1fgz5jIlt4'
+
+        // 全局 Supabase 客户端实例
+        window.supabase = createClient(supabaseUrl, supabaseAnonKey, {
+            auth: {
+                persistSession: true,
+                autoRefreshToken: true,
+                detectSessionInUrl: true
+            }
+        })
+
+        console.log('✅ Supabase 客户端已初始化')
+    </script>
+
     <!-- 统一数据API -->
     <script src="../js/unified-data-api.js"></script>
+
+    <!-- 管理后台功能 -->
     <script src="js/admin.js"></script>
 </body>
 </html>
