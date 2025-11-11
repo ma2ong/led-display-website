@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+<!-- Version: 2024-11-11-v2 | All JS inlined | No external admin.js -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -200,7 +201,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>LED显示屏管理后台</h1>
+        <h1>LED显示屏管理后台 <small style="font-size: 12px; color: #999;">(v2024-11-11)</small></h1>
         <div class="user-info">
             <span id="userWelcome">欢迎，管理员</span>
             <button class="logout-btn" onclick="logout()">退出登录</button>
@@ -210,6 +211,7 @@
     <div class="sidebar">
         <ul>
             <li><a href="#dashboard" class="nav-link active" onclick="showSection('dashboard')">仪表板</a></li>
+            <li><a href="media-manager.html" class="nav-link">📸 媒体管理</a></li>
             <li><a href="#products" class="nav-link" onclick="showSection('products')">产品管理</a></li>
             <li><a href="#news" class="nav-link" onclick="showSection('news')">新闻管理</a></li>
             <li><a href="#inquiries" class="nav-link" onclick="showSection('inquiries')">客户询问</a></li>
@@ -332,11 +334,330 @@
         </div>
     </div>
 
-    <!-- Supabase Client (如果需要) -->
+    <!-- Supabase Client -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-    <script src="../lib/supabase.js"></script>
+
+    <!-- 初始化 Supabase 客户端 -->
+    <script>
+        // 创建 Supabase 客户端
+        const { createClient } = supabase
+        const supabaseUrl = 'https://jirudzbqcxviytcmxegf.supabase.co'
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppcnVkemJxY3h2aXl0Y214ZWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0NTExOTUsImV4cCI6MjA3MDAyNzE5NX0.qi0YhrxQmbRa6YsbVA13IpddImIjJKJyd1fgz5jIlt4'
+
+        // 全局 Supabase 客户端实例
+        window.supabase = createClient(supabaseUrl, supabaseAnonKey, {
+            auth: {
+                persistSession: true,
+                autoRefreshToken: true,
+                detectSessionInUrl: true
+            }
+        })
+
+        console.log('✅ Supabase 客户端已初始化')
+    </script>
+
     <!-- 统一数据API -->
     <script src="../js/unified-data-api.js"></script>
-    <script src="js/admin.js"></script>
+
+    <!-- 管理后台功能 - 内联以避免加载问题 -->
+    <script>
+// 初始化
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('📊 管理后台初始化中...')
+    await checkAuth()
+    await loadDashboardStats()
+    setupEventListeners()
+    console.log('✅ 管理后台初始化完成')
+})
+
+async function checkAuth() {
+    try {
+        if (typeof supabase === 'undefined') {
+            console.warn('⚠️ Supabase 客户端未加载')
+            return
+        }
+        const { data: { session }, error } = await supabase.auth.getSession()
+        if (error || !session) {
+            console.warn('⚠️ 未登录，跳转到登录页')
+            window.location.href = '/admin/login.html'
+            return
+        }
+        const { data: adminUser, error: adminError } = await supabase
+            .from('admin_users')
+            .select('username, role')
+            .eq('user_id', session.user.id)
+            .eq('is_active', true)
+            .single()
+        if (adminError || !adminUser) {
+            console.error('❌ 非管理员用户')
+            alert('您没有访问管理后台的权限')
+            window.location.href = '/admin/login.html'
+            return
+        }
+        const welcomeEl = document.getElementById('userWelcome')
+        if (welcomeEl) {
+            welcomeEl.textContent = `欢迎，${adminUser.username} (${getRoleName(adminUser.role)})`
+        }
+        console.log('✅ 认证成功:', adminUser.username)
+    } catch (error) {
+        console.error('认证检查异常:', error)
+        window.location.href = '/admin/login.html'
+    }
+}
+
+function getRoleName(role) {
+    const roleNames = {
+        'super_admin': '超级管理员',
+        'admin': '管理员',
+        'editor': '编辑',
+        'viewer': '查看者'
+    }
+    return roleNames[role] || role
+}
+
+async function logout() {
+    try {
+        if (typeof supabase !== 'undefined') {
+            await supabase.auth.signOut()
+        }
+        localStorage.clear()
+        sessionStorage.clear()
+        window.location.href = '/admin/login.html'
+    } catch (error) {
+        console.error('登出异常:', error)
+        window.location.href = '/admin/login.html'
+    }
+}
+
+function showSection(sectionId) {
+    console.log('📄 切换到:', sectionId)
+    document.querySelectorAll('.content-section').forEach(section => {
+        section.classList.remove('active')
+    })
+    const targetSection = document.getElementById(sectionId)
+    if (targetSection) {
+        targetSection.classList.add('active')
+    }
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active')
+    })
+    const activeLink = document.querySelector(`a[onclick*="${sectionId}"]`)
+    if (activeLink) {
+        activeLink.classList.add('active')
+    }
+    switch(sectionId) {
+        case 'products': loadProducts(); break
+        case 'news': loadNews(); break
+        case 'inquiries': loadInquiries(); break
+        case 'users': loadUsers(); break
+    }
+}
+
+async function loadDashboardStats() {
+    try {
+        console.log('📊 加载统计数据...')
+        if (typeof window.dataAPI === 'undefined' && typeof supabase === 'undefined') {
+            setStatPlaceholders()
+            return
+        }
+        loadProductCount()
+        loadNewsCount()
+        loadInquiryCount()
+        loadUserCount()
+    } catch (error) {
+        console.error('加载统计数据错误:', error)
+        setStatPlaceholders()
+    }
+}
+
+function setStatPlaceholders() {
+    document.getElementById('totalProducts').textContent = '0'
+    document.getElementById('totalNews').textContent = '0'
+    document.getElementById('totalInquiries').textContent = '0'
+    document.getElementById('totalUsers').textContent = '0'
+}
+
+async function loadProductCount() {
+    try {
+        if (supabase) {
+            const { count, error } = await supabase.from('products').select('*', { count: 'exact', head: true })
+            if (!error) document.getElementById('totalProducts').textContent = count || 0
+        }
+    } catch (error) {
+        document.getElementById('totalProducts').textContent = '-'
+    }
+}
+
+async function loadNewsCount() {
+    try {
+        if (supabase) {
+            const { count, error } = await supabase.from('news').select('*', { count: 'exact', head: true })
+            if (!error) document.getElementById('totalNews').textContent = count || 0
+        }
+    } catch (error) {
+        document.getElementById('totalNews').textContent = '-'
+    }
+}
+
+async function loadInquiryCount() {
+    try {
+        if (supabase) {
+            const { count, error } = await supabase.from('inquiries').select('*', { count: 'exact', head: true })
+            if (!error) document.getElementById('totalInquiries').textContent = count || 0
+        }
+    } catch (error) {
+        document.getElementById('totalInquiries').textContent = '-'
+    }
+}
+
+async function loadUserCount() {
+    try {
+        if (supabase) {
+            const { count, error } = await supabase.from('admin_users').select('*', { count: 'exact', head: true })
+            if (!error) document.getElementById('totalUsers').textContent = count || 0
+        }
+    } catch (error) {
+        document.getElementById('totalUsers').textContent = '-'
+    }
+}
+
+async function loadProducts() {
+    const loading = document.getElementById('productsLoading')
+    const table = document.getElementById('productsTable')
+    const tbody = document.getElementById('productsTableBody')
+    try {
+        loading.style.display = 'block'
+        table.style.display = 'none'
+        if (supabase) {
+            const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false })
+            if (!error && data) {
+                tbody.innerHTML = data.map(p => `
+                    <tr>
+                        <td>${p.id}</td>
+                        <td>${p.name || '-'}</td>
+                        <td>${p.category || '-'}</td>
+                        <td>${p.price ? '¥' + p.price : '-'}</td>
+                        <td>${formatDate(p.created_at)}</td>
+                        <td><button class="btn btn-sm" onclick="alert('功能开发中')">编辑</button></td>
+                    </tr>
+                `).join('')
+            }
+        }
+        loading.style.display = 'none'
+        table.style.display = 'table'
+    } catch (error) {
+        loading.innerHTML = '<p style="color: red;">加载失败: ' + error.message + '</p>'
+    }
+}
+
+async function loadNews() {
+    const loading = document.getElementById('newsLoading')
+    const table = document.getElementById('newsTable')
+    const tbody = document.getElementById('newsTableBody')
+    try {
+        loading.style.display = 'block'
+        table.style.display = 'none'
+        if (supabase) {
+            const { data, error } = await supabase.from('news').select('*').order('created_at', { ascending: false })
+            if (!error && data) {
+                tbody.innerHTML = data.map(n => `
+                    <tr>
+                        <td>${n.id}</td>
+                        <td>${n.title || '-'}</td>
+                        <td>${n.author || '-'}</td>
+                        <td>${n.status || '-'}</td>
+                        <td>${formatDate(n.created_at)}</td>
+                        <td><button class="btn btn-sm" onclick="alert('功能开发中')">编辑</button></td>
+                    </tr>
+                `).join('')
+            }
+        }
+        loading.style.display = 'none'
+        table.style.display = 'table'
+    } catch (error) {
+        loading.innerHTML = '<p style="color: red;">加载失败: ' + error.message + '</p>'
+    }
+}
+
+async function loadInquiries() {
+    const loading = document.getElementById('inquiriesLoading')
+    const table = document.getElementById('inquiriesTable')
+    const tbody = document.getElementById('inquiriesTableBody')
+    try {
+        loading.style.display = 'block'
+        table.style.display = 'none'
+        if (supabase) {
+            const { data, error } = await supabase.from('inquiries').select('*').order('created_at', { ascending: false })
+            if (!error && data) {
+                tbody.innerHTML = data.map(i => `
+                    <tr>
+                        <td>${i.id}</td>
+                        <td>${i.name || '-'}</td>
+                        <td>${i.email || '-'}</td>
+                        <td>${i.company || '-'}</td>
+                        <td>${i.status || 'pending'}</td>
+                        <td>${formatDate(i.created_at)}</td>
+                        <td><button class="btn btn-sm" onclick="alert('功能开发中')">查看</button></td>
+                    </tr>
+                `).join('')
+            }
+        }
+        loading.style.display = 'none'
+        table.style.display = 'table'
+    } catch (error) {
+        loading.innerHTML = '<p style="color: red;">加载失败: ' + error.message + '</p>'
+    }
+}
+
+async function loadUsers() {
+    const loading = document.getElementById('usersLoading')
+    const table = document.getElementById('usersTable')
+    const tbody = document.getElementById('usersTableBody')
+    try {
+        loading.style.display = 'block'
+        table.style.display = 'none'
+        if (supabase) {
+            const { data, error } = await supabase.from('admin_users').select('*').order('created_at', { ascending: false })
+            if (!error && data) {
+                tbody.innerHTML = data.map(u => `
+                    <tr>
+                        <td>${u.id}</td>
+                        <td>${u.username || '-'}</td>
+                        <td>${getRoleName(u.role)}</td>
+                        <td>${formatDate(u.created_at)}</td>
+                        <td><button class="btn btn-sm" onclick="alert('功能开发中')">编辑</button></td>
+                    </tr>
+                `).join('')
+            }
+        }
+        loading.style.display = 'none'
+        table.style.display = 'table'
+    } catch (error) {
+        loading.innerHTML = '<p style="color: red;">加载失败: ' + error.message + '</p>'
+    }
+}
+
+function formatDate(dateString) {
+    if (!dateString) return '-'
+    try {
+        return new Date(dateString).toLocaleString('zh-CN', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        })
+    } catch (error) {
+        return dateString
+    }
+}
+
+function setupEventListeners() {
+    console.log('📡 事件监听器已设置')
+}
+
+window.showSection = showSection
+window.logout = logout
+    </script>
 </body>
 </html>
