@@ -411,12 +411,12 @@
 
     <script>
         // 初始化 Supabase 客户端
-        const { createClient } = supabase
+        const { createClient } = window.supabase
         const supabaseUrl = 'https://jirudzbqcxviytcmxegf.supabase.co'
         const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppcnVkemJxY3h2aXl0Y214ZWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0NTExOTUsImV4cCI6MjA3MDAyNzE5NX0.qi0YhrxQmbRa6YsbVA13IpddImIjJKJyd1fgz5jIlt4'
 
-        // 创建 Supabase 客户端
-        const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+        // 创建 Supabase 客户端实例
+        const supabaseClient = createClient(supabaseUrl, supabaseAnonKey, {
             auth: {
                 persistSession: true,
                 autoRefreshToken: true,
@@ -427,14 +427,14 @@
         // 检查管理员权限
         async function checkAdminAccess() {
             try {
-                const { data: { session }, error } = await supabase.auth.getSession()
+                const { data: { session }, error } = await supabaseClient.auth.getSession()
 
                 if (error || !session) {
                     console.warn('未登录')
                     return false
                 }
 
-                const { data: adminUser, error: adminError } = await supabase
+                const { data: adminUser, error: adminError } = await supabaseClient
                     .from('admin_users')
                     .select('role, is_active')
                     .eq('user_id', session.user.id)
@@ -628,7 +628,7 @@
                     const filename = `${item.category}/${timestamp}-${randomStr}.${ext}`
 
                     // 上传到 Supabase Storage
-                    const { data, error } = await supabase.storage
+                    const { data, error } = await supabaseClient.storage
                         .from('led-images')
                         .upload(filename, item.file, {
                             cacheControl: '3600',
@@ -638,14 +638,14 @@
                     if (error) throw error
 
                     // 获取公开 URL
-                    const { data: urlData } = supabase.storage
+                    const { data: urlData } = supabaseClient.storage
                         .from('led-images')
                         .getPublicUrl(filename)
 
                     // 保存元数据到数据库
-                    const { data: user } = await supabase.auth.getUser()
+                    const { data: user } = await supabaseClient.auth.getUser()
 
-                    await supabase.from('image_metadata').insert({
+                    await supabaseClient.from('image_metadata').insert({
                         filename: data.path.split('/').pop(),
                         original_filename: item.file.name,
                         storage_path: data.path,
@@ -683,7 +683,7 @@
 
         async function loadImages() {
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('image_metadata')
                     .select('*')
                     .eq('is_active', true)
@@ -782,14 +782,14 @@
                 const image = allImages.find(img => img.id === imageId)
 
                 // 从 Storage 删除
-                const { error: storageError } = await supabase.storage
+                const { error: storageError } = await supabaseClient.storage
                     .from('led-images')
                     .remove([image.storage_path])
 
                 if (storageError) throw storageError
 
                 // 从数据库删除元数据
-                const { error: dbError } = await supabase
+                const { error: dbError } = await supabaseClient
                     .from('image_metadata')
                     .delete()
                     .eq('id', imageId)
