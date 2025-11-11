@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片管理 - 联锦LED后台</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: #f8f9fa;
+        }
+
+        .header {
+            background: white;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .upload-zone {
+            border: 3px dashed #667eea;
+            border-radius: 10px;
+            padding: 60px 20px;
+            text-align: center;
+            background: #f8f9ff;
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-bottom: 30px;
+        }
+
+        .upload-zone.dragover {
+            background: #e8ecff;
+            border-color: #4f5fd9;
+            transform: scale(1.02);
+        }
+
+        .upload-zone i {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .category-tabs {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .category-btn {
+            margin: 5px;
+            padding: 10px 20px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        .category-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .image-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+
+        .image-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .image-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .image-card-body {
+            padding: 15px;
+        }
+
+        .image-card-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .image-card-info {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .image-card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .image-card-actions button {
+            flex: 1;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-radius: 5px;
+        }
+
+        .upload-preview {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .upload-preview-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .upload-preview-item:last-child {
+            border-bottom: none;
+        }
+
+        .upload-preview-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 15px;
+        }
+
+        .upload-preview-info {
+            flex: 1;
+        }
+
+        .progress {
+            height: 5px;
+            margin-top: 5px;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .stats-card i {
+            font-size: 36px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stats-card h3 {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .stats-card p {
+            color: #666;
+            margin: 0;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-overlay.show {
+            display: flex;
+        }
+
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="text-center">
+            <div class="spinner-border text-light" role="status"></div>
+            <p class="text-light mt-3">正在处理...</p>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <!-- Header -->
+        <div class="header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="mb-0">📸 图片管理</h2>
+                    <p class="text-muted mb-0">拖拽上传、自动分类、云端存储</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-secondary" onclick="window.location.href='dashboard.html'">
+                        <i class="fas fa-arrow-left"></i> 返回后台
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Statistics -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <i class="fas fa-images"></i>
+                        <h3 id="totalImages">0</h3>
+                        <p>总图片数</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <i class="fas fa-database"></i>
+                        <h3 id="totalSize">0 MB</h3>
+                        <p>总大小</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <i class="fas fa-folder"></i>
+                        <h3 id="totalCategories">0</h3>
+                        <p>分类数量</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="stats-card">
+                        <i class="fas fa-clock"></i>
+                        <h3 id="recentUploads">0</h3>
+                        <p>最近上传</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upload Zone -->
+            <div class="upload-zone" id="uploadZone">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h4>拖拽图片到这里上传</h4>
+                <p class="text-muted">或点击选择文件</p>
+                <p class="text-muted small">支持 JPG, PNG, WebP, GIF（最大 5MB）</p>
+                <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
+            </div>
+
+            <!-- Category Selection -->
+            <div class="category-tabs">
+                <h5 class="mb-3">选择分类</h5>
+                <div id="categoryButtons">
+                    <button class="category-btn active" data-category="all">
+                        <i class="fas fa-th"></i> 全部
+                    </button>
+                    <button class="category-btn" data-category="products">
+                        <i class="fas fa-box"></i> 产品图片
+                    </button>
+                    <button class="category-btn" data-category="cases">
+                        <i class="fas fa-briefcase"></i> 案例图片
+                    </button>
+                    <button class="category-btn" data-category="certificates">
+                        <i class="fas fa-award"></i> 证书资质
+                    </button>
+                    <button class="category-btn" data-category="about">
+                        <i class="fas fa-building"></i> 关于我们
+                    </button>
+                    <button class="category-btn" data-category="backgrounds">
+                        <i class="fas fa-image"></i> 背景图片
+                    </button>
+                    <button class="category-btn" data-category="logos">
+                        <i class="fas fa-star"></i> Logo图标
+                    </button>
+                    <button class="category-btn" data-category="other">
+                        <i class="fas fa-folder"></i> 其他
+                    </button>
+                </div>
+            </div>
+
+            <!-- Upload Preview -->
+            <div class="upload-preview" id="uploadPreview" style="display: none;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">待上传图片 (<span id="uploadCount">0</span>)</h5>
+                    <div>
+                        <button class="btn btn-sm btn-success" id="uploadBtn">
+                            <i class="fas fa-upload"></i> 开始上传
+                        </button>
+                        <button class="btn btn-sm btn-secondary" id="clearBtn">
+                            <i class="fas fa-times"></i> 清空
+                        </button>
+                    </div>
+                </div>
+                <div id="previewList"></div>
+            </div>
+
+            <!-- Image Grid -->
+            <div class="my-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">图片列表</h5>
+                    <div>
+                        <input type="text" class="form-control form-control-sm d-inline-block"
+                               style="width: 250px;" placeholder="搜索图片..." id="searchInput">
+                        <button class="btn btn-sm btn-primary" id="refreshBtn">
+                            <i class="fas fa-sync-alt"></i> 刷新
+                        </button>
+                    </div>
+                </div>
+                <div class="image-grid" id="imageGrid">
+                    <!-- Images will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Detail Modal -->
+    <div class="modal fade" id="imageModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">图片详情</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img id="modalImage" src="" class="img-fluid rounded" alt="">
+                        </div>
+                        <div class="col-md-6">
+                            <h6>基本信息</h6>
+                            <table class="table table-sm">
+                                <tr>
+                                    <td>文件名：</td>
+                                    <td id="modalFilename"></td>
+                                </tr>
+                                <tr>
+                                    <td>分类：</td>
+                                    <td id="modalCategory"></td>
+                                </tr>
+                                <tr>
+                                    <td>大小：</td>
+                                    <td id="modalSize"></td>
+                                </tr>
+                                <tr>
+                                    <td>尺寸：</td>
+                                    <td id="modalDimensions"></td>
+                                </tr>
+                                <tr>
+                                    <td>上传时间：</td>
+                                    <td id="modalUploadTime"></td>
+                                </tr>
+                            </table>
+                            <h6 class="mt-3">图片 URL</h6>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" id="modalURL" readonly>
+                                <button class="btn btn-outline-secondary" type="button" id="copyURLBtn">
+                                    <i class="fas fa-copy"></i> 复制
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="deleteImageBtn">
+                        <i class="fas fa-trash"></i> 删除
+                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // 初始化 Supabase 客户端
+        const { createClient } = supabase
+        const supabaseUrl = 'https://jirudzbqcxviytcmxegf.supabase.co'
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImppcnVkemJxY3h2aXl0Y214ZWdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ0NTExOTUsImV4cCI6MjA3MDAyNzE5NX0.qi0YhrxQmbRa6YsbVA13IpddImIjJKJyd1fgz5jIlt4'
+
+        // 创建 Supabase 客户端
+        const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+            auth: {
+                persistSession: true,
+                autoRefreshToken: true,
+                detectSessionInUrl: true
+            }
+        })
+
+        // 检查管理员权限
+        async function checkAdminAccess() {
+            try {
+                const { data: { session }, error } = await supabase.auth.getSession()
+
+                if (error || !session) {
+                    console.warn('未登录')
+                    return false
+                }
+
+                const { data: adminUser, error: adminError } = await supabase
+                    .from('admin_users')
+                    .select('role, is_active')
+                    .eq('user_id', session.user.id)
+                    .eq('is_active', true)
+                    .single()
+
+                if (adminError || !adminUser) {
+                    console.error('非管理员用户')
+                    return false
+                }
+
+                return true
+            } catch (error) {
+                console.error('认证检查错误:', error)
+                return false
+            }
+        }
+
+        // 主初始化
+        ;(async function() {
+            const hasAccess = await checkAdminAccess()
+            if (!hasAccess) {
+                alert('您没有访问权限，请先登录')
+                window.location.href = '/admin/login.html'
+                return
+            }
+
+        // 全局变量
+        let pendingFiles = []
+        let currentCategory = 'all'
+        let allImages = []
+
+        // DOM 元素
+        const uploadZone = document.getElementById('uploadZone')
+        const fileInput = document.getElementById('fileInput')
+        const uploadPreview = document.getElementById('uploadPreview')
+        const previewList = document.getElementById('previewList')
+        const uploadBtn = document.getElementById('uploadBtn')
+        const clearBtn = document.getElementById('clearBtn')
+        const imageGrid = document.getElementById('imageGrid')
+        const loadingOverlay = document.getElementById('loadingOverlay')
+        const imageModal = new bootstrap.Modal(document.getElementById('imageModal'))
+
+        // 初始化
+        init()
+
+        async function init() {
+            setupEventListeners()
+            await loadImages()
+            await loadStats()
+        }
+
+        function setupEventListeners() {
+            // 上传区域点击
+            uploadZone.addEventListener('click', () => fileInput.click())
+
+            // 文件选择
+            fileInput.addEventListener('change', handleFileSelect)
+
+            // 拖拽上传
+            uploadZone.addEventListener('dragover', (e) => {
+                e.preventDefault()
+                uploadZone.classList.add('dragover')
+            })
+
+            uploadZone.addEventListener('dragleave', () => {
+                uploadZone.classList.remove('dragover')
+            })
+
+            uploadZone.addEventListener('drop', (e) => {
+                e.preventDefault()
+                uploadZone.classList.remove('dragover')
+                handleFileSelect({ target: { files: e.dataTransfer.files } })
+            })
+
+            // 分类按钮
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'))
+                    this.classList.add('active')
+                    currentCategory = this.dataset.category
+                    filterImages()
+                })
+            })
+
+            // 上传和清空按钮
+            uploadBtn.addEventListener('click', uploadFiles)
+            clearBtn.addEventListener('click', clearPendingFiles)
+
+            // 刷新按钮
+            document.getElementById('refreshBtn').addEventListener('click', () => loadImages())
+
+            // 搜索
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                filterImages(e.target.value)
+            })
+
+            // 复制 URL
+            document.getElementById('copyURLBtn').addEventListener('click', () => {
+                const url = document.getElementById('modalURL').value
+                navigator.clipboard.writeText(url)
+                alert('URL 已复制到剪贴板！')
+            })
+        }
+
+        function handleFileSelect(e) {
+            const files = Array.from(e.target.files)
+
+            files.forEach(file => {
+                // 验证文件类型
+                if (!file.type.startsWith('image/')) {
+                    alert(`${file.name} 不是图片文件`)
+                    return
+                }
+
+                // 验证文件大小（5MB）
+                if (file.size > 5 * 1024 * 1024) {
+                    alert(`${file.name} 超过 5MB 限制`)
+                    return
+                }
+
+                // 添加到待上传列表
+                pendingFiles.push({
+                    file: file,
+                    category: currentCategory === 'all' ? 'other' : currentCategory,
+                    preview: URL.createObjectURL(file)
+                })
+            })
+
+            updatePreview()
+            fileInput.value = '' // 清空 input
+        }
+
+        function updatePreview() {
+            if (pendingFiles.length === 0) {
+                uploadPreview.style.display = 'none'
+                return
+            }
+
+            uploadPreview.style.display = 'block'
+            document.getElementById('uploadCount').textContent = pendingFiles.length
+
+            previewList.innerHTML = pendingFiles.map((item, index) => `
+                <div class="upload-preview-item">
+                    <img src="${item.preview}" class="upload-preview-img" alt="">
+                    <div class="upload-preview-info">
+                        <strong>${item.file.name}</strong>
+                        <p class="text-muted small mb-0">
+                            ${formatFileSize(item.file.size)} | ${item.category}
+                        </p>
+                        <div class="progress" id="progress-${index}" style="display: none;">
+                            <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger" onclick="window.removePendingFile(${index})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `).join('')
+        }
+
+        window.removePendingFile = function(index) {
+            URL.revokeObjectURL(pendingFiles[index].preview)
+            pendingFiles.splice(index, 1)
+            updatePreview()
+        }
+
+        function clearPendingFiles() {
+            pendingFiles.forEach(item => URL.revokeObjectURL(item.preview))
+            pendingFiles = []
+            updatePreview()
+        }
+
+        async function uploadFiles() {
+            if (pendingFiles.length === 0) return
+
+            loadingOverlay.classList.add('show')
+
+            for (let i = 0; i < pendingFiles.length; i++) {
+                const item = pendingFiles[i]
+                const progressBar = document.querySelector(`#progress-${i} .progress-bar`)
+                const progressEl = document.getElementById(`progress-${i}`)
+
+                if (progressEl) progressEl.style.display = 'block'
+
+                try {
+                    // 生成唯一文件名
+                    const timestamp = Date.now()
+                    const randomStr = Math.random().toString(36).substring(7)
+                    const ext = item.file.name.split('.').pop()
+                    const filename = `${item.category}/${timestamp}-${randomStr}.${ext}`
+
+                    // 上传到 Supabase Storage
+                    const { data, error } = await supabase.storage
+                        .from('led-images')
+                        .upload(filename, item.file, {
+                            cacheControl: '3600',
+                            upsert: false
+                        })
+
+                    if (error) throw error
+
+                    // 获取公开 URL
+                    const { data: urlData } = supabase.storage
+                        .from('led-images')
+                        .getPublicUrl(filename)
+
+                    // 保存元数据到数据库
+                    const { data: user } = await supabase.auth.getUser()
+
+                    await supabase.from('image_metadata').insert({
+                        filename: data.path.split('/').pop(),
+                        original_filename: item.file.name,
+                        storage_path: data.path,
+                        public_url: urlData.publicUrl,
+                        category: item.category,
+                        file_size: item.file.size,
+                        mime_type: item.file.type,
+                        uploaded_by: user.user.id
+                    })
+
+                    // 更新进度
+                    if (progressBar) {
+                        progressBar.style.width = '100%'
+                        progressBar.classList.add('bg-success')
+                    }
+
+                } catch (error) {
+                    console.error('Upload error:', error)
+                    if (progressBar) {
+                        progressBar.classList.add('bg-danger')
+                    }
+                    alert(`上传 ${item.file.name} 失败: ${error.message}`)
+                }
+            }
+
+            // 清空待上传列表
+            clearPendingFiles()
+
+            // 重新加载图片列表
+            await loadImages()
+            await loadStats()
+
+            loadingOverlay.classList.remove('show')
+        }
+
+        async function loadImages() {
+            try {
+                const { data, error } = await supabase
+                    .from('image_metadata')
+                    .select('*')
+                    .eq('is_active', true)
+                    .order('created_at', { ascending: false })
+
+                if (error) throw error
+
+                allImages = data || []
+                filterImages()
+            } catch (error) {
+                console.error('Load images error:', error)
+                alert('加载图片失败: ' + error.message)
+            }
+        }
+
+        function filterImages(searchTerm = '') {
+            let filtered = allImages
+
+            // 分类筛选
+            if (currentCategory !== 'all') {
+                filtered = filtered.filter(img => img.category === currentCategory)
+            }
+
+            // 搜索筛选
+            if (searchTerm) {
+                const term = searchTerm.toLowerCase()
+                filtered = filtered.filter(img =>
+                    img.filename.toLowerCase().includes(term) ||
+                    img.original_filename.toLowerCase().includes(term)
+                )
+            }
+
+            displayImages(filtered)
+        }
+
+        function displayImages(images) {
+            if (images.length === 0) {
+                imageGrid.innerHTML = '<div class="col-12 text-center text-muted">暂无图片</div>'
+                return
+            }
+
+            imageGrid.innerHTML = images.map(img => `
+                <div class="image-card">
+                    <img src="${img.public_url}" alt="${img.filename}" onclick="window.showImageDetail('${img.id}')">
+                    <div class="image-card-body">
+                        <div class="image-card-title" title="${img.original_filename}">
+                            ${img.original_filename}
+                        </div>
+                        <div class="image-card-info">
+                            ${formatFileSize(img.file_size)} | ${img.category}
+                        </div>
+                        <div class="image-card-actions">
+                            <button class="btn btn-sm btn-outline-primary" onclick="window.copyImageURL('${img.public_url}')">
+                                <i class="fas fa-copy"></i> 复制
+                            </button>
+                            <button class="btn btn-sm btn-outline-info" onclick="window.showImageDetail('${img.id}')">
+                                <i class="fas fa-eye"></i> 详情
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('')
+        }
+
+        window.showImageDetail = async function(imageId) {
+            const image = allImages.find(img => img.id === imageId)
+            if (!image) return
+
+            document.getElementById('modalImage').src = image.public_url
+            document.getElementById('modalFilename').textContent = image.original_filename
+            document.getElementById('modalCategory').textContent = image.category
+            document.getElementById('modalSize').textContent = formatFileSize(image.file_size)
+            document.getElementById('modalDimensions').textContent = image.width && image.height
+                ? `${image.width} x ${image.height}`
+                : '未知'
+            document.getElementById('modalUploadTime').textContent = new Date(image.created_at).toLocaleString('zh-CN')
+            document.getElementById('modalURL').value = image.public_url
+
+            // 删除按钮
+            document.getElementById('deleteImageBtn').onclick = () => deleteImage(imageId)
+
+            imageModal.show()
+        }
+
+        window.copyImageURL = function(url) {
+            navigator.clipboard.writeText(url)
+            alert('URL 已复制！')
+        }
+
+        async function deleteImage(imageId) {
+            if (!confirm('确定要删除这张图片吗？')) return
+
+            loadingOverlay.classList.add('show')
+
+            try {
+                const image = allImages.find(img => img.id === imageId)
+
+                // 从 Storage 删除
+                const { error: storageError } = await supabase.storage
+                    .from('led-images')
+                    .remove([image.storage_path])
+
+                if (storageError) throw storageError
+
+                // 从数据库删除元数据
+                const { error: dbError } = await supabase
+                    .from('image_metadata')
+                    .delete()
+                    .eq('id', imageId)
+
+                if (dbError) throw dbError
+
+                imageModal.hide()
+                await loadImages()
+                await loadStats()
+            } catch (error) {
+                console.error('Delete error:', error)
+                alert('删除失败: ' + error.message)
+            }
+
+            loadingOverlay.classList.remove('show')
+        }
+
+        async function loadStats() {
+            try {
+                // 总图片数
+                document.getElementById('totalImages').textContent = allImages.length
+
+                // 总大小
+                const totalBytes = allImages.reduce((sum, img) => sum + (img.file_size || 0), 0)
+                document.getElementById('totalSize').textContent = formatFileSize(totalBytes)
+
+                // 分类数量
+                const categories = new Set(allImages.map(img => img.category))
+                document.getElementById('totalCategories').textContent = categories.size
+
+                // 最近上传（24小时内）
+                const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000)
+                const recent = allImages.filter(img => new Date(img.created_at) > oneDayAgo)
+                document.getElementById('recentUploads').textContent = recent.length
+            } catch (error) {
+                console.error('Load stats error:', error)
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B'
+            const k = 1024
+            const sizes = ['B', 'KB', 'MB', 'GB']
+            const i = Math.floor(Math.log(bytes) / Math.log(k))
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+        }
+
+        })() // 结束 IIFE
+    </script>
+</body>
+</html>
