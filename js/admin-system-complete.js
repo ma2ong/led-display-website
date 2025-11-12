@@ -896,9 +896,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             currentAdmin = null;
             localStorage.removeItem('admin_user');
-            
+
             // 跳转到登录页面
-            window.location.href = 'admin-login-fixed.html';
+            window.location.href = 'admin/login.html';
         }
     };
     
@@ -1102,6 +1102,6 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         // 未登录，跳转到登录页面
         console.log('🔐 未登录，跳转到登录页面');
-        window.location.href = 'admin-login-fixed.html';
+        window.location.href = 'admin/login.html';
     }
 });
