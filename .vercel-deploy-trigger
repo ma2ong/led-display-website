@@ -1,0 +1,9 @@
+# Vercel Deployment Trigger
+# This file is used to manually trigger Vercel deployments when auto-deploy fails
+
+Last manual deployment trigger: 2025-11-12 08:10:00 UTC
+Reason: Force deployment of media manager fixes (commits from 2025-11-11)
+Includes:
+- Media manager variable conflict fix (a69666a)
+- Safe SQL script for Storage setup (90a364b)
+- Media management link in admin.html (5d6e9b5)
