@@ -233,7 +233,7 @@
                     <p class="text-muted mb-0">拖拽上传、自动分类、云端存储</p>
                 </div>
                 <div>
-                    <button class="btn btn-outline-secondary" onclick="window.location.href='dashboard.html'">
+                    <button class="btn btn-outline-secondary" onclick="window.location.href='../admin.html'">
                         <i class="fas fa-arrow-left"></i> 返回后台
                     </button>
                 </div>
@@ -427,10 +427,25 @@
         // 检查管理员权限
         async function checkAdminAccess() {
             try {
+                // 方式1: 检查 localStorage 中的 admin_user（与 admin.html 兼容）
+                const localAdminUser = localStorage.getItem('admin_user')
+                if (localAdminUser) {
+                    try {
+                        const adminData = JSON.parse(localAdminUser)
+                        if (adminData && adminData.email) {
+                            console.log('✅ 通过 localStorage 认证:', adminData.email)
+                            return true
+                        }
+                    } catch (e) {
+                        console.warn('localStorage 数据解析失败:', e)
+                    }
+                }
+
+                // 方式2: 检查 Supabase session
                 const { data: { session }, error } = await supabaseClient.auth.getSession()
 
                 if (error || !session) {
-                    console.warn('未登录')
+                    console.warn('Supabase 未登录')
                     return false
                 }
 
@@ -446,6 +461,7 @@
                     return false
                 }
 
+                console.log('✅ 通过 Supabase 认证')
                 return true
             } catch (error) {
                 console.error('认证检查错误:', error)
