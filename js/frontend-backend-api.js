@@ -548,5 +548,3 @@ window.getLatestNews = async (limit = 3) => {
 };
 
 console.log('🚀 前后端API连接器加载完成');
-
-export default FrontendBackendAPI;
