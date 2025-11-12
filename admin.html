@@ -936,28 +936,54 @@
                     <!-- 上传区域 -->
                     <div class="card mb-4">
                         <div class="card-body">
-                            <h5 class="card-title mb-3">上传图片</h5>
+                            <h5 class="card-title mb-3">📤 上传图片到指定位置</h5>
+
+                            <!-- 页面选择 -->
                             <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label class="form-label">选择分类</label>
-                                    <select class="form-select" id="mediaCategorySelect">
-                                        <option value="product">产品图片</option>
-                                        <option value="banner">横幅广告</option>
-                                        <option value="icon">图标</option>
-                                        <option value="logo">Logo</option>
-                                        <option value="team">团队照片</option>
-                                        <option value="project">项目案例</option>
-                                        <option value="certificate">证书资质</option>
-                                        <option value="news">新闻图片</option>
-                                        <option value="background">背景图</option>
-                                        <option value="other">其他</option>
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">1. 选择页面</label>
+                                    <select class="form-select" id="mediaPageSelect" onchange="updateMediaLocations()">
+                                        <option value="">-- 请选择页面 --</option>
+                                        <option value="index">首页 (index.html)</option>
+                                        <option value="products">产品页 (products.html)</option>
+                                        <option value="about">关于我们 (about.html)</option>
+                                        <option value="contact">联系我们 (contact.html)</option>
+                                        <option value="news">新闻页 (news.html)</option>
                                     </select>
                                 </div>
+
+                                <!-- 位置选择 -->
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">2. 选择位置</label>
+                                    <select class="form-select" id="mediaLocationSelect" onchange="updateMediaPreviewInfo()" disabled>
+                                        <option value="">-- 先选择页面 --</option>
+                                    </select>
+                                </div>
+
+                                <!-- 预览按钮 -->
+                                <div class="col-md-4">
+                                    <label class="form-label fw-bold">3. 预览位置</label>
+                                    <button class="btn btn-outline-primary w-100" id="mediaPreviewLocationBtn" onclick="previewFrontendLocation()" disabled>
+                                        <i class="fas fa-eye"></i> 查看前端位置
+                                    </button>
+                                </div>
                             </div>
+
+                            <!-- 位置信息提示 -->
+                            <div id="mediaLocationInfo" class="alert alert-info" style="display: none;">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>上传位置：</strong>
+                                <span id="mediaLocationDesc"></span>
+                                <br>
+                                <small class="text-muted" id="mediaLocationDetail"></small>
+                            </div>
+
+                            <!-- 上传区域 -->
                             <div class="upload-zone" id="mediaUploadZone">
                                 <i class="fas fa-cloud-upload-alt"></i>
                                 <h5>拖拽文件到此处上传</h5>
                                 <p class="text-muted">或点击选择文件</p>
+                                <p class="text-muted"><small>支持 JPG, PNG, WebP 格式，建议大小不超过 2MB</small></p>
                                 <input type="file" id="mediaFileInput" multiple accept="image/*" style="display: none;">
                             </div>
                             <div id="mediaUploadPreview" style="display: none;">
@@ -1046,6 +1072,163 @@
         // 媒体管理全局变量
         let mediaPendingFiles = []
         let mediaSupabaseClient = null
+        let currentMediaLocation = null
+
+        // 前端页面位置映射配置
+        const mediaLocationMap = {
+            index: {
+                name: '首页',
+                locations: [
+                    { id: 'hero-banner-1', name: 'Hero轮播图1', path: '/', element: '.carousel-item:nth-child(1) img', desc: '首页顶部轮播图第1张', size: '1920x800px' },
+                    { id: 'hero-banner-2', name: 'Hero轮播图2', path: '/', element: '.carousel-item:nth-child(2) img', desc: '首页顶部轮播图第2张', size: '1920x800px' },
+                    { id: 'hero-banner-3', name: 'Hero轮播图3', path: '/', element: '.carousel-item:nth-child(3) img', desc: '首页顶部轮播图第3张', size: '1920x800px' },
+                    { id: 'product-indoor-p25', name: '产品卡片 - Indoor P2.5', path: '/#products', element: '.product-card:nth-child(1) img', desc: 'Indoor LED Display P2.5 产品主图', size: '400x300px' },
+                    { id: 'product-outdoor-p10', name: '产品卡片 - Outdoor P10', path: '/#products', element: '.product-card:nth-child(2) img', desc: 'Outdoor LED Display P10 产品主图', size: '400x300px' },
+                    { id: 'product-rental-p391', name: '产品卡片 - Rental P3.91', path: '/#products', element: '.product-card:nth-child(3) img', desc: 'Rental LED Display P3.91 产品主图', size: '400x300px' },
+                    { id: 'product-transparent', name: '产品卡片 - Transparent LED', path: '/#products', element: '.product-card:nth-child(4) img', desc: 'Transparent LED Display 产品主图', size: '400x300px' },
+                    { id: 'product-creative', name: '产品卡片 - Creative LED', path: '/#products', element: '.product-card:nth-child(5) img', desc: 'Creative LED Display 产品主图', size: '400x300px' },
+                    { id: 'product-fine-pitch', name: '产品卡片 - Fine Pitch', path: '/#products', element: '.product-card:nth-child(6) img', desc: 'Fine Pitch LED Display 产品主图', size: '400x300px' },
+                    { id: 'company-logo', name: '公司Logo', path: '/', element: '.navbar-brand img', desc: '网站顶部导航栏Logo', size: '200x50px' },
+                    { id: 'about-section-bg', name: '关于我们背景图', path: '/#about', element: '.about-section', desc: '关于我们section背景图', size: '1920x600px' }
+                ]
+            },
+            products: {
+                name: '产品页',
+                locations: [
+                    { id: 'product-page-indoor-main', name: 'Indoor P2.5 主图', path: '/products.html#indoor', element: '#indoor-p25-main', desc: 'Indoor P2.5 产品详情主图', size: '800x600px' },
+                    { id: 'product-page-indoor-detail-1', name: 'Indoor P2.5 细节图1', path: '/products.html#indoor', element: '#indoor-p25-detail-1', desc: 'Indoor P2.5 产品细节图1', size: '600x450px' },
+                    { id: 'product-page-indoor-detail-2', name: 'Indoor P2.5 细节图2', path: '/products.html#indoor', element: '#indoor-p25-detail-2', desc: 'Indoor P2.5 产品细节图2', size: '600x450px' },
+                    { id: 'product-page-outdoor-main', name: 'Outdoor P10 主图', path: '/products.html#outdoor', element: '#outdoor-p10-main', desc: 'Outdoor P10 产品详情主图', size: '800x600px' },
+                    { id: 'product-page-rental-main', name: 'Rental P3.91 主图', path: '/products.html#rental', element: '#rental-p391-main', desc: 'Rental P3.91 产品详情主图', size: '800x600px' },
+                    { id: 'product-page-transparent-main', name: 'Transparent LED 主图', path: '/products.html#transparent', element: '#transparent-main', desc: 'Transparent LED 产品详情主图', size: '800x600px' },
+                    { id: 'product-page-creative-main', name: 'Creative LED 主图', path: '/products.html#creative', element: '#creative-main', desc: 'Creative LED 产品详情主图', size: '800x600px' },
+                    { id: 'product-page-fine-pitch-main', name: 'Fine Pitch 主图', path: '/products.html#fine-pitch', element: '#fine-pitch-main', desc: 'Fine Pitch LED 产品详情主图', size: '800x600px' }
+                ]
+            },
+            about: {
+                name: '关于我们',
+                locations: [
+                    { id: 'about-hero-image', name: '关于我们主图', path: '/about.html', element: '.about-hero img', desc: '关于我们页面顶部主图', size: '1920x600px' },
+                    { id: 'company-building', name: '公司大楼照片', path: '/about.html#company', element: '.company-building img', desc: '公司办公大楼外景', size: '800x600px' },
+                    { id: 'factory-workshop', name: '工厂车间照片', path: '/about.html#company', element: '.factory-workshop img', desc: '生产车间内景', size: '800x600px' },
+                    { id: 'team-ceo', name: 'CEO照片', path: '/about.html#team', element: '.team-member:nth-child(1) img', desc: 'CEO/总经理照片', size: '300x400px' },
+                    { id: 'team-member-1', name: '团队成员1', path: '/about.html#team', element: '.team-member:nth-child(2) img', desc: '团队核心成员照片', size: '300x400px' },
+                    { id: 'team-member-2', name: '团队成员2', path: '/about.html#team', element: '.team-member:nth-child(3) img', desc: '团队核心成员照片', size: '300x400px' },
+                    { id: 'certificate-iso', name: 'ISO认证证书', path: '/about.html#certificates', element: '.certificate-iso img', desc: 'ISO质量认证证书', size: '600x800px' },
+                    { id: 'certificate-ce', name: 'CE认证证书', path: '/about.html#certificates', element: '.certificate-ce img', desc: 'CE产品认证证书', size: '600x800px' }
+                ]
+            },
+            contact: {
+                name: '联系我们',
+                locations: [
+                    { id: 'contact-hero', name: '联系我们主图', path: '/contact.html', element: '.contact-hero img', desc: '联系我们页面顶部图片', size: '1920x500px' },
+                    { id: 'office-location-map', name: '办公地点地图', path: '/contact.html#map', element: '.office-map img', desc: '办公室位置地图截图', size: '800x600px' }
+                ]
+            },
+            news: {
+                name: '新闻页',
+                locations: [
+                    { id: 'news-hero', name: '新闻页主图', path: '/news.html', element: '.news-hero img', desc: '新闻页面顶部图片', size: '1920x500px' },
+                    { id: 'news-article-1', name: '新闻文章1配图', path: '/news.html', element: '.news-article:nth-child(1) img', desc: '第1篇新闻文章配图', size: '600x400px' },
+                    { id: 'news-article-2', name: '新闻文章2配图', path: '/news.html', element: '.news-article:nth-child(2) img', desc: '第2篇新闻文章配图', size: '600x400px' },
+                    { id: 'news-article-3', name: '新闻文章3配图', path: '/news.html', element: '.news-article:nth-child(3) img', desc: '第3篇新闻文章配图', size: '600x400px' }
+                ]
+            }
+        }
+
+        // 更新位置选择下拉菜单
+        function updateMediaLocations() {
+            const pageSelect = document.getElementById('mediaPageSelect')
+            const locationSelect = document.getElementById('mediaLocationSelect')
+            const previewBtn = document.getElementById('mediaPreviewLocationBtn')
+            const locationInfo = document.getElementById('mediaLocationInfo')
+
+            const selectedPage = pageSelect.value
+
+            if (!selectedPage) {
+                locationSelect.disabled = true
+                locationSelect.innerHTML = '<option value="">-- 先选择页面 --</option>'
+                previewBtn.disabled = true
+                locationInfo.style.display = 'none'
+                return
+            }
+
+            // 填充位置选项
+            const locations = mediaLocationMap[selectedPage].locations
+            locationSelect.innerHTML = '<option value="">-- 请选择上传位置 --</option>'
+
+            locations.forEach(loc => {
+                const option = document.createElement('option')
+                option.value = loc.id
+                option.textContent = loc.name
+                option.dataset.location = JSON.stringify(loc)
+                locationSelect.appendChild(option)
+            })
+
+            locationSelect.disabled = false
+            locationInfo.style.display = 'none'
+        }
+
+        // 更新位置信息预览
+        function updateMediaPreviewInfo() {
+            const locationSelect = document.getElementById('mediaLocationSelect')
+            const previewBtn = document.getElementById('mediaPreviewLocationBtn')
+            const locationInfo = document.getElementById('mediaLocationInfo')
+            const locationDesc = document.getElementById('mediaLocationDesc')
+            const locationDetail = document.getElementById('mediaLocationDetail')
+
+            const selectedOption = locationSelect.options[locationSelect.selectedIndex]
+
+            if (!selectedOption || !selectedOption.dataset.location) {
+                previewBtn.disabled = true
+                locationInfo.style.display = 'none'
+                currentMediaLocation = null
+                return
+            }
+
+            const location = JSON.parse(selectedOption.dataset.location)
+            currentMediaLocation = location
+
+            // 显示位置信息
+            locationDesc.textContent = location.name
+            locationDetail.textContent = `页面: ${location.path} | 位置: ${location.desc} | 建议尺寸: ${location.size}`
+            locationInfo.style.display = 'block'
+            previewBtn.disabled = false
+        }
+
+        // 预览前端位置
+        function previewFrontendLocation() {
+            if (!currentMediaLocation) {
+                alert('请先选择要上传的位置')
+                return
+            }
+
+            // 在新窗口中打开前端页面
+            const frontendUrl = window.location.origin + currentMediaLocation.path
+            const previewWindow = window.open(frontendUrl, '_blank')
+
+            // 尝试高亮显示元素（如果可以访问的话）
+            if (previewWindow) {
+                setTimeout(() => {
+                    try {
+                        const element = previewWindow.document.querySelector(currentMediaLocation.element)
+                        if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+                            element.style.outline = '3px solid #667eea'
+                            element.style.outlineOffset = '5px'
+                            setTimeout(() => {
+                                element.style.outline = ''
+                                element.style.outlineOffset = ''
+                            }, 3000)
+                        }
+                    } catch (e) {
+                        console.log('无法访问预览窗口DOM（跨域限制）')
+                    }
+                }, 1000)
+            }
+
+            alert(`已在新窗口打开前端页面\n\n位置：${currentMediaLocation.desc}\n建议尺寸：${currentMediaLocation.size}\n\n注意：上传的图片将替换该位置的图片`)
+        }
 
         // 初始化媒体管理 Supabase 客户端
         function initMediaSupabase() {
@@ -1176,12 +1359,16 @@
                 return
             }
 
+            if (!currentMediaLocation) {
+                alert('请先选择要上传到的页面位置')
+                return
+            }
+
             if (!mediaSupabaseClient) {
                 alert('Supabase 未初始化，请刷新页面重试')
                 return
             }
 
-            const category = document.getElementById('mediaCategorySelect').value
             const uploadBtn = document.getElementById('mediaUploadBtn')
             uploadBtn.disabled = true
             uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 上传中...'
@@ -1189,11 +1376,12 @@
             try {
                 let successCount = 0
                 let failCount = 0
+                const uploadedImages = []
 
                 for (const file of mediaPendingFiles) {
                     try {
                         const fileExt = file.name.split('.').pop()
-                        const fileName = `${category}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`
+                        const fileName = `${currentMediaLocation.id}/${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`
 
                         const { data, error } = await mediaSupabaseClient.storage
                             .from('led-images')
@@ -1204,7 +1392,27 @@
                             failCount++
                         } else {
                             successCount++
-                            console.log('✅ 上传成功:', fileName)
+
+                            // 获取公开URL
+                            const { data: urlData } = mediaSupabaseClient.storage
+                                .from('led-images')
+                                .getPublicUrl(fileName)
+
+                            // 保存位置映射关系
+                            const imageMapping = {
+                                locationId: currentMediaLocation.id,
+                                locationName: currentMediaLocation.name,
+                                page: currentMediaLocation.path,
+                                element: currentMediaLocation.element,
+                                fileName: fileName,
+                                publicUrl: urlData.publicUrl,
+                                uploadedAt: new Date().toISOString(),
+                                size: file.size,
+                                originalName: file.name
+                            }
+
+                            uploadedImages.push(imageMapping)
+                            console.log('✅ 上传成功:', fileName, imageMapping)
                         }
                     } catch (error) {
                         console.error('文件上传错误:', error)
@@ -1212,11 +1420,27 @@
                     }
                 }
 
-                alert(`上传完成！\n成功: ${successCount} 个\n失败: ${failCount} 个`)
+                // 保存映射关系到 localStorage
+                if (uploadedImages.length > 0) {
+                    const existingMappings = JSON.parse(localStorage.getItem('image_location_mappings') || '{}')
+                    uploadedImages.forEach(img => {
+                        existingMappings[img.locationId] = img
+                    })
+                    localStorage.setItem('image_location_mappings', JSON.stringify(existingMappings))
+                    console.log('✅ 保存位置映射:', existingMappings)
+                }
 
                 if (successCount > 0) {
+                    alert(`✅ 上传完成！\n\n成功: ${successCount} 个\n失败: ${failCount} 个\n\n上传位置: ${currentMediaLocation.desc}\n\n点击"确定"后可以预览前端效果`)
                     clearMediaFiles()
                     loadMediaImages()
+
+                    // 询问是否预览
+                    if (confirm('是否现在预览前端页面效果？')) {
+                        previewFrontendLocation()
+                    }
+                } else {
+                    alert(`❌ 上传失败\n\n失败: ${failCount} 个`)
                 }
             } catch (error) {
                 console.error('上传过程出错:', error)
