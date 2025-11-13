@@ -318,7 +318,7 @@
         /* 页面编辑器主布局 */
         #page-editor-content .page-editor-layout {
             display: flex;
-            height: calc(100vh - 140px);
+            height: calc(100vh - 180px); /* 增加高度以避免重叠 */
             margin: -30px;
             background: white;
         }
@@ -439,6 +439,7 @@
             border-left: 1px solid #e0e0e0;
             display: flex;
             flex-direction: column;
+            max-height: calc(100vh - 180px); /* 限制最大高度 */
         }
 
         #page-editor-content .preview-header {
@@ -448,12 +449,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-shrink: 0; /* 防止收缩 */
         }
 
         #page-editor-content .preview-content {
             flex: 1;
             background: white;
             overflow: hidden;
+            position: relative;
+            min-height: 0; /* 重要：允许flex子元素收缩 */
         }
 
         #page-editor-content .preview-iframe {
@@ -1973,8 +1977,14 @@
             setTimeout(() => {
                 const iframe = document.getElementById('pageEditorPreviewIframe');
                 if (iframe && !iframe.src) {
-                    iframe.src = 'index.html';
-                    console.log('🖼️ 初始化预览iframe');
+                    // admin.html在根目录，所以直接使用相对路径
+                    iframe.src = './index.html';
+                    console.log('🖼️ 初始化预览iframe: ./index.html');
+
+                    // 添加错误处理
+                    iframe.onerror = function() {
+                        console.error('❌ iframe加载失败');
+                    };
                 }
             }, 100);
 
@@ -1990,43 +2000,80 @@
 
         // 适配器函数：将page-editor-main.js的函数适配到admin.html环境
         function loadPageEditorTab(pageId, clickedElement) {
+            ensureEditorAreaId(() => {
+                if (typeof loadPageEditor === 'function') {
+                    loadPageEditor(pageId, clickedElement);
+                }
+
+                // 更新菜单激活状态
+                const pageEditorContent = document.getElementById('page-editor-content');
+                if (pageEditorContent) {
+                    pageEditorContent.querySelectorAll('.page-menu-link').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    if (clickedElement) {
+                        clickedElement.classList.add('active');
+                    }
+                }
+
+                // 更新当前页面徽章
+                updateCurrentPageBadge(pageId);
+
+                // 自动更新预览到对应页面
+                setTimeout(() => {
+                    refreshEditorPreview();
+                }, 300);
+            });
+        }
+
+        // 确保editorArea的ID正确，执行回调
+        function ensureEditorAreaId(callback) {
             const editorArea = document.getElementById('pageEditorArea');
             if (!editorArea) {
                 console.error('编辑器区域未找到');
                 return;
             }
 
-            // 调用原始的loadPageEditor函数
-            if (typeof loadPageEditor === 'function') {
-                // 临时替换editorArea的ID
-                const originalEditorArea = document.getElementById('editorArea');
-                editorArea.id = 'editorArea';
+            // 临时设置正确的ID
+            const originalId = editorArea.id;
+            editorArea.id = 'editorArea';
 
-                loadPageEditor(pageId, clickedElement);
-
-                // 恢复ID
-                editorArea.id = 'pageEditorArea';
+            try {
+                // 执行回调
+                if (callback) callback();
+            } finally {
+                // 恢复原始ID
+                editorArea.id = originalId;
             }
-
-            // 更新菜单激活状态
-            const pageEditorContent = document.getElementById('page-editor-content');
-            if (pageEditorContent) {
-                pageEditorContent.querySelectorAll('.page-menu-link').forEach(link => {
-                    link.classList.remove('active');
-                });
-                if (clickedElement) {
-                    clickedElement.classList.add('active');
-                }
-            }
-
-            // 更新当前页面徽章
-            updateCurrentPageBadge(pageId);
-
-            // 自动更新预览到对应页面
-            setTimeout(() => {
-                refreshEditorPreview();
-            }, 300);
         }
+
+        // 包装图片上传处理函数
+        window.originalHandleHeroImageUpload = window.handleHeroImageUpload;
+        window.handleHeroImageUpload = function(index, input) {
+            ensureEditorAreaId(() => {
+                if (window.originalHandleHeroImageUpload) {
+                    window.originalHandleHeroImageUpload(index, input);
+                }
+            });
+        };
+
+        window.originalHandleProductImageUpload = window.handleProductImageUpload;
+        window.handleProductImageUpload = function(index, input) {
+            ensureEditorAreaId(() => {
+                if (window.originalHandleProductImageUpload) {
+                    window.originalHandleProductImageUpload(index, input);
+                }
+            });
+        };
+
+        window.originalHandleProductMainImageUpload = window.handleProductMainImageUpload;
+        window.handleProductMainImageUpload = function(catIndex, prodIndex, input) {
+            ensureEditorAreaId(() => {
+                if (window.originalHandleProductMainImageUpload) {
+                    window.originalHandleProductMainImageUpload(catIndex, prodIndex, input);
+                }
+            });
+        };
 
         // 更新当前页面徽章
         function updateCurrentPageBadge(pageId) {
@@ -2074,46 +2121,63 @@
                     loading.classList.add('active');
                 }
 
-                // 根据当前页面更新预览URL
-                let previewUrl = 'index.html';
+                // 根据当前页面更新预览URL（admin.html在根目录）
+                let previewUrl = './index.html';
                 if (typeof currentPage !== 'undefined') {
                     switch(currentPage) {
-                        case 'products': previewUrl = 'products.html'; break;
-                        case 'about': previewUrl = 'about.html'; break;
-                        case 'contact': previewUrl = 'contact.html'; break;
-                        case 'news': previewUrl = 'news.html'; break;
+                        case 'products': previewUrl = './products.html'; break;
+                        case 'about': previewUrl = './about.html'; break;
+                        case 'contact': previewUrl = './contact.html'; break;
+                        case 'news': previewUrl = './news.html'; break;
                     }
                 }
 
-                // 强制刷新iframe
-                iframe.src = 'about:blank';
-                setTimeout(() => {
-                    iframe.src = previewUrl + '?t=' + new Date().getTime();
-                    console.log('🔄 刷新预览:', previewUrl);
+                console.log('🔄 准备刷新预览:', previewUrl);
 
-                    // iframe加载完成后隐藏加载状态
-                    iframe.onload = function() {
-                        if (loading) {
-                            loading.classList.remove('active');
-                        }
-                    };
-                }, 50);
+                // 使用更可靠的刷新方法
+                const timestamp = new Date().getTime();
+                iframe.src = previewUrl + '?t=' + timestamp;
+
+                // iframe加载完成后隐藏加载状态
+                iframe.onload = function() {
+                    console.log('✅ 预览加载完成:', previewUrl);
+                    if (loading) {
+                        loading.classList.remove('active');
+                    }
+                };
+
+                // 处理加载错误
+                iframe.onerror = function() {
+                    console.error('❌ 预览加载失败:', previewUrl);
+                    if (loading) {
+                        loading.classList.remove('active');
+                    }
+                };
+
+                // 超时处理（5秒后自动隐藏加载动画）
+                setTimeout(() => {
+                    if (loading && loading.classList.contains('active')) {
+                        loading.classList.remove('active');
+                        console.warn('⚠️ 预览加载超时');
+                    }
+                }, 5000);
             } else {
                 console.error('❌ 预览iframe未找到');
             }
         }
 
         function openEditorPreviewInNewTab() {
-            let url = 'index.html';
+            let url = './index.html';
             if (typeof currentPage !== 'undefined') {
                 switch(currentPage) {
-                    case 'products': url = 'products.html'; break;
-                    case 'about': url = 'about.html'; break;
-                    case 'contact': url = 'contact.html'; break;
-                    case 'news': url = 'news.html'; break;
+                    case 'products': url = './products.html'; break;
+                    case 'about': url = './about.html'; break;
+                    case 'contact': url = './contact.html'; break;
+                    case 'news': url = './news.html'; break;
                 }
             }
             window.open(url, '_blank');
+            console.log('🔗 在新标签页打开:', url);
         }
 
         console.log('✅ 页面编辑器适配器已加载');
