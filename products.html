@@ -999,7 +999,7 @@
                 el.style.display = 'flex';
                 el.style.alignItems = 'center';
             });
-            
+
             // Force containers within hero sections
             document.querySelectorAll('.hero-section .container, .product-hero-section .container, .cta-section .container').forEach(function(el) {
                 el.style.position = 'relative';
@@ -1008,8 +1008,16 @@
                 el.style.display = 'flex';
                 el.style.alignItems = 'center';
             });
-            
+
             console.log('✅ Emergency hero fix applied via JavaScript');
         });
-        </script></body>
+        </script>
+
+<!-- Data schema definitions -->
+<script src="js/content-data-schema.js"></script>
+
+<!-- Auto-load backend-edited content -->
+<script src="js/content-auto-loader.js"></script>
+
+</body>
 </html>
