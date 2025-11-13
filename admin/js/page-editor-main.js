@@ -46,7 +46,7 @@ function initSupabase() {
 }
 
 // 加载页面编辑器
-function loadPageEditor(pageId) {
+function loadPageEditor(pageId, clickedElement) {
     console.log(`📄 加载 ${pageId} 页面编辑器`);
 
     // 如果有未保存的更改，提醒用户
@@ -64,7 +64,18 @@ function loadPageEditor(pageId) {
     document.querySelectorAll('.page-menu-link').forEach(link => {
         link.classList.remove('active');
     });
-    event.target.closest('.page-menu-link').classList.add('active');
+    if (clickedElement) {
+        const menuLink = clickedElement.closest ? clickedElement.closest('.page-menu-link') : clickedElement;
+        if (menuLink) {
+            menuLink.classList.add('active');
+        }
+    } else {
+        // 如果没有传入元素，根据 pageId 查找并激活
+        const targetLink = document.querySelector(`[onclick*="loadPageEditor('${pageId}')"]`);
+        if (targetLink) {
+            targetLink.classList.add('active');
+        }
+    }
 
     // 根据页面类型加载不同的编辑器
     switch(pageId) {
@@ -611,7 +622,7 @@ async function handleProductImageUpload(index, input) {
 }
 
 // 保存所有更改
-function saveAllChanges() {
+function saveAllChanges(event) {
     if (!hasUnsavedChanges) {
         alert('没有需要保存的更改');
         return;
@@ -621,15 +632,17 @@ function saveAllChanges() {
     hasUnsavedChanges = false;
 
     // 显示成功提示
-    const btn = event.target;
-    const originalHTML = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-check"></i> 已保存';
-    btn.disabled = true;
+    if (event && event.target) {
+        const btn = event.target;
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> 已保存';
+        btn.disabled = true;
 
-    setTimeout(() => {
-        btn.innerHTML = originalHTML;
-        btn.disabled = false;
-    }, 2000);
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.disabled = false;
+        }, 2000);
+    }
 
     // 刷新预览
     refreshPreview();
