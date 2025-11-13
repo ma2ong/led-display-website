@@ -312,6 +312,198 @@
             color: #666;
             margin: 0;
         }
+
+        /* ========== 页面编辑器专用样式 ========== */
+
+        /* 页面编辑器主布局 */
+        #page-editor-content .page-editor-layout {
+            display: flex;
+            height: calc(100vh - 140px);
+            margin: -30px;
+            background: white;
+        }
+
+        /* 编辑器侧边栏 */
+        #page-editor-content .editor-sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #e0e0e0;
+            overflow-y: auto;
+        }
+
+        #page-editor-content .page-menu {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        #page-editor-content .page-menu-item {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        #page-editor-content .page-menu-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 20px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        #page-editor-content .page-menu-link:hover {
+            background: #f8f9ff;
+            color: #667eea;
+        }
+
+        #page-editor-content .page-menu-link.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+        }
+
+        #page-editor-content .page-menu-icon {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* 中间编辑区 */
+        #page-editor-content .editor-area {
+            flex: 1;
+            background: #f8f9fa;
+            overflow-y: auto;
+            padding: 30px;
+        }
+
+        #page-editor-content .editor-section {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        #page-editor-content .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        #page-editor-content .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 图片上传预览 */
+        #page-editor-content .image-upload-box {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f8f9fa;
+        }
+
+        #page-editor-content .image-upload-box:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        #page-editor-content .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        #page-editor-content .image-info {
+            font-size: 12px;
+            color: #666;
+            margin-top: 8px;
+        }
+
+        /* 右侧预览区 */
+        #page-editor-content .preview-area {
+            width: 450px;
+            background: #2c3e50;
+            border-left: 1px solid #e0e0e0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #page-editor-content .preview-header {
+            background: #34495e;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #page-editor-content .preview-content {
+            flex: 1;
+            background: white;
+            overflow: hidden;
+        }
+
+        #page-editor-content .preview-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* 卡片式编辑项 */
+        #page-editor-content .edit-item-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+        }
+
+        #page-editor-content .edit-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        #page-editor-content .edit-item-title {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        /* 编辑器工具栏 */
+        #page-editor-content .editor-toolbar {
+            background: white;
+            padding: 15px 30px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #page-editor-content .editor-toolbar-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        @media (max-width: 1200px) {
+            #page-editor-content .preview-area {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -366,7 +558,7 @@
                 <a class="nav-link active" href="#" data-section="dashboard">
                     <i class="fas fa-tachometer-alt"></i>仪表盘总览
                 </a>
-                <a class="nav-link" href="admin/page-editor.html" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: bold; border-radius: 8px; margin: 5px 0;">
+                <a class="nav-link" href="#" data-section="page-editor" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: bold; border-radius: 8px; margin: 5px 0;">
                     <i class="fas fa-edit"></i>📄 页面可视化编辑器 ⭐
                 </a>
                 <a class="nav-link" href="#" data-section="frontend">
@@ -425,20 +617,6 @@
             <div class="content-area">
                 <!-- 仪表盘 -->
                 <div id="dashboard-content" class="content-section active">
-                    <!-- 页面编辑器快速入口 -->
-                    <div class="alert alert-info border-0 shadow-sm mb-4" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div>
-                                <h5 class="mb-2"><i class="fas fa-sparkles me-2"></i>新功能：页面可视化编辑器</h5>
-                                <p class="mb-0">使用全新的可视化编辑器，轻松编辑网站内容，所见即所得！</p>
-                            </div>
-                            <a href="admin/page-editor.html" class="btn btn-light btn-lg px-4" style="white-space: nowrap;">
-                                <i class="fas fa-edit me-2"></i>立即使用
-                                <i class="fas fa-arrow-right ms-2"></i>
-                            </a>
-                        </div>
-                    </div>
-
                     <div class="row mb-4">
                         <div class="col-md-3">
                             <div class="stat-card">
@@ -1032,6 +1210,92 @@
                                     <i class="fas fa-images fa-3x mb-3"></i>
                                     <p>暂无图片，请先上传</p>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 页面可视化编辑器 -->
+                <div id="page-editor-content" class="content-section">
+                    <!-- 编辑器工具栏 -->
+                    <div class="editor-toolbar">
+                        <div class="editor-toolbar-title">
+                            <i class="fas fa-edit me-2"></i>页面可视化编辑器
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary me-2" onclick="previewChangesInEditor()">
+                                <i class="fas fa-eye me-1"></i>预览
+                            </button>
+                            <button class="btn btn-sm btn-success" onclick="saveAllChangesInEditor(event)">
+                                <i class="fas fa-save me-1"></i>保存所有更改
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 页面编辑器布局 -->
+                    <div class="page-editor-layout">
+                        <!-- 左侧页面选择菜单 -->
+                        <div class="editor-sidebar">
+                            <ul class="page-menu">
+                                <li class="page-menu-item">
+                                    <a class="page-menu-link active" href="#" onclick="loadPageEditorTab('index', this); return false;">
+                                        <i class="fas fa-home page-menu-icon"></i>
+                                        <span>首页编辑</span>
+                                    </a>
+                                </li>
+                                <li class="page-menu-item">
+                                    <a class="page-menu-link" href="#" onclick="loadPageEditorTab('products', this); return false;">
+                                        <i class="fas fa-cube page-menu-icon"></i>
+                                        <span>产品中心</span>
+                                    </a>
+                                </li>
+                                <li class="page-menu-item">
+                                    <a class="page-menu-link" href="#" onclick="loadPageEditorTab('about', this); return false;">
+                                        <i class="fas fa-building page-menu-icon"></i>
+                                        <span>关于我们</span>
+                                    </a>
+                                </li>
+                                <li class="page-menu-item">
+                                    <a class="page-menu-link" href="#" onclick="loadPageEditorTab('contact', this); return false;">
+                                        <i class="fas fa-envelope page-menu-icon"></i>
+                                        <span>联系我们</span>
+                                    </a>
+                                </li>
+                                <li class="page-menu-item">
+                                    <a class="page-menu-link" href="#" onclick="loadPageEditorTab('news', this); return false;">
+                                        <i class="fas fa-newspaper page-menu-icon"></i>
+                                        <span>新闻中心</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- 中间编辑区域 -->
+                        <div class="editor-area" id="pageEditorArea">
+                            <!-- 这里动态加载编辑表单 -->
+                            <div class="text-center py-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">加载中...</span>
+                                </div>
+                                <p class="mt-3 text-muted">正在加载编辑器...</p>
+                            </div>
+                        </div>
+
+                        <!-- 右侧实时预览区域 -->
+                        <div class="preview-area">
+                            <div class="preview-header">
+                                <span><i class="fas fa-desktop"></i> 实时预览</span>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-light" onclick="refreshEditorPreview()">
+                                        <i class="fas fa-sync"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-light" onclick="openEditorPreviewInNewTab()">
+                                        <i class="fas fa-external-link-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="preview-content">
+                                <iframe id="pageEditorPreviewIframe" class="preview-iframe" src="index.html"></iframe>
                             </div>
                         </div>
                     </div>
@@ -1637,9 +1901,125 @@
                     if (this.getAttribute('data-section') === 'statistics') {
                         setTimeout(initCharts, 100);
                     }
+                    // 初始化页面编辑器
+                    if (this.getAttribute('data-section') === 'page-editor') {
+                        setTimeout(initPageEditor, 100);
+                    }
                 });
             });
         });
+    </script>
+
+    <!-- 页面编辑器数据结构 -->
+    <script src="js/content-data-schema.js"></script>
+
+    <!-- 页面编辑器主脚本 -->
+    <script src="admin/js/page-editor-main.js"></script>
+
+    <!-- 页面编辑器集成适配器 -->
+    <script>
+        // 全局变量
+        let pageEditorInitialized = false;
+
+        // 初始化页面编辑器（当切换到page-editor section时调用）
+        function initPageEditor() {
+            if (pageEditorInitialized) {
+                return;
+            }
+
+            console.log('🎨 初始化集成页面编辑器...');
+
+            // 初始化默认数据
+            if (typeof initializeDefaultData === 'function') {
+                initializeDefaultData();
+            }
+
+            // 加载首页编辑器
+            if (typeof loadPageEditor === 'function') {
+                // 使用重命名的函数避免冲突
+                loadPageEditorTab('index');
+            }
+
+            pageEditorInitialized = true;
+            console.log('✅ 集成页面编辑器初始化完成');
+        }
+
+        // 适配器函数：将page-editor-main.js的函数适配到admin.html环境
+        function loadPageEditorTab(pageId, clickedElement) {
+            const editorArea = document.getElementById('pageEditorArea');
+            if (!editorArea) {
+                console.error('编辑器区域未找到');
+                return;
+            }
+
+            // 调用原始的loadPageEditor函数
+            if (typeof loadPageEditor === 'function') {
+                // 临时替换editorArea的ID
+                const originalEditorArea = document.getElementById('editorArea');
+                editorArea.id = 'editorArea';
+
+                loadPageEditor(pageId, clickedElement);
+
+                // 恢复ID
+                editorArea.id = 'pageEditorArea';
+            }
+
+            // 更新菜单激活状态
+            const pageEditorContent = document.getElementById('page-editor-content');
+            if (pageEditorContent) {
+                pageEditorContent.querySelectorAll('.page-menu-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                if (clickedElement) {
+                    clickedElement.classList.add('active');
+                }
+            }
+        }
+
+        function saveAllChangesInEditor(event) {
+            if (typeof saveAllChanges === 'function') {
+                saveAllChanges(event);
+            }
+        }
+
+        function previewChangesInEditor() {
+            if (typeof previewChanges === 'function') {
+                previewChanges();
+            }
+        }
+
+        function refreshEditorPreview() {
+            const iframe = document.getElementById('pageEditorPreviewIframe');
+            if (iframe) {
+                // 根据当前页面更新预览URL
+                let previewUrl = 'index.html';
+                if (typeof currentPage !== 'undefined') {
+                    switch(currentPage) {
+                        case 'products': previewUrl = 'products.html'; break;
+                        case 'about': previewUrl = 'about.html'; break;
+                        case 'contact': previewUrl = 'contact.html'; break;
+                        case 'news': previewUrl = 'news.html'; break;
+                    }
+                }
+                iframe.src = previewUrl;
+                console.log('🔄 刷新预览:', previewUrl);
+            }
+        }
+
+        function openEditorPreviewInNewTab() {
+            let url = 'index.html';
+            if (typeof currentPage !== 'undefined') {
+                switch(currentPage) {
+                    case 'products': url = 'products.html'; break;
+                    case 'about': url = 'about.html'; break;
+                    case 'contact': url = 'contact.html'; break;
+                    case 'news': url = 'news.html'; break;
+                }
+            }
+            window.open(url, '_blank');
+        }
+
+        console.log('✅ 页面编辑器适配器已加载');
     </script>
 </body>
 </html>
