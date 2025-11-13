@@ -499,6 +499,33 @@
             color: #333;
         }
 
+        #page-editor-content .current-page-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            font-size: 13px;
+            margin-left: 10px;
+        }
+
+        /* 预览加载状态 */
+        #page-editor-content .preview-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: none;
+        }
+
+        #page-editor-content .preview-loading.active {
+            display: block;
+        }
+
         @media (max-width: 1200px) {
             #page-editor-content .preview-area {
                 display: none;
@@ -1221,8 +1248,12 @@
                     <div class="editor-toolbar">
                         <div class="editor-toolbar-title">
                             <i class="fas fa-edit me-2"></i>页面可视化编辑器
+                            <span class="current-page-badge" id="currentPageBadge">首页</span>
                         </div>
                         <div>
+                            <button class="btn btn-sm btn-outline-secondary me-2" onclick="refreshEditorPreview()">
+                                <i class="fas fa-sync me-1"></i>刷新预览
+                            </button>
                             <button class="btn btn-sm btn-outline-secondary me-2" onclick="previewChangesInEditor()">
                                 <i class="fas fa-eye me-1"></i>预览
                             </button>
@@ -1294,8 +1325,12 @@
                                     </button>
                                 </div>
                             </div>
-                            <div class="preview-content">
-                                <iframe id="pageEditorPreviewIframe" class="preview-iframe" src="index.html"></iframe>
+                            <div class="preview-content" style="position: relative;">
+                                <iframe id="pageEditorPreviewIframe" class="preview-iframe" src=""></iframe>
+                                <div class="preview-loading" id="previewLoading">
+                                    <div class="spinner-border text-primary" role="status"></div>
+                                    <p class="mt-2 mb-0">加载预览中...</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1934,6 +1969,15 @@
                 initializeDefaultData();
             }
 
+            // 初始化预览iframe
+            setTimeout(() => {
+                const iframe = document.getElementById('pageEditorPreviewIframe');
+                if (iframe && !iframe.src) {
+                    iframe.src = 'index.html';
+                    console.log('🖼️ 初始化预览iframe');
+                }
+            }, 100);
+
             // 加载首页编辑器
             if (typeof loadPageEditor === 'function') {
                 // 使用重命名的函数避免冲突
@@ -1974,15 +2018,47 @@
                     clickedElement.classList.add('active');
                 }
             }
+
+            // 更新当前页面徽章
+            updateCurrentPageBadge(pageId);
+
+            // 自动更新预览到对应页面
+            setTimeout(() => {
+                refreshEditorPreview();
+            }, 300);
+        }
+
+        // 更新当前页面徽章
+        function updateCurrentPageBadge(pageId) {
+            const badge = document.getElementById('currentPageBadge');
+            if (badge) {
+                const pageNames = {
+                    'index': '首页',
+                    'products': '产品中心',
+                    'about': '关于我们',
+                    'contact': '联系我们',
+                    'news': '新闻中心'
+                };
+                badge.textContent = pageNames[pageId] || pageId;
+            }
         }
 
         function saveAllChangesInEditor(event) {
             if (typeof saveAllChanges === 'function') {
                 saveAllChanges(event);
+
+                // 保存成功后刷新预览
+                setTimeout(() => {
+                    refreshEditorPreview();
+                }, 500);
             }
         }
 
         function previewChangesInEditor() {
+            // 刷新预览iframe
+            refreshEditorPreview();
+
+            // 同时调用原始的previewChanges函数（如果存在）
             if (typeof previewChanges === 'function') {
                 previewChanges();
             }
@@ -1990,7 +2066,14 @@
 
         function refreshEditorPreview() {
             const iframe = document.getElementById('pageEditorPreviewIframe');
+            const loading = document.getElementById('previewLoading');
+
             if (iframe) {
+                // 显示加载状态
+                if (loading) {
+                    loading.classList.add('active');
+                }
+
                 // 根据当前页面更新预览URL
                 let previewUrl = 'index.html';
                 if (typeof currentPage !== 'undefined') {
@@ -2001,8 +2084,22 @@
                         case 'news': previewUrl = 'news.html'; break;
                     }
                 }
-                iframe.src = previewUrl;
-                console.log('🔄 刷新预览:', previewUrl);
+
+                // 强制刷新iframe
+                iframe.src = 'about:blank';
+                setTimeout(() => {
+                    iframe.src = previewUrl + '?t=' + new Date().getTime();
+                    console.log('🔄 刷新预览:', previewUrl);
+
+                    // iframe加载完成后隐藏加载状态
+                    iframe.onload = function() {
+                        if (loading) {
+                            loading.classList.remove('active');
+                        }
+                    };
+                }, 50);
+            } else {
+                console.error('❌ 预览iframe未找到');
             }
         }
 
