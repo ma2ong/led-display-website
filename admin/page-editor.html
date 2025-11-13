@@ -278,7 +278,7 @@
             <button class="btn btn-sm btn-light" onclick="previewChanges()">
                 <i class="fas fa-eye"></i> 预览
             </button>
-            <button class="btn btn-sm btn-success" onclick="saveAllChanges()">
+            <button class="btn btn-sm btn-success" onclick="saveAllChanges(event)">
                 <i class="fas fa-save"></i> 保存所有更改
             </button>
             <button class="btn btn-sm btn-outline-light" onclick="goBackToAdmin()">
@@ -293,31 +293,31 @@
         <div class="sidebar">
             <ul class="page-menu">
                 <li class="page-menu-item">
-                    <a class="page-menu-link active" href="#" onclick="loadPageEditor('index'); return false;">
+                    <a class="page-menu-link active" href="#" onclick="loadPageEditor('index', this); return false;">
                         <i class="fas fa-home page-menu-icon"></i>
                         <span>首页编辑</span>
                     </a>
                 </li>
                 <li class="page-menu-item">
-                    <a class="page-menu-link" href="#" onclick="loadPageEditor('products'); return false;">
+                    <a class="page-menu-link" href="#" onclick="loadPageEditor('products', this); return false;">
                         <i class="fas fa-cube page-menu-icon"></i>
                         <span>产品中心</span>
                     </a>
                 </li>
                 <li class="page-menu-item">
-                    <a class="page-menu-link" href="#" onclick="loadPageEditor('about'); return false;">
+                    <a class="page-menu-link" href="#" onclick="loadPageEditor('about', this); return false;">
                         <i class="fas fa-building page-menu-icon"></i>
                         <span>关于我们</span>
                     </a>
                 </li>
                 <li class="page-menu-item">
-                    <a class="page-menu-link" href="#" onclick="loadPageEditor('contact'); return false;">
+                    <a class="page-menu-link" href="#" onclick="loadPageEditor('contact', this); return false;">
                         <i class="fas fa-envelope page-menu-icon"></i>
                         <span>联系我们</span>
                     </a>
                 </li>
                 <li class="page-menu-item">
-                    <a class="page-menu-link" href="#" onclick="loadPageEditor('news'); return false;">
+                    <a class="page-menu-link" href="#" onclick="loadPageEditor('news', this); return false;">
                         <i class="fas fa-newspaper page-menu-icon"></i>
                         <span>新闻中心</span>
                     </a>
