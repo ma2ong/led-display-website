@@ -1382,7 +1382,95 @@
     <!-- Supabase客户端 -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Section切换功能脚本 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        // 通用的Section切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔧 初始化section切换功能...');
+            
+            // 为所有带data-section属性的nav-link添加点击事件
+            document.querySelectorAll('.nav-link[data-section]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const sectionName = this.getAttribute('data-section');
+                    
+                    if (!sectionName) return;
+                    
+                    console.log('📑 切换到section:', sectionName);
+                    
+                    // 移除所有nav-link的active类
+                    document.querySelectorAll('.nav-link').forEach(l => {
+                        l.classList.remove('active');
+                    });
+                    
+                    // 添加active类到当前链接
+                    this.classList.add('active');
+                    
+                    // 隐藏所有content-section
+                    document.querySelectorAll('.content-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    
+                    // 显示目标section
+                    const targetSection = document.getElementById(sectionName + '-content');
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                        console.log('✅ Section切换成功:', sectionName);
+                        
+                        // 更新页面标题
+                        updatePageTitle(sectionName);
+                        
+                        // 根据section类型执行初始化
+                        setTimeout(() => {
+                            if (sectionName === 'statistics') {
+                                if (typeof initCharts === 'function') {
+                                    initCharts();
+                                }
+                            } else if (sectionName === 'page-editor') {
+                                if (typeof initPageEditor === 'function') {
+                                    initPageEditor();
+                                }
+                            } else if (sectionName === 'media') {
+                                if (typeof initMediaManager === 'function') {
+                                    console.log('📸 初始化媒体管理器...');
+                                    initMediaManager();
+                                    if (typeof loadMediaImages === 'function') {
+                                        loadMediaImages();
+                                    }
+                                }
+                            }
+                        }, 150);
+                    } else {
+                        console.error('❌ 未找到section:', sectionName + '-content');
+                    }
+                });
+            });
+            
+            console.log('✅ Section切换功能初始化完成');
+        });
+        
+        // 更新页面标题
+        function updatePageTitle(sectionName) {
+            const titles = {
+                'dashboard': '仪表盘总览',
+                'frontend': '前端页面管理',
+                'page-editor': '页面可视化编辑器',
+                'products': '产品管理',
+                'inquiries': '询盘管理',
+                'news': '新闻管理',
+                'media': '媒体管理',
+                'users': '用户管理',
+                'settings': '系统设置',
+                'statistics': '统计分析'
+            };
+            
+            const titleElement = document.getElementById('page-title');
+            if (titleElement && titles[sectionName]) {
+                titleElement.textContent = titles[sectionName];
+            }
+        }
+    </script>
     <script src="js/frontend-backend-api.js"></script>
     <script src="js/admin-system-complete.js"></script>
     <!-- 页面内容编辑器 -->
@@ -1961,8 +2049,12 @@
         let pageEditorInitialized = false;
 
         // 初始化页面编辑器（当切换到page-editor section时调用）
+        // 初始化页面编辑器（当切换到page-editor section时调用）
         function initPageEditor() {
             if (pageEditorInitialized) {
+                console.log('⚠️ 页面编辑器已初始化，跳过重复初始化');
+                // 即使已初始化，也刷新预览
+                refreshEditorPreview();
                 return;
             }
 
@@ -1973,20 +2065,35 @@
                 initializeDefaultData();
             }
 
-            // 初始化预览iframe
+            // 初始化预览iframe - 增加延迟确保DOM已加载
             setTimeout(() => {
                 const iframe = document.getElementById('pageEditorPreviewIframe');
-                if (iframe && !iframe.src) {
+                console.log('🔍 查找预览iframe...', iframe ? '找到' : '未找到');
+                
+                if (iframe) {
                     // admin.html在根目录，所以直接使用相对路径
-                    iframe.src = './index.html';
-                    console.log('🖼️ 初始化预览iframe: ./index.html');
+                    const previewUrl = './index.html?t=' + Date.now();
+                    iframe.src = previewUrl;
+                    console.log('🖼️ 初始化预览iframe:', previewUrl);
+
+                    // 添加加载成功处理
+                    iframe.onload = function() {
+                        console.log('✅ 预览iframe加载成功!');
+                        const loading = document.getElementById('previewLoading');
+                        if (loading) {
+                            loading.classList.remove('active');
+                        }
+                    };
 
                     // 添加错误处理
                     iframe.onerror = function() {
                         console.error('❌ iframe加载失败');
+                        alert('预览加载失败，请检查index.html文件是否存在');
                     };
+                } else {
+                    console.error('❌ 未找到预览iframe元素');
                 }
-            }, 100);
+            }, 500); // 增加到500ms确保DOM完全加载
 
             // 加载首页编辑器
             if (typeof loadPageEditor === 'function') {
