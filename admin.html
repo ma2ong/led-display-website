@@ -1546,12 +1546,14 @@
 
         // 更新位置选择下拉菜单
         function updateMediaLocations() {
+            console.log('🔄 更新媒体位置列表...')
             const pageSelect = document.getElementById('mediaPageSelect')
             const locationSelect = document.getElementById('mediaLocationSelect')
             const previewBtn = document.getElementById('mediaPreviewLocationBtn')
             const locationInfo = document.getElementById('mediaLocationInfo')
 
             const selectedPage = pageSelect.value
+            console.log('📄 选中的页面:', selectedPage)
 
             if (!selectedPage) {
                 locationSelect.disabled = true
@@ -1563,6 +1565,7 @@
 
             // 填充位置选项
             const locations = mediaLocationMap[selectedPage].locations
+            console.log(`✅ 找到 ${locations.length} 个可用位置`)
             locationSelect.innerHTML = '<option value="">-- 请选择上传位置 --</option>'
 
             locations.forEach(loc => {
@@ -1579,6 +1582,7 @@
 
         // 更新位置信息预览
         function updateMediaPreviewInfo() {
+            console.log('ℹ️ 更新位置信息预览...')
             const locationSelect = document.getElementById('mediaLocationSelect')
             const previewBtn = document.getElementById('mediaPreviewLocationBtn')
             const locationInfo = document.getElementById('mediaLocationInfo')
@@ -1591,11 +1595,13 @@
                 previewBtn.disabled = true
                 locationInfo.style.display = 'none'
                 currentMediaLocation = null
+                console.log('⚠️ 未选择有效位置')
                 return
             }
 
             const location = JSON.parse(selectedOption.dataset.location)
             currentMediaLocation = location
+            console.log('✅ 选中位置:', location.name)
 
             // 显示位置信息
             locationDesc.textContent = location.name
@@ -1670,8 +1676,13 @@
                 return
             }
 
+            console.log('✅ 找到上传区域和文件输入框')
+
             // 上传区域点击
-            uploadZone.addEventListener('click', () => fileInput.click())
+            uploadZone.addEventListener('click', () => {
+                console.log('📁 点击上传区域，打开文件选择器...')
+                fileInput.click()
+            })
 
             // 文件选择
             fileInput.addEventListener('change', handleMediaFileSelect)
@@ -1704,18 +1715,28 @@
 
         // 处理文件选择
         function handleMediaFileSelect(e) {
+            console.log('📂 文件选择事件触发')
             const files = Array.from(e.target.files)
+            console.log(`📄 选择了 ${files.length} 个文件:`, files.map(f => f.name))
             handleMediaFiles(files)
         }
 
         // 处理文件
         function handleMediaFiles(files) {
-            if (files.length === 0) return
+            if (files.length === 0) {
+                console.log('⚠️ 没有选择文件')
+                return
+            }
 
+            console.log(`✅ 处理 ${files.length} 个文件`)
             mediaPendingFiles = [...mediaPendingFiles, ...files]
             displayMediaPreview()
 
-            document.getElementById('mediaUploadPreview').style.display = 'block'
+            const previewElement = document.getElementById('mediaUploadPreview')
+            if (previewElement) {
+                previewElement.style.display = 'block'
+                console.log('✅ 显示文件预览区域')
+            }
         }
 
         // 显示预览
@@ -1762,15 +1783,20 @@
 
         // 上传文件
         async function uploadMediaFiles() {
+            console.log('🚀 开始上传流程...')
+
             if (mediaPendingFiles.length === 0) {
                 alert('请先选择要上传的文件')
                 return
             }
 
             if (!currentMediaLocation) {
-                alert('请先选择要上传到的页面位置')
+                alert('⚠️ 请先选择要上传到的页面位置\n\n步骤：\n1. 在上方选择页面（如：首页）\n2. 选择具体位置（如：Hero轮播图1）\n3. 再点击"上传全部"按钮')
+                console.warn('⚠️ 未选择上传位置，当前位置:', currentMediaLocation)
                 return
             }
+
+            console.log('✅ 开始上传到位置:', currentMediaLocation)
 
             if (!mediaSupabaseClient) {
                 alert('Supabase 未初始化，请刷新页面重试')
